@@ -1,0 +1,165 @@
+## DESCRIPTION
+## Linear Algebra and Quantitative Biology
+## nselem84@gmail.com
+## This problem uses real coordinates from molecules to motivate biology students
+## into the linear algebra study. Coordinates were obtained at PDB database and sotred at QuantBio.pl
+## library. So you need to load QuantBio.pl at your macros in order that the problem runs.
+## 
+## ENDDESCRIPTION
+
+## Tagged by nselem84
+
+## DBsubject(Linear algebra)
+## DBchapter(Inner products)
+## DBsection(Projection and distance)
+## Institution('Portland GSoC')
+## KEYWORDS('inner product' 'orthogonal' 'projection' 'distance' 'molecular' 'structure')
+
+DOCUMENT();       
+
+loadMacros(
+"PG.pl",
+"PGstandard.pl",
+"PGchoicemacros.pl",
+"PGgraphmacros.pl",
+"unionTables.pl",
+"parserPopUp.pl",
+"PGbasicmacros.pl",
+"PGanswermacros.pl",
+"PGnumericalmacros.pl",
+"PGauxiliaryFunctions.pl",
+"QuantBio.pl"
+);
+
+
+
+
+TEXT(beginproblem());
+
+$refreshCachedImages=1;
+
+
+  $fig[0]=image("Adenine.png",width=>50,height=>50,tex_size=>450);
+  $fig[1]=image("Guanina.png",width=>50,height=>50,tex_size=>450);
+  $fig[2]=image("Thymine.png",width=>50,height=>50,tex_size=>450);
+  $fig[3]=image("Cytosine.png",width=>50,height=>50,tex_size=>450);
+
+@eqn =("Adenine",  "Guanine", "Thymine", "Cytosine");
+$k = random(0,3,1);
+
+@perm = shuffle(4);
+@fig = @fig[@perm];
+@inv = invert(@perm);
+
+@letter = ("A", "B", "C", "D");
+$molecule=$eqn[$k];
+$popup = PopUp(["?","A","B","C","D"], $letter[$inv[$k]]);
+
+$atom_a=random(1,243,1);
+$atom_b=random(1,243,1);
+while ($atom_b==$atom_a){$atom_b=random(1,243,1);} ## Making sure are note the same
+
+@a=&DNAcoord($atom_a);
+@b=&DNAcoord($atom_b);
+
+$xa=Real("$a[4]"); $ya=Real("$a[5]"); $za=Real("$a[6]");
+$xb=Real("$b[4]"); $yb=Real("$b[5]"); $zb=Real("$b[6]");
+
+BEGIN_TEXT
+In May 1981, 1BNA was one of the first crystallographic DNA structures to be stored at the PDB database. It is just 12 nucleotides long --CGCGAATTCGCG--, completing slightly more than one turn of right-handed double-stranded B helix. $PAR
+
+Go to  \{ htmlLink( "http://www.rcsb.org/pdb/home/home.do", "PDBdatabase" ) \}, look for the PDB 1BNA  file an find the x,y,z-coordinates of: $BR
+
+Atom $atom_a of the DNA chain: \( A=\)(\{$xa->ans_rule(6)\} , \{$ya->ans_rule(6)\} , \{$za->ans_rule(6)\} )$BR
+Atom $atom_b of the DNA chain: \(B=\)(\{$xb->ans_rule(6)\} , \{$yb->ans_rule(6)\} , \{$zb->ans_rule(6)\} ) $BR
+
+$PAR
+To which nucleotide belongs Atom $atom_a?  
+\{ $popup->menu() \}
+$BR
+$BR
+$BCENTER
+\{
+BeginTable().
+  AlignedRow([$fig[0],$fig[1],$fig[2],$fig[3]]).
+  TableSpace(5,0).
+  AlignedRow(["A","B","C","D"]).
+EndTable();
+\}
+$BR
+(Click on a graph to enlarge it.)
+$ECENTER
+
+END_TEXT
+
+$showPartialCorrectAnswers = 0;
+
+##############################################################
+#
+#  Answers
+#
+#
+
+ANS($xa->cmp);
+ANS($ya->cmp);
+ANS($za->cmp);
+ANS($xb->cmp);
+ANS($yb->cmp);
+ANS($zb->cmp);
+ANS( $popup->cmp() );
+
+###############################################################
+Context()->texStrings;
+BEGIN_SOLUTION
+${PAR}SOLUTION:${PAR}
+This problems gives an idea of the Angstrom distance between atoms of a small DNA molecule. $BR
+First yo have to go to  \{ htmlLink( "http://www.rcsb.org/pdb/home/home.do", "PDBdatabase" ) \}
+is part of the idea of the problem that you know the PDB web site existence. $BR
+There, at the home page you have to search 1BNA, and ask for the PDB file (superior rigth corner). $BR
+
+\(A=\)($xa,$ya,$za) $BR
+\(B=\)($xb,$yb,$zb)
+$PAR
+
+END_SOLUTION
+Context()->normalStrings;
+
+###################################################
+## Now the second part vectors: angles
+
+	$prod = $xa*$xb+$ya*$yb+$za*$zb;
+        $norm_A = sqrt($xa*$xa+$ya*$ya+$za*$za);
+        $norm_B = sqrt($xb*$xb+$yb*$yb+$zb*$zb);
+
+$angle = arccos( $prod / $norm_A / $norm_B);
+
+BEGIN_TEXT
+$PAR
+Angles and distances between atoms allow scientists to decide if a molecule would react with another molecule. Using the inner product, find the angle \( \alpha \) between the above vectors A, B.
+$BR
+\( \alpha = \) \{ans_rule(20)\}.
+
+END_TEXT
+
+ANS(num_cmp($angle));
+
+###############################################################
+Context()->texStrings;
+BEGIN_SOLUTION
+${PAR}SOLUTION:${PAR}
+We are going to use the equation \(A\cdot B=\|A\| \|B\|\cos\alpha\) $BR
+\(A\cdot B=\) $xa*$xb+$ya*$yb+$za*$zb $BR
+        =$prod $PAR
+\(\|A\|=\sqrt{$xa*$xa+$ya*$ya+$za*$za}= $norm_A  \)$BR
+\(\|B\|= \sqrt{$xb*$xb+$yb*$yb+$zb*$zb}=  $norm_B \)$BR
+$PAR
+Then 
+$PAR 
+\(\alpha=arccos( \frac{$prod }{ $norm_A \times $norm_B})=$angle \)
+
+
+END_SOLUTION
+Context()->normalStrings;
+
+ENDDOCUMENT();
+

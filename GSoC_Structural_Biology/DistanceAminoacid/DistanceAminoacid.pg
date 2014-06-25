@@ -1,0 +1,90 @@
+##DESCRIPTION
+##  Algebra problem: true or false for inequality 
+##ENDDESCRIPTION
+
+##KEYWORDS('algebra', 'inequality', 'fraction')
+
+## DBsubject('Algebra')
+## DBchapter('Fundamentals')
+## DBsection('Real Numbers')
+## Date('6/3/2002')
+## Author('')
+## Institution('')
+## TitleText1('Precalculus')
+## EditionText1('3')
+## AuthorText1('Stewart, Redlin, Watson')
+## Section1('1.1')
+## Problem1('22')
+
+########################################################################
+
+DOCUMENT();      
+
+loadMacros(
+   "PGstandard.pl",     # Standard macros for PG language
+   "MathObjects.pl",
+   #"source.pl",        # allows code to be displayed on certain sites.
+   #"PGcourse.pl",      # Customization file for the course
+   #"In_test.pl",
+"QuantBio.pl",
+"PGchoicemacros.pl",
+"PGgraphmacros.pl",
+"unionTables.pl",
+"parserPopUp.pl",
+);
+
+# Print problem number and point value (weight) for the problem
+TEXT(beginproblem());
+
+# Show which answers are correct and which ones are incorrect
+$showPartialCorrectAnswers = 1;
+
+##############################################################
+#
+#  Setup
+#
+#
+Context("Numeric");
+
+$k=random(1,19,1); ## Chose one from 20 possible aminoacids
+$aminoacid=&Amino($k);
+$fig=image("$aminoacid.png",width=>200,height=>200,tex_size=>450);
+
+@perm = shuffle(20);
+
+@Aminos;
+for ($i=0;$i<20;$i++){
+if ($i!=$k){
+    $Amino[$perm[$i]]=&Amino($perm[$i]);
+    }
+else{
+    $Amino[$perm[$i]]=$aminoacid;
+   }
+}
+
+$popup = PopUp(["?","$Amino[$perm[0]]","$Amino[$perm[1]]","$Amino[$perm[2]]","$Amino[$perm[3]]","$Amino[$perm[4]]","$Amino[$perm[5]]","$Amino[$perm[6]]","$Amino[$perm[7]]","$Amino[$perm[8]]","$Amino[$perm[9]]","$Amino[$perm[10]]","$Amino[$perm[11]]","$Amino[$perm[12]]","$Amino[$perm[13]]","$Amino[$perm[14]]","$Amino[$perm[15]]","$Amino[$perm[17]]","$Amino[$perm[18]]","$Amino[$perm[19]]"], $aminoacid);
+
+BEGIN_TEXT
+$BCENTER
+$PAR
+Select from the menu which aminoacid corresponds to the structure below. 
+$BR $BR \{ $popup->menu() \} $BR
+$fig $PAR
+
+$ECENTER
+END_TEXT
+
+Context()->texStrings;
+install_problem_grader(~~&std_problem_grader);
+$showPartialCorrectAnswers = 0;
+
+ANS( $popup->cmp() );
+
+Context()->texStrings;
+BEGIN_SOLUTION
+${PAR}SOLUTION:${PAR}
+The graph is the structure of the aminoacid $aminoacid $BR
+END_SOLUTION
+Context()->normalStrings;
+
+ENDDOCUMENT();        

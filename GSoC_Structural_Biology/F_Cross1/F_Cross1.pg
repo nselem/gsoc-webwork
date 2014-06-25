@@ -1,0 +1,146 @@
+## DESCRIPTION
+## Linear Algebra and Quantitative Biology
+## nselem84@gmail.com
+## This problem uses real coordinates from molecules to motivate biology students
+## into the linear algebra study. Coordinates were obtained at PDB database and sotred at QuantBio.pl
+## library. So you need to load QuantBio.pl at your macros in order that the problem runs.
+## 
+## ENDDESCRIPTION
+
+## Tagged by nselem84
+
+## DBsubject(Linear algebra)
+## DBchapter(Inner products)
+## DBsection(Projection and distance)
+## Institution('Portland GSoC')
+## KEYWORDS('inner product' 'orthogonal' 'projection' 'distance' 'molecular' 'structure')
+########################################################################
+
+DOCUMENT();      
+
+loadMacros(
+ "PGstandard.pl",     # Standard macros for PG language
+ "MathObjects.pl",
+"PG.pl",
+"PGstandard.pl",
+"PGchoicemacros.pl",
+"PGgraphmacros.pl",
+"unionTables.pl",
+"parserPopUp.pl",
+"PGbasicmacros.pl",
+"PGanswermacros.pl",
+"PGnumericalmacros.pl",
+"PGauxiliaryFunctions.pl",
+"QuantBio.pl",
+"PGmatrixmacros.pl", 
+);
+
+# Print problem number and point value (weight) for the problem
+TEXT(beginproblem());
+
+DOCUMENT();       
+
+TEXT(beginproblem());
+
+$refreshCachedImages=1;
+
+
+$atom_a=random(1,1700,1);
+$atom_b=random(1,1700,1);
+while ($atom_b==$atom_a){$atom_b=random(1,243,1);} ## Making sure are note the same
+
+@a=&PROTcoord($atom_a);
+@b=&PROTcoord($atom_b);
+
+$xa=Real("$a[4]"); $ya=Real("$a[5]"); $za=Real("$a[6]");
+$xb=Real("$b[4]"); $yb=Real("$b[5]"); $zb=Real("$b[6]");
+$aminoa=&AminoName($a[1]);
+$aminob=&AminoName($b[1]); 
+
+$fig[0]=image("$aminoa.png",width=>200,height=>200,tex_size=>450);
+$fig[1]=image("$aminob.png",width=>200,height=>200,tex_size=>450);
+
+
+
+BEGIN_TEXT
+2VEP is one protein structure of phosphoribosyl isomerase A (PriA) from Streptomyces coelicolor, this enzyme is involved in both histidine and tryptophan biosynthesis, the structure was solved at \(1.8A^{\circ}\) .
+$PAR
+
+Go to  \{ htmlLink( "http://www.rcsb.org/pdb/home/home.do", "PDBdatabase" ) \}, look for the PDB file 2VEP an find the x,y,z-coordinates  of: $BR
+
+atom $atom_a of the aminoacid $aminoa from 2VEP $BR \(A=\) (\{$xa->ans_rule(6)\} , \{$ya->ans_rule(6)\} , \{$za->ans_rule(6)\} )$BR
+atom $atom_b of the aminoacid $aminob from 2VEP $BR \(B=\)(\{$xb->ans_rule(6)\} , \{$yb->ans_rule(6)\} , \{$zb->ans_rule(6)\} ) $BR
+$PAR
+Here you have the molecular model of $aminoa, $aminob:$PAR 
+$fig[0] $fig[1]
+
+$BR
+
+END_TEXT
+
+$showPartialCorrectAnswers = 0;
+
+##############################################################
+#
+#  Answers
+#
+#
+
+ANS($xa->cmp);
+ANS($ya->cmp);
+ANS($za->cmp);
+ANS($xb->cmp);
+ANS($yb->cmp);
+ANS($zb->cmp);
+
+###############################################################
+Context()->texStrings;
+BEGIN_SOLUTION
+${PAR}SOLUTION:${PAR}
+This problems gives an idea of the Angstrom distance between atoms of a small DNA molecule. $BR
+First yo have to go to  \{ htmlLink( "http://www.rcsb.org/pdb/home/home.do", "PDBdatabase" ) \}
+is part of the idea of the problem that you know the PDB web site existence. $BR
+There, at the home page you have to search 2VEP, and ask for the PDB file (superior rigth corner). $BR
+
+\(A=\)($xa,$ya,$za) $BR
+\(B=\)($xb,$yb,$zb)
+$PAR
+
+END_SOLUTION
+Context()->normalStrings;
+
+###################################################
+## Now the second part vectors: Distance From A to B distance
+
+         $X=$xa-$xb;
+          $Y=$ya-$yb;
+          $Z=$za-$zb;
+	$dist = sqrt ($X*$X+$Y*$Y+$Z*$Z);
+
+
+BEGIN_TEXT
+$PAR
+In Structural Biology, angles and distances between atoms allow scientists to decide if a molecule would react witn another molecule. Now that you know the Streptomyces protein coordinates of the atoms A and B calculate the magnitude of the line between them .
+$BR
+\(\|A-B\| = \) \{ans_rule(20)\}.
+
+END_TEXT
+
+ANS(num_cmp($dist));
+
+###############################################################
+Context()->texStrings;
+BEGIN_SOLUTION
+${PAR}SOLUTION:${PAR}
+Calculate the magnitude is the same than use the Pythagoras theorem in a three dimensional space. $BR
+
+\(\|A-B\|=\sqrt{(A-B)\cdot(A-B)}\) $PAR
+\(=\sqrt{(x_A-x_B)^2+(y_A-y_B)^2+(z_A-z_B)^2}\) $BR
+in this case:
+\(d=\sqrt{($xa-$xb)^2+($ya-$yb)^2+($za-$zb)^2}\) $BR
+\(d=\sqrt{($X)^2+($Y)^2+($Z)^2}\) $BR
+\(d=$dist  A^{\circ}\)$PAR
+END_SOLUTION
+Context()->normalStrings;
+
+ENDDOCUMENT();        

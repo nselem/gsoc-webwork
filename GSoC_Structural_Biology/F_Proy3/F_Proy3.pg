@@ -1,0 +1,315 @@
+## DESCRIPTION
+## Linear Algebra and Quantitative Biology
+## nselem84@gmail.com
+## This problem uses real coordinates from molecules to motivate biology students
+## into the linear algebra study. Coordinates were obtained at PDB database and sotred at QuantBio.pl
+## library. So you need to load QuantBio.pl at your macros in order that the problem runs.
+## 
+## ENDDESCRIPTION
+
+## Tagged by nselem84
+
+## DBsubject(Linear algebra)
+## DBchapter(Inner products)
+## DBsection(Projection and distance)
+## Institution('Portland GSoC')
+## KEYWORDS('inner product' 'orthogonal' 'projection' 'distance' 'molecular' 'structure')
+
+DOCUMENT();        # This should be the first executable line in the problem.
+
+loadMacros("PG.pl","PGbasicmacros.pl","PGanswermacros.pl",
+"PGmatrixmacros.pl", "PGnumericalmacros.pl","PGauxiliaryFunctions.pl", "PGstandard.pl", "MathObjects.pl","PGchoicemacros.pl","PGgraphmacros.pl",
+"unionTables.pl","parserPopUp.pl",   "QuantBio.pl");
+
+TEXT(beginproblem());
+$showPartialCorrectAnswers = 1;
+
+DOCUMENT();      
+
+##############################################################
+#
+#  Setup
+#
+#
+Context("Numeric");
+
+$aminoacid="Tryptophan";
+
+#_ Tryptophan image:
+$fig=image("$aminoacid.png",width=>200,height=>200,tex_size=>450);
+
+##
+@perm = shuffle(20);
+@Aminos;
+for ($i=0;$i<20;$i++){
+     if ($i!=$k){
+            $Amino[$perm[$i]]=&Amino($perm[$i]);
+            }
+      else{
+            $Amino[$perm[$i]]=$aminoacid;
+           }
+      }
+
+$popup = PopUp(["?","$Amino[$perm[0]]","$Amino[$perm[1]]","$Amino[$perm[2]]","$Amino[$perm[3]]","$Amino[$perm[4]]","$Amino[$perm[5]]","$Amino[$perm[6]]","$Amino[$perm[7]]","$Amino[$perm[8]]","$Amino[$perm[9]]","$Amino[$perm[10]]","$Amino[$perm[11]]","$Amino[$perm[12]]","$Amino[$perm[13]]","$Amino[$perm[14]]","$Amino[$perm[15]]","$Amino[$perm[17]]","$Amino[$perm[18]]","$Amino[$perm[19]]"], $aminoacid);
+
+
+#$_2VEP{1039}=["CE2","TRP","A","141","17.468","-0.064","22.489","1","68.78","C"];
+#$_2VEP{1040}=["CE3","TRP","A","141","19.101","1.532","23.307","1","68.65","C"];
+#$_2VEP{1041}=["CZ2","TRP","A","141","17.986","-1.084","23.305","1","68.37","C"];
+#$_2VEP{1042}=["CZ3","TRP","A","141","19.617","0.515","24.12","1","68.19","C"];
+#$_2VEP{1043}=["CH2","TRP","A","141","19.057","-0.774","24.11","1","68.26","C"];
+
+##################################################################
+##########
+###### Getting coordinates of Carbon atoms from TRP 141
+### 
+$atom_a=1039;
+$atom_b=1040;
+$atom_c=1041;
+$atom_d=1042;
+
+@a=&PROTcoord($atom_a);
+@b=&PROTcoord($atom_b);
+@c=&PROTcoord($atom_c);
+@d=&PROTcoord($atom_d);
+
+$xa=Real("$a[4]")+random(0,.005,.001);  ##Given some random perturbations
+$ya=Real("$a[5]")+random(0,.005,.001);
+$za=Real("$a[6]")+random(0,.005,.001);
+
+$xb=Real("$b[4]")+random(0,.005,.001); 
+$yb=Real("$b[5]")+random(0,.005,.001);
+$zb=Real("$b[6]")+random(0,.005,.001);
+
+$xc=Real("$c[4]")+random(0,.005,.001);
+$yc=Real("$c[5]")+random(0,.005,.001); 
+$zc=Real("$c[6]")+random(0,.005,.001);
+
+$xd=Real("$d[4]")+random(0,.005,.001); 
+$yd=Real("$d[5]")+random(0,.005,.001); 
+$zd=Real("$d[6]")+random(0,.005,.001);
+
+$aminoa=&AminoName($a[1]);
+$aminob=&AminoName($b[1]); 
+
+
+
+$fig[0]=image("$aminoa.png",width=>200,height=>200,tex_size=>450);
+$fig[1]=image("$aminob.png",width=>200,height=>200,tex_size=>450);
+
+
+
+
+BEGIN_TEXT
+
+$BCENTER
+$PAR
+Select from the menu which aminoacid corresponds to the structure below. 
+$BR $BR \{ $popup->menu() \} $BR
+$fig $PAR
+
+$ECENTER
+END_TEXT
+
+Context()->texStrings;
+install_problem_grader(~~&std_problem_grader);
+$showPartialCorrectAnswers = 0;
+
+ANS( $popup->cmp() );
+
+Context()->texStrings;
+BEGIN_SOLUTION
+${PAR}SOLUTION:${PAR}
+The graph is the structure of the aminoacid $aminoacid $BR
+END_SOLUTION
+Context()->normalStrings;
+
+
+$u1 = $xa;
+$u2 = $ya;
+$u3 = $za;
+
+$v1 = $xb;
+$v2 = $yb;
+$v3 = $zb;
+
+$w1 = $xc;
+$w2 = $yc;
+$w3= $zc;
+
+$dist = 0;
+
+BEGIN_TEXT 
+$PAR
+TRP 141 is one of essential catalytic aminoacids of the PriA enzyme from $BITALIC Streptomyces Coelicolor $EITALIC. Given the vectors \(u, v,w\) whose coordinates corresponds to the x,y,z-coordiinates of three carbon atoms from the hexan ring of TRP 141, compute the normal vector . $PAR
+
+\{ mbox('Let \(u=\)', display_matrix([[$u1], [$u2], [$u3]]), ', \(v=\)', display_matrix([[$v1], [$v2], [$v3]]), ', \(w=\)', display_matrix([[$w1], [$w2], [$w3]]), '.' ) \} 
+$BR
+
+Calculate:
+$PAR
+\(n=(\mathbf{u-v})\times( \mathbf{w-v}) = \) \{ans_rule()\}
+$BR
+Please express your solution in terms of the vectors \(i,j,k\)$BR
+
+
+END_TEXT
+
+$V1=$u1-$v1;
+$V2=$u2-$v2;
+$V3=$u3-$v3;
+
+$W1=$w1-$v1;
+$W2=$w2-$v2;
+$W3=$w3-$v3;
+
+$cp1=$V2*$W3-$V3*$W2;
+$cp2=-($V1*$W3-$V3*$W1);
+$cp3=$V1*$W2-$V2*$W1;
+
+Context("Vector");
+$A = Compute("<$V1, $V2, $V3>");
+$B = Compute("<$W1, $W2, $W3>");
+$ans = Compute("$cp1 i + $cp2 j + $cp3 k");
+($i, $j, $k) = (Compute("i"), Compute("j"), Compute("k"));
+
+ANS($ans->cmp);
+
+Context()->texStrings;
+
+SOLUTION(EV3(<<'END_SOLUTION'));
+$PAR
+$SOL
+First we calculate the vectors on the plane from points \(v\) to \(u\) and from \(w\) to  \(v\).$PAR
+\((\mathbf{u-v})= ($u1-$v1,$u2-$v2,$u3-$v3)=($V1,$V2,$V3)\) $BR
+
+\(( \mathbf{w-v}) =  ($w1-$v1,$w2-$v2,$w3-$v3)=($W1,$W2,$W3) \) $BR
+
+$BR
+Using the definition of cross product we get:
+$PAR
+\(
+\left|\begin{array}{ccc}
+ $i & $j & $k \\
+ $V1 & $V2 & $V3 \\
+ $W1 & $W2 & $W3 
+\end{array} \right|
+= 
+\left| \begin{array}{ccc}
+ $V2 & $V3 \\
+ $W2 & $W3 
+\end{array} \right| $i
+-  \left| \begin{array}{ccc}
+ $V1 & $V3 \\
+ $W1 & $W3  \end{array} \right| $j
++ \left| \begin{array}{ccc}
+ $V1 & $V2 \\
+ $W1 & $W2  \end{array} \right| $k
+\)
+
+$BR
+
+\(\qquad = \left($V2\cdot $W3-$V3\cdot $W2\right) $i - \left($V1\cdot $W3-$V3\cdot $W1\right) $j + \left($V1\cdot $W2-$V2\cdot $W1\right) $k \)
+
+$BR
+
+\(\qquad = $ans \)
+
+$BR
+END_SOLUTION
+
+###########################################################################
+########## Now the plane equation
+
+
+BEGIN_TEXT
+$PAR
+Now, use your calculated n to obtain the equation of the plane determined for \(u,v,w\)$BR
+
+\{ans_rule(6)\} \(x+\) \{ans_rule(6)\}\(y+\) \{ans_rule(6)\}= \{ans_rule(6)\} $PAR
+$PAR
+END_TEXT
+
+$d=$u1*$cp1+$u2*$cp2+$u3*$cp3;
+
+ANS(num_cmp($cp1));
+ANS(num_cmp($cp2));
+ANS(num_cmp($cp3));
+ANS(num_cmp($d));
+
+
+Context()->texStrings;
+
+SOLUTION(EV3(<<'END_SOLUTION'));
+$PAR
+$SOL
+We use the fact that the plane equation is given by $BR
+\(ax+by+cz=d\) $BR
+where \(n\) is a normal vector and \(p\) a point on the plane with: 
+$BR \(n=(a,b,c)\) , \(p=(x_p,y_p,z_p)\)$BR
+\(d=n\cdot p=a\times x_p+b\times y_p +z\times z_p\) .
+$PAR
+In this case:
+$BR \(n=($cp1,$cp2,$cp3)\) , \(p=($u1,$u2,$u3)\)$BR
+and then $BR
+\(d=$d\) $PAR
+so the plane equations is given by:
+\($cp1 x+$cp2 y+$cp3 z=$d)\)
+
+END_SOLUTION
+
+###########################################################################
+########## Now distance to an external point to the plane
+
+
+BEGIN_TEXT
+$PAR
+Using your plane equation and the normal vector \(n\), compute the distance of another Carbon atom from the TRP given by \(p=$xd,$yd,$zd\) $BR
+
+\(D=\)\{ans_rule(6)\} $PAR
+Think, wht does this distance means $BR
+$PAR
+END_TEXT
+
+$dp=0;
+
+ANS(num_cmp($dp));
+
+# $D=($cp1* $xd+$cp2 *$yd+$cp3* $zd - $d)/(sqrt(($cp1)^2+($cp2)^2+($cp3 )^2));
+ $D=($cp1* $xd+$cp2 *$yd+$cp3* $zd - $d)/(sqrt(($cp1)**2+($cp2)**2+($cp3 )**2));
+
+Context()->texStrings;
+
+SOLUTION(EV3(<<'END_SOLUTION'));
+$PAR
+$SOL
+To calculate the distance between the point \(P=($xd,$yd,$zd)\) to the plane with equation given by:
+\($cp1 x+$cp2 y+$cp3 z-$d=0\) $PAR
+projections will be used $PAR
+
+\(n=( $cp1,$cp2,$cp3)\) is a normal vector to the plane $PAR
+
+a vector from the plane to the point \(P\) is given by $BR
+ \(r=[x-$xd, y-$yd, z-$zd]\)
+$PAR 
+Projecting  \(r\) on \(n = \frac{\|ax+by+cz-ap_x-bp_y-cp_z\|}{\sqrt{a^2+b^2+c^2}}	\)$PAR
+then the distance  \( D\) from the point to the plane is calculated as following: $PAR
+
+  \(D	=	\|Proj_{n}r\|	\) $PAR
+
+	\(=	\frac{\|n\cdot r\|}{\|n\|}	\)$PAR
+
+	\(=	\frac{\|a(x-p_x)+b(y-p_y)+c(z-p_z)\|}{\sqrt{a^2+b^2+c^2}}	\)$PAR
+
+	\(=	\frac{\|ax+by+cz-ap_x-bp_y-cp_z\|}{\sqrt{a^2+b^2+c^2}}	\)$PAR
+       \(=	\frac{\|d-ap_x-bp_y-cp_z\|}{\sqrt{a^2+b^2+c^2}}	\)$PAR
+     \(=	\frac{\|ap_x+bp_y+cp_z-d\|}{\sqrt{a^2+b^2+c^2}}	\)$PAR
+     \(=	\frac{\|$cp1 p_x+$cp2 p_y+$cp3 p_z-d\|}{\sqrt{($cp1)^2+($cp2)^2+($cp3 )^2}}	\)$PAR
+     \(=	\frac{\|$cp1\times $xd+$cp2\times $yd+$cp3\times $zd - $d \|}{\sqrt{($cp1)^2+($cp2)^2+($cp3 )^2}}	\)$PAR
+
+  \(D=$D\) $PAR
+
+D is small because the C atom is also on the hexan ring, and this rings are close to be coplanars.
+END_SOLUTION
+
+ENDDOCUMENT();       # This should be the last executable line in the problem.

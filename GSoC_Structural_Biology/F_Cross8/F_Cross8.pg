@@ -1,0 +1,176 @@
+##DESCRIPTION
+##  Algebra problem: true or false for inequality 
+##ENDDESCRIPTION
+
+##KEYWORDS('algebra', 'inequality', 'fraction')
+
+## DBsubject('Algebra')
+## DBchapter('Fundamentals')
+## DBsection('Real Numbers')
+## Date('6/3/2002')
+## Author('')
+## Institution('')
+## TitleText1('Precalculus')
+## EditionText1('3')
+## AuthorText1('Stewart, Redlin, Watson')
+## Section1('1.1')
+## Problem1('22')
+## DESCRIPTION
+## Linear Algebra
+## ENDDESCRIPTION
+
+## Tagged by tda2d
+
+## DBsubject(Linear algebra)
+## DBchapter(Inner products)
+## DBsection(Projection and distance)
+## Institution('TCNJ')
+## KEYWORDS('inner product' 'orthogonal' 'projection' 'subspace')
+## TitleText1('Linear Algebra with Applications')
+## AuthorText1('Jeffrey Holt')
+## EditionText1('1')
+## Section1('8.2')
+## Problem1('')
+########################################################################
+
+DOCUMENT();      
+
+loadMacros(
+ "PGstandard.pl",     # Standard macros for PG language
+ "MathObjects.pl",
+"PG.pl",
+"PGstandard.pl",
+"PGchoicemacros.pl",
+"PGgraphmacros.pl",
+"unionTables.pl",
+"parserPopUp.pl",
+"PGbasicmacros.pl",
+"PGanswermacros.pl",
+"PGnumericalmacros.pl",
+"PGauxiliaryFunctions.pl",
+"QuantBio.pl",
+"PGmatrixmacros.pl", 
+);
+
+# Print problem number and point value (weight) for the problem
+TEXT(beginproblem());
+
+DOCUMENT();       
+
+TEXT(beginproblem());
+
+$refreshCachedImages=1;
+
+
+$atom_a=random(1,1700,1);
+$atom_b=random(1,1700,1);
+while ($atom_b==$atom_a){$atom_b=random(1,243,1);} ## Making sure are note the same
+
+@a=&PROTcoord($atom_a);
+@b=&PROTcoord($atom_b);
+
+$xa=Real("$a[4]"); $ya=Real("$a[5]"); $za=Real("$a[6]");
+$xb=Real("$b[4]"); $yb=Real("$b[5]"); $zb=Real("$b[6]");
+$aminoa=&AminoName($a[1]);
+$aminob=&AminoName($b[1]); 
+
+$fig[0]=image("$aminoa.png",width=>200,height=>200,tex_size=>450);
+$fig[1]=image("$aminob.png",width=>200,height=>200,tex_size=>450);
+
+
+
+BEGIN_TEXT
+2VEP is one protein structure of phosphoribosyl isomerase A (PriA) from Streptomyces coelicolor, this enzyme is involved in both histidine and tryptophan biosynthesis, the structure was solved at \(1.8A^{\circ}\) .
+$PAR
+
+Go to  \{ htmlLink( "http://www.rcsb.org/pdb/home/home.do", "PDBdatabase" ) \}, look for the PDB file 2VEP an find the x,y,z-coordinates  of: $BR
+
+atom $atom_a of the aminoacid $aminoa from 2VEP $BR \(A=\) (\{$xa->ans_rule(6)\} , \{$ya->ans_rule(6)\} , \{$za->ans_rule(6)\} )$BR
+atom $atom_b of the aminoacid $aminob from 2VEP $BR \(B=\)(\{$xb->ans_rule(6)\} , \{$yb->ans_rule(6)\} , \{$zb->ans_rule(6)\} ) $BR
+$PAR
+Here you have the molecular model of $aminoa, $aminob:$PAR 
+$fig[0] $fig[1]
+
+$BR
+
+END_TEXT
+
+$showPartialCorrectAnswers = 0;
+
+##############################################################
+#
+#  Answers
+#
+#
+
+ANS($xa->cmp);
+ANS($ya->cmp);
+ANS($za->cmp);
+ANS($xb->cmp);
+ANS($yb->cmp);
+ANS($zb->cmp);
+
+###############################################################
+Context()->texStrings;
+BEGIN_SOLUTION
+${PAR}SOLUTION:${PAR}
+This problems gives an idea of the Angstrom distance between atoms of a small DNA molecule. $BR
+First yo have to go to  \{ htmlLink( "http://www.rcsb.org/pdb/home/home.do", "PDBdatabase" ) \}
+is part of the idea of the problem that you know the PDB web site existence. $BR
+There, at the home page you have to search 2VEP, and ask for the PDB file (superior rigth corner). $BR
+
+\(A=\)($xa,$ya,$za) $BR
+\(B=\)($xb,$yb,$zb)
+$PAR
+
+END_SOLUTION
+Context()->normalStrings;
+
+###################################################
+## Now the second part vectors: Projections
+
+$x1 = $xa;
+$x2 = $ya;
+$x3 = $za;
+
+$v1 = $xb;
+$v2 = $yb;
+$v3 = $zb;
+
+$vx = $v1 * $x1 + $v2 * $x2 + $v3 * $x3;
+$norm2x = $x1 * $x1 + $x2 * $x2 + $x3 * $x3; 
+$projvx = $vx/$norm2x; 
+
+$ans1 = $projvx * $x1;
+$ans2 = $projvx * $x2;
+$ans3 = $projvx * $x3;
+
+BEGIN_TEXT
+$PAR
+Angles and distances are important for structural biologists in order to know if two molecules are going to have chemical interaction. $PAR
+Compute the orthogonal projection of \(B=\) onto the line \(L\) through \(A\) and the origin. \(A\) and \(B\) are the coordinates of atoms on the 3D protein structure 2VEP given above.
+$BR
+\{ mbox('\( {\rm proj}_L(B)= \)', answer_matrix(3,1,10), '.' ) \}
+
+END_TEXT
+
+ANS(num_cmp($ans1));
+ANS(num_cmp($ans2));
+ANS(num_cmp($ans3));
+
+
+Context()->texStrings;
+BEGIN_SOLUTION
+${PAR}SOLUTION:${PAR}
+You need to compute:$PAR
+\( A\cdot B= $v1 * $x1 + $v2 * $x2 + $v3 * $x3=$vx\) $PAR
+
+\(\|u\|^2 = $x1 * $x1 + $x2 * $x2 + $x3 * $x3=$norm2x\)$PAR
+\(proj_{yu} = $vx/$norm2x=$projvx\) $PAR
+
+Projection =\( $projvx ( $x1,$x2,$x3) =($ans1,$ans2,$ans3)\)$PAR
+
+END_SOLUTION
+Context()->normalStrings;
+
+ENDDOCUMENT();        

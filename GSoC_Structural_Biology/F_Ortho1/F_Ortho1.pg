@@ -1,0 +1,196 @@
+## DESCRIPTION
+## Linear Algebra and Quantitative Biology
+## nselem84@gmail.com
+## This problem uses real coordinates from molecules to motivate biology students
+## into the linear algebra study. Coordinates were obtained at PDB database and sotred at QuantBio.pl
+## library. So you need to load QuantBio.pl at your macros in order that the problem runs.
+## 
+## ENDDESCRIPTION
+
+## Tagged by nselem84
+
+## DBsubject(Linear algebra)
+## DBchapter(Inner products)
+## DBsection(Projection and distance)
+## Institution('Portland GSoC')
+## KEYWORDS('inner product' 'orthogonal' 'projection' 'distance' 'molecular' 'structure')
+
+DOCUMENT();       
+
+loadMacros(
+"PG.pl",
+"PGstandard.pl",
+"PGchoicemacros.pl",
+"PGgraphmacros.pl",
+"unionTables.pl",
+"parserPopUp.pl",
+"PGbasicmacros.pl",
+"PGanswermacros.pl",
+"PGnumericalmacros.pl",
+"PGauxiliaryFunctions.pl",
+"QuantBio.pl",
+"PGmatrixmacros.pl", 
+
+);
+
+
+
+
+TEXT(beginproblem());
+
+$refreshCachedImages=1;
+
+
+  $fig[0]=image("Adenine.png",width=>50,height=>50,tex_size=>450);
+  $fig[1]=image("Guanina.png",width=>50,height=>50,tex_size=>450);
+  $fig[2]=image("Thymine.png",width=>50,height=>50,tex_size=>450);
+  $fig[3]=image("Cytosine.png",width=>50,height=>50,tex_size=>450);
+
+@eqn =("Adenine",  "Guanine", "Thymine", "Cytosine");
+$k = random(0,3,1);
+
+@perm = shuffle(4);
+@fig = @fig[@perm];
+@inv = invert(@perm);
+
+@letter = ("A", "B", "C", "D");
+$molecule=$eqn[$k];
+$popup = PopUp(["?","A","B","C","D"], $letter[$inv[$k]]);
+
+$atom_a=random(1,243,1);
+$atom_b=random(1,243,1);
+while ($atom_b==$atom_a){$atom_b=random(1,243,1);} ## Making sure are note the same
+
+@a=&DNAcoord($atom_a);
+@b=&DNAcoord($atom_b);
+
+$xa=Real("$a[4]"); $ya=Real("$a[5]"); $za=Real("$a[6]");
+$xb=Real("$b[4]"); $yb=Real("$b[5]"); $zb=Real("$b[6]");
+BEGIN_TEXT
+In May 1981, 1BNA was one of the first crystallographic DNA structures to be stored at the PDB database. It is just 12 nucleotides long --CGCGAATTCGCG--, completing slightly more than one turn of right-handed double-stranded B helix. $PAR
+
+Go to  \{ htmlLink( "http://www.rcsb.org/pdb/home/home.do", "PDBdatabase" ) \}, look for the PDB 1BNA  file an find the x,y,z-coordinates of: $BR
+
+Atom $atom_a of the DNA chain: \( A=\)(\{$xa->ans_rule(6)\} , \{$ya->ans_rule(6)\} , \{$za->ans_rule(6)\} )$BR
+Atom $atom_b of the DNA chain: \(B=\)(\{$xb->ans_rule(6)\} , \{$yb->ans_rule(6)\} , \{$zb->ans_rule(6)\} ) $BR
+
+$PAR
+To which nucleotide belongs Atom $atom_a?  
+\{ $popup->menu() \}
+$BR
+$BR
+$BCENTER
+\{
+BeginTable().
+  AlignedRow([$fig[0],$fig[1],$fig[2],$fig[3]]).
+  TableSpace(5,0).
+  AlignedRow(["A","B","C","D"]).
+EndTable();
+\}
+$BR
+(Click on a graph to enlarge it.)
+$ECENTER
+
+END_TEXT
+$showPartialCorrectAnswers = 0;
+
+##############################################################
+#
+#  Answers
+#
+#
+
+ANS($xa->cmp);
+ANS($ya->cmp);
+ANS($za->cmp);
+ANS($xb->cmp);
+ANS($yb->cmp);
+ANS($zb->cmp);
+ANS( $popup->cmp() );
+
+###############################################################
+Context()->texStrings;
+BEGIN_SOLUTION
+${PAR}SOLUTION:${PAR}
+This problems gives an idea of the Angstrom distance between atoms of a small DNA molecule. $BR
+First yo have to go to  \{ htmlLink( "http://www.rcsb.org/pdb/home/home.do", "PDBdatabase" ) \}
+is part of the idea of the problem that you know the PDB web site existence. $BR
+There, at the home page you have to search 1BNA, and ask for the PDB file (superior rigth corner). $BR
+
+\(A=\)($xa,$ya,$za) $BR
+\(B=\)($xb,$yb,$zb)
+$PAR
+
+END_SOLUTION
+Context()->normalStrings;
+
+###################################################
+## Now the second part vectors: Distance From A to B
+
+
+$a = $xa;
+$b = $ya;
+$c = $za;
+
+$d = $xb;
+$e = $yb;
+$f = $zb;
+
+
+
+BEGIN_TEXT
+$PAR
+Angles and distances are important for structural biologists in order to know if two molecules are going to interact. Consider that an enzyme is attaching to the double strand in an orthogonal angle to both vectors \( A \) and \(B\) $PAR
+
+Find a vector \(W\) in the direction the enzyme travels, i.e. perpendicular to both vectors \( A\)
+ 	 and \(B\) such that the z coordinate of \(W \) equals 1. 
+
+$BR
+\{ mbox( '\( W= \)', answer_matrix(3,1,20), '.' ) \}
+$PAR  
+END_TEXT
+$det=$xa*$yb-$ya*$xb;
+$x_W=(1/$det)*(-$yb*$za+$ya*$zb);
+$y_W=(1/$det)*($xb*$za-$xa*$zb);
+
+ANS(num_cmp($x_W));
+ANS(num_cmp($y_W));
+ANS(num_cmp(1));
+
+$ina=$x_W*$xa+$y_W*$ya+$za;
+$inb=$x_W*$xb+$y_W*$yb+$zb;
+###############################################################
+Context()->texStrings;
+BEGIN_SOLUTION
+${PAR}SOLUTION:${PAR}
+You have to use the fact that orthogonal vectors have dot product equal to zero. $BR
+So if \(W=(x_W,y_W,z_W)\) you need to solve the equations $PAR
+\(A \cdot W = 0 \) $BR 
+\(B \cdot W = 0 \) $BR 
+\(z_W=1\) $PAR
+
+then $BR
+\(x_A\times x_W +y_A\times y_W+z_A\times1=0 \) $BR
+\(x_B\times x_W +y_B\times y_W+z_B\times1=0 \) $BR
+$PAR 
+
+\($xa\times x_W +$ya\times y_W+$za\times1=0 \) $BR
+\($xb\times x_W +$yb\times y_W+$zb\times1=0 \) $BR
+
+$PAR 
+\($xa\times x_W +$ya\times y_W=-$za \) $BR
+\($xb\times x_W +$yb\times y_W=-$zb \) $BR
+
+then $BR
+\(det=$xa*$yb-$ya*$xb\)
+\(x_W=\frac{1}{det}\times(-$yb\times$za+$ya\times$zb)\)
+\(y_W=\frac{1}{det}\times($xb\times$za-$xa\times$zb)\)
+
+END_SOLUTION
+
+Context()->normalStrings;
+
+###################################################
+
+
+ENDDOCUMENT();

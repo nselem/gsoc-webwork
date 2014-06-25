@@ -1,0 +1,199 @@
+## DESCRIPTION
+## Linear Algebra and Quantitative Biology
+## nselem84@gmail.com
+## This problem uses real coordinates from molecules to motivate biology students
+## into the linear algebra study. Coordinates were obtained at PDB database and sotred at QuantBio.pl
+## library. So you need to load QuantBio.pl at your macros in order that the problem runs.
+## 
+## ENDDESCRIPTION
+
+## Tagged by nselem84
+
+## DBsubject(Linear algebra)
+## DBchapter(Inner products)
+## DBsection(Projection and distance)
+## Institution('Portland GSoC')
+## KEYWORDS('inner product' 'orthogonal' 'projection' 'distance' 'molecular' 'structure')
+##################################################
+
+DOCUMENT();      
+
+loadMacros("PGstandard.pl",   "MathObjects.pl", "PGstandard.pl",
+"unionTables.pl",
+"parserPopUp.pl",
+"PGbasicmacros.pl",
+"PGnumericalmacros.pl",
+"QuantBio.pl",
+"PGmatrixmacros.pl", 
+);
+
+loadMacros("PG.pl","PGbasicmacros.pl","PGanswermacros.pl");
+loadMacros("Parser.pl");
+loadMacros("freemanMacros.pl");
+loadMacros("PGauxiliaryFunctions.pl");
+loadMacros("PGgraphmacros.pl");
+loadMacros("PGchoicemacros.pl");
+
+# Print problem number and point value (weight) for the problem
+TEXT(beginproblem());
+
+DOCUMENT();       
+
+$refreshCachedImages=1;
+
+
+$atom_a=random(1,1700,1);
+$atom_b=random(1,1700,1);
+while ($atom_b==$atom_a){$atom_b=random(1,243,1);} ## Making sure are note the same
+
+@a=&PROTcoord($atom_a);
+@b=&PROTcoord($atom_b);
+
+$xa=Real("$a[4]"); $ya=Real("$a[5]"); $za=Real("$a[6]");
+$xb=Real("$b[4]"); $yb=Real("$b[5]"); $zb=Real("$b[6]");
+$aminoa=&AminoName($a[1]);
+$aminob=&AminoName($b[1]); 
+
+$fig[0]=image("$aminoa.png",width=>200,height=>200,tex_size=>450);
+$fig[1]=image("$aminob.png",width=>200,height=>200,tex_size=>450);
+
+
+
+BEGIN_TEXT
+2VEP is one protein structure of phosphoribosyl isomerase A (PriA) from Streptomyces coelicolor, this enzyme is involved in both histidine and tryptophan biosynthesis, the structure was solved at \(1.8A^{\circ}\) .
+$PAR
+
+Go to  \{ htmlLink( "http://www.rcsb.org/pdb/home/home.do", "PDBdatabase" ) \}, look for the PDB file 2VEP an find the x,y,z-coordinates  of: $BR
+
+atom $atom_a of the aminoacid $aminoa from 2VEP $BR \(A=\) (\{$xa->ans_rule(6)\} , \{$ya->ans_rule(6)\} , \{$za->ans_rule(6)\} )$BR
+atom $atom_b of the aminoacid $aminob from 2VEP $BR \(B=\)(\{$xb->ans_rule(6)\} , \{$yb->ans_rule(6)\} , \{$zb->ans_rule(6)\} ) $BR
+$PAR
+Here you have the molecular model of $aminoa, $aminob:$PAR 
+$fig[0] $fig[1]
+
+$BR
+
+END_TEXT
+
+$showPartialCorrectAnswers = 0;
+
+##############################################################
+#
+#  Answers
+#
+#
+
+ANS($xa->cmp);
+ANS($ya->cmp);
+ANS($za->cmp);
+ANS($xb->cmp);
+ANS($yb->cmp);
+ANS($zb->cmp);
+
+###############################################################
+Context()->texStrings;
+BEGIN_SOLUTION
+${PAR}SOLUTION:${PAR}
+This problems gives an idea of the Angstrom distance between atoms of a small DNA molecule. $BR
+First yo have to go to  \{ htmlLink( "http://www.rcsb.org/pdb/home/home.do", "PDBdatabase" ) \}
+is part of the idea of the problem that you know the PDB web site existence. $BR
+There, at the home page you have to search 2VEP, and ask for the PDB file (superior rigth corner). $BR
+
+\(A=\)($xa,$ya,$za) $BR
+\(B=\)($xb,$yb,$zb)
+$PAR
+
+END_SOLUTION
+Context()->normalStrings;
+
+###################################################
+## Now the second part vectors: A cross product B
+
+
+$a = $xa;
+$b = $ya;
+$c = $za;
+
+$d = $xb;
+$e = $yb;
+$f = $zb;
+
+BEGIN_TEXT
+$PAR
+Molecules move inside the cell due to different forces acting over them. In order to generate molecular dynamics simulations, this forces and their directions need to be calculated. The cross product is an easy way to obtain a vector normal to the plane generated from vectors \( A \) and \(B\). Calculate the cross product of the vectors defined by the coordinates of the atoms that you found at the 2VEP PDB. $PAR
+
+Calculate:
+$PAR
+\(\mathbf{A}\times \mathbf{B} = \) \{ans_rule()\}
+$BR
+Please express your solution in terms of the vectors \(i,j,k\)$BR
+
+
+END_TEXT
+
+Context()->normalStrings;
+
+$v1=$xa;
+$v2=$ya;
+$v3=$za;
+
+$w1=$xb;
+$w2=$yb;
+$w3=$zb;
+
+$cp1=$v2*$w3-$v3*$w2;
+$cp2=-($v1*$w3-$v3*$w1);
+$cp3=$v1*$w2-$v2*$w1;
+
+Context("Vector");
+$A = Compute("<$v1, $v2, $v3>");
+$B = Compute("<$w1, $w2, $w3>");
+$ans = Compute("$cp1 i + $cp2 j + $cp3 k");
+($i, $j, $k) = (Compute("i"), Compute("j"), Compute("k"));
+
+ANS($ans->cmp);
+
+Context()->texStrings;
+
+SOLUTION(EV3(<<'END_SOLUTION'));
+$PAR
+$SOL
+$BR
+Using the definition of cross product we get:
+$PAR
+\(
+\left|\begin{array}{ccc}
+ $i & $j & $k \\
+ $v1 & $v2 & $v3 \\
+ $w1 & $w2 & $w3 
+\end{array} \right|
+= 
+\left| \begin{array}{ccc}
+ $v2 & $v3 \\
+ $w2 & $w3 
+\end{array} \right| $i
+-  \left| \begin{array}{ccc}
+ $v1 & $v3 \\
+ $w1 & $w3  \end{array} \right| $j
++ \left| \begin{array}{ccc}
+ $v1 & $v2 \\
+ $w1 & $w2  \end{array} \right| $k
+\)
+
+$BR
+
+\(\qquad = \left($v2\cdot $w3-$v3\cdot $w2\right) $i - \left($v1\cdot $w3-$v3\cdot $w1\right) $j + \left($v1\cdot $w2-$v2\cdot $w1\right) $k \)
+
+$BR
+
+\(\qquad = $ans \)
+
+$BR
+END_SOLUTION
+
+
+
+
+
+
+ENDDOCUMENT();        

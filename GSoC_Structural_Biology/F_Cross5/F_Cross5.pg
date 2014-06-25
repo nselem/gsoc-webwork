@@ -1,0 +1,177 @@
+##DESCRIPTION
+##  Algebra problem: true or false for inequality 
+##ENDDESCRIPTION
+
+##KEYWORDS('algebra', 'inequality', 'fraction')
+
+## DBsubject('Algebra')
+## DBchapter('Fundamentals')
+## DBsection('Real Numbers')
+## Date('6/3/2002')
+## Author('')
+## Institution('')
+## TitleText1('Precalculus')
+## EditionText1('3')
+## AuthorText1('Stewart, Redlin, Watson')
+## Section1('1.1')
+## Problem1('22')
+
+########################################################################
+
+DOCUMENT();      
+
+loadMacros(
+ "PGstandard.pl",     # Standard macros for PG language
+ "MathObjects.pl",
+"PG.pl",
+"PGstandard.pl",
+"PGchoicemacros.pl",
+"PGgraphmacros.pl",
+"unionTables.pl",
+"parserPopUp.pl",
+"PGbasicmacros.pl",
+"PGanswermacros.pl",
+"PGnumericalmacros.pl",
+"PGauxiliaryFunctions.pl",
+"QuantBio.pl",
+"PGmatrixmacros.pl", 
+);
+
+# Print problem number and point value (weight) for the problem
+TEXT(beginproblem());
+
+DOCUMENT();       
+
+TEXT(beginproblem());
+
+$refreshCachedImages=1;
+
+
+$atom_a=random(1,1700,1);
+$atom_b=random(1,1700,1);
+while ($atom_b==$atom_a){$atom_b=random(1,243,1);} ## Making sure are note the same
+
+@a=&PROTcoord($atom_a);
+@b=&PROTcoord($atom_b);
+
+$xa=Real("$a[4]"); $ya=Real("$a[5]"); $za=Real("$a[6]");
+$xb=Real("$b[4]"); $yb=Real("$b[5]"); $zb=Real("$b[6]");
+$aminoa=&AminoName($a[1]);
+$aminob=&AminoName($b[1]); 
+
+$fig[0]=image("$aminoa.png",width=>200,height=>200,tex_size=>450);
+$fig[1]=image("$aminob.png",width=>200,height=>200,tex_size=>450);
+
+
+
+BEGIN_TEXT
+2VEP is one structure of phosphoribosyl isomerase A (PriA) from Streptomyces coelicolor, this enzyme is involved in both histidine and tryptophan biosynthesis, the structure was solved at 1.8A resolution detecting catalytic residues Asp11 and Asp130 as responsible for both activities.
+$PAR
+
+Go to  \{ htmlLink( "http://www.rcsb.org/pdb/home/home.do", "PDBdatabase" ) \}, look for the PDB file 2VEP an find the coordinates x,y,z of $BR
+
+Atom $atom_a of the aminoacid $aminoa from 2VEP $BR \(A=\) (\{$xa->ans_rule(6)\} , \{$ya->ans_rule(6)\} , \{$za->ans_rule(6)\} )$BR
+Atom $atom_b of the aminoacid $aminob from 2VEP $BR \(B=\)(\{$xb->ans_rule(6)\} , \{$yb->ans_rule(6)\} , \{$zb->ans_rule(6)\} ) $BR
+$PAR
+Here you have the molecular model to construct$PAR $fig[0] $fig[1]
+
+$BR
+
+END_TEXT
+
+$showPartialCorrectAnswers = 0;
+
+##############################################################
+#
+#  Answers
+#
+#
+
+ANS($xa->cmp);
+ANS($ya->cmp);
+ANS($za->cmp);
+ANS($xb->cmp);
+ANS($yb->cmp);
+ANS($zb->cmp);
+
+###############################################################
+Context()->texStrings;
+BEGIN_SOLUTION
+${PAR}SOLUTION:${PAR}
+This problems gives an idea of the Angstrom distance between atoms of a small DNA molecule. $BR
+First yo have to go to  \{ htmlLink( "http://www.rcsb.org/pdb/home/home.do", "PDBdatabase" ) \}
+is part of the idea of the problem that you know the PDB web site existence. $BR
+There, at the home page you have to search 2VEP, and ask for the PDB file (superior rigth corner). $BR
+
+\(A=\)($xa,$ya,$za) $BR
+\(B=\)($xb,$yb,$zb)
+$PAR
+
+END_SOLUTION
+Context()->normalStrings;
+
+###################################################
+## Now the second part vectors: Distance From A to B
+
+
+$a = $xa;
+$b = $ya;
+$c = $za;
+
+$d = $xb;
+$e = $yb;
+$f = $zb;
+
+BEGIN_TEXT
+$PAR
+Angles and distances are important for structural biologists in order to know if two molecules are going to interact. Consider that an enzyme is atacking the double strand in an orthogonal angle to both atoms \( A \) and \(B\) $PAR
+
+\{ mbox( 'Find a vector \(W\) perpendicular to both vectors \(\hat A=\)', display_matrix([[$a], [$b], [$c]]), 
+ 	 ' and \(B=\)', display_matrix([[$d], [$e], [$f]]), '.' ) \} such that z coordinate of \(W \) equal to 1. 
+
+$BR
+\{ mbox( '\( W= \)', answer_matrix(3,1,20), '.' ) \}
+$PAR  
+END_TEXT
+$det=$xa*$yb-$ya*$xb;
+$x_W=(1/$det)*(-$yb*$za+$ya*$zb);
+$y_W=(1/$det)*($xb*$za-$xa*$zb);
+
+ANS(num_cmp($x_W));
+ANS(num_cmp($y_W));
+ANS(num_cmp(1));
+
+$ina=$x_W*$xa+$y_W*$ya+$za;
+$inb=$x_W*$xb+$y_W*$yb+$zb;
+###############################################################
+Context()->texStrings;
+BEGIN_SOLUTION
+${PAR}SOLUTION:${PAR}
+You have to use the fact that orthogonal vectors have dot product equal to zero. $BR
+So if \(W=(x_W,y_W,z_W)\) you need to solve the equations $PAR
+\(A \cdot W = 0 \) $BR 
+\(B \cdot W = 0 \) $BR 
+\(z_W=1\) $PAR
+
+then $BR
+\(x_A\times x_W +y_A\times y_W+z_A\times1=0 \) $BR
+\(x_B\times x_W +y_B\times y_W+z_B\times1=0 \) $BR
+$PAR 
+
+\($xa\times x_W +$ya\times y_W+$za\times1=0 \) $BR
+\($xb\times x_W +$yb\times y_W+$zb\times1=0 \) $BR
+
+$PAR 
+\($xa\times x_W +$ya\times y_W=-$za \) $BR
+\($xb\times x_W +$yb\times y_W=-$zb \) $BR
+
+then $BR
+\(det=$xa*$yb-$ya*$xb\)
+\(x_W=\frac{1}{det}\times(-$yb\times$za+$ya\times$zb)\)
+\(y_W=\frac{1}{det}\times($xb\times$za-$xa\times$zb)\)
+
+END_SOLUTION
+
+Context()->normalStrings;
+
+ENDDOCUMENT();        

@@ -1,0 +1,208 @@
+## DESCRIPTION
+## Linear Algebra and Quantitative Biology
+## nselem84@gmail.com
+## This problem uses real coordinates from molecules to motivate biology students
+## into the linear algebra study. Coordinates were obtained at PDB database and sotred at QuantBio.pl
+## library. So you need to load QuantBio.pl at your macros in order that the problem runs.
+## 
+## ENDDESCRIPTION
+
+## Tagged by nselem84
+
+## DBsubject(Linear algebra)
+## DBchapter(Inner products)
+## DBsection(Projection and distance)
+## Institution('Portland GSoC')
+## KEYWORDS('inner product' 'orthogonal' 'projection' 'distance' 'molecular' 'structure')
+
+DOCUMENT();        # This should be the first executable line in the problem.
+
+loadMacros("PG.pl","PGbasicmacros.pl","PGanswermacros.pl",
+"PGmatrixmacros.pl", "PGnumericalmacros.pl","PGauxiliaryFunctions.pl", "PGstandard.pl", "MathObjects.pl","PGchoicemacros.pl","PGgraphmacros.pl",
+"unionTables.pl","parserPopUp.pl",   "QuantBio.pl");
+
+TEXT(beginproblem());
+$showPartialCorrectAnswers = 1;
+
+DOCUMENT();      
+
+##############################################################
+#
+#  Setup
+#
+#
+Context("Numeric");
+
+$aminoacid="Tryptophan";
+
+#_ Tryptophan image:
+$fig=image("$aminoacid.png",width=>200,height=>200,tex_size=>450);
+
+##
+@perm = shuffle(20);
+@Aminos;
+for ($i=0;$i<20;$i++){
+     if ($i!=$k){
+            $Amino[$perm[$i]]=&Amino($perm[$i]);
+            }
+      else{
+            $Amino[$perm[$i]]=$aminoacid;
+           }
+      }
+
+$popup = PopUp(["?","$Amino[$perm[0]]","$Amino[$perm[1]]","$Amino[$perm[2]]","$Amino[$perm[3]]","$Amino[$perm[4]]","$Amino[$perm[5]]","$Amino[$perm[6]]","$Amino[$perm[7]]","$Amino[$perm[8]]","$Amino[$perm[9]]","$Amino[$perm[10]]","$Amino[$perm[11]]","$Amino[$perm[12]]","$Amino[$perm[13]]","$Amino[$perm[14]]","$Amino[$perm[15]]","$Amino[$perm[17]]","$Amino[$perm[18]]","$Amino[$perm[19]]"], $aminoacid);
+
+
+#$_2VEP{1039}=["CE2","TRP","A","141","17.468","-0.064","22.489","1","68.78","C"];
+#$_2VEP{1040}=["CE3","TRP","A","141","19.101","1.532","23.307","1","68.65","C"];
+#$_2VEP{1041}=["CZ2","TRP","A","141","17.986","-1.084","23.305","1","68.37","C"];
+#$_2VEP{1042}=["CZ3","TRP","A","141","19.617","0.515","24.12","1","68.19","C"];
+#$_2VEP{1043}=["CH2","TRP","A","141","19.057","-0.774","24.11","1","68.26","C"];
+
+##################################################################
+##########
+###### Getting coordinates of Carbon atoms from TRP 141
+### 
+$atom_a=1039;
+$atom_b=1040;
+$atom_c=1041;
+$atom_d=1042;
+
+@a=&PROTcoord($atom_a);
+@b=&PROTcoord($atom_b);
+@c=&PROTcoord($atom_c);
+@d=&PROTcoord($atom_d);
+
+$xa=Real("$a[4]")+random(0,.005,.001);  ##Given some random perturbations
+$ya=Real("$a[5]")+random(0,.005,.001);
+$za=Real("$a[6]")+random(0,.005,.001);
+
+$xb=Real("$b[4]")+random(0,.005,.001); 
+$yb=Real("$b[5]")+random(0,.005,.001);
+$zb=Real("$b[6]")+random(0,.005,.001);
+
+$xc=Real("$c[4]")+random(0,.005,.001);
+$yc=Real("$c[5]")+random(0,.005,.001); 
+$zc=Real("$c[6]")+random(0,.005,.001);
+
+$xd=Real("$d[4]")+random(0,.005,.001); 
+$yd=Real("$d[5]")+random(0,.005,.001); 
+$zd=Real("$d[6]")+random(0,.005,.001);
+
+$aminoa=&AminoName($a[1]);
+$aminob=&AminoName($b[1]); 
+
+
+
+$fig[0]=image("$aminoa.png",width=>200,height=>200,tex_size=>450);
+$fig[1]=image("$aminob.png",width=>200,height=>200,tex_size=>450);
+
+
+
+
+BEGIN_TEXT
+
+$BCENTER
+$PAR
+Select from the menu which aminoacid corresponds to the structure below. 
+$BR $BR \{ $popup->menu() \} $BR
+$fig $PAR
+
+$ECENTER
+END_TEXT
+
+Context()->texStrings;
+install_problem_grader(~~&std_problem_grader);
+$showPartialCorrectAnswers = 0;
+
+ANS( $popup->cmp() );
+
+Context()->texStrings;
+BEGIN_SOLUTION
+${PAR}SOLUTION:${PAR}
+The graph is the structure of the aminoacid $aminoacid $BR
+END_SOLUTION
+Context()->normalStrings;
+
+
+$u1 = $xa;
+$u2 = $ya;
+$u3 = $za;
+
+$v1 = $xb;
+$v2 = $yb;
+$v3 = $zb;
+
+$w1 = $xc;
+$w2 = $yc;
+$w3= $zc;
+
+BEGIN_TEXT 
+$PAR
+TRP 141 is one of essential catalytic aminoacids of the PriA enzyme from $BITALIC Streptomyces Coelicolor $EITALIC. Given the vectors \(u, v,w\) whose coordinates corresponds to the x,y,z-coordiinates of three carbon atoms from the hexan ring of TRP 141, compute the normal vector . $PAR
+
+\{ mbox('Let \(u=\)', display_matrix([[$u1], [$u2], [$u3]]), ', \(v=\)', display_matrix([[$v1], [$v2], [$v3]]), ', \(w=\)', display_matrix([[$w1], [$w2], [$w3]]), '.' ) \} 
+$BR
+
+Find the angle between the segment \(uv\) and  segment \(wv\):
+$PAR
+\(\alpha= \) \{ans_rule()\}
+$BR
+
+END_TEXT
+######### Difference vectors
+$V1=$u1-$v1;
+$V2=$u2-$v2;
+$V3=$u3-$v3;
+
+$W1=$w1-$v1;
+$W2=$w2-$v2;
+$W3=$w3-$v3;
+
+
+###################################################
+## Now the second part vectors: angles
+
+	$prod = $V1*$W1+$V2*$W2+$V3*$W3;
+        $norm_V = sqrt(($V1*$V1)+$V2*$V2+$V3*$V3);
+        $norm_W = sqrt($W1*$W1+$W2*$W2+$W3*$W3);
+
+$angle = arccos( $prod / $norm_V / $norm_W);
+
+ANS(num_cmp($angle));
+
+###############################################################
+Context()->texStrings;
+BEGIN_SOLUTION
+${PAR}SOLUTION:${PAR}
+The vectors $PAR
+\(V=u-v\) $BR
+$V1=$u1-$v1; $BR
+$V2=$u2-$v2; $BR
+$V3=$u3-$v3; $BR
+\(V=$V1,$V2,$V3\)
+$PAR and 
+$BR
+\(W=w-v\) $BR
+$W1=$w1-$v1; $BR
+$W2=$w2-$v2; $BR
+$W3=$w3-$v3; $BR
+
+\(W=$W1,$W2,$W3\) $PAR
+We are going to use the equation \(V\cdot W=\|V\| \|W\|\cos\alpha\) $BR
+\(V\cdot W=\) $V1*$W1+$V2*$W2+$V3*$W3 $BR
+        =$prod $PAR
+\(\|V\|=\sqrt{($V1*$V1)+($V2*$V2)+($V3*$V3)}= $norm_V  \)$BR
+\(\|W\|= \sqrt{($W1*$W1)+($W2*$W2)+($W3*$W3)}=  $norm_W \)$BR
+$PAR
+Then 
+$PAR 
+\(\alpha=arccos( \frac{$prod }{ $norm_V \times $norm_W})=$angle \)
+
+$PAR
+
+
+END_SOLUTION
+Context()->normalStrings;
+
+ENDDOCUMENT();       # This should be the last executable line in the problem.

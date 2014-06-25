@@ -1,0 +1,82 @@
+## DESCRIPTION
+## Linear Algebra and Quantitative Biology
+## nselem84@gmail.com
+## This problem uses real coordinates from molecules to motivate biology students
+## into the linear algebra study. Coordinates were obtained at PDB database and sotred at QuantBio.pl
+## library. So you need to load QuantBio.pl at your macros in order that the problem runs.
+## 
+## ENDDESCRIPTION
+
+## Tagged by nselem84
+
+## DBsubject(Linear algebra)
+## DBchapter(Inner products)
+## DBsection(Projection and distance)
+## Institution('Portland GSoC')
+## KEYWORDS('inner product' 'orthogonal' 'projection' 'distance' 'molecular' 'structure')
+
+DOCUMENT();       
+
+loadMacros(
+"PGstandard.pl",
+"PGchoicemacros.pl",
+"PGgraphmacros.pl",
+"unionTables.pl",
+"parserPopUp.pl",
+);
+       
+TEXT(beginproblem());
+
+$refreshCachedImages=1;
+
+
+  $fig[0]=image("Adenine.png",width=>200,height=>200,tex_size=>450);
+  $fig[1]=image("Guanina.png",width=>200,height=>200,tex_size=>450);
+  $fig[2]=image("Thymine.png",width=>200,height=>200,tex_size=>450);
+  $fig[3]=image("Cytosine.png",width=>200,height=>200,tex_size=>450);
+
+@eqn =("Adenine",  "Guanine", 
+       "Thymine", "Cytosine");
+
+$k = random(0,3,1);
+
+@perm = shuffle(4);
+@fig = @fig[@perm];
+@inv = invert(@perm);
+
+@letter = ("A", "B", "C", "D");
+$molecule=$eqn[$k];
+$popup = PopUp(["?","A","B","C","D"], $letter[$inv[$k]]);
+
+BEGIN_TEXT
+$BR
+$BR
+Which graph corresponds to $molecule structure?  
+\{ $popup->menu() \}
+$BR
+$BR
+$BCENTER
+\{
+BeginTable().
+  AlignedRow([$fig[0],$fig[1]]).
+  TableSpace(5,0).
+  AlignedRow(["A","B"]).
+  TableSpace(25,6).
+  AlignedRow([$fig[2],$fig[3]]).
+  TableSpace(5,0).
+  AlignedRow(["C","D"]).
+EndTable();
+\}
+$BR
+(Click on a graph to enlarge it.)
+$ECENTER
+
+
+END_TEXT
+
+install_problem_grader(~~&std_problem_grader);
+$showPartialCorrectAnswers = 0;
+
+ANS( $popup->cmp() );
+
+ENDDOCUMENT();
