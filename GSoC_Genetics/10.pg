@@ -1,0 +1,156 @@
+##DESCRIPTION
+##  GSoC - Genetics
+##ENDDESCRIPTION
+
+##KEYWORDS('Genetics')
+
+## DBsubject('Genetics')
+## DBchapter('Fundamentals')
+## DBsection('')
+## Date('5/1/2014')
+## Author('Nelly Selem')
+## Institution('GSoC')
+
+########################################################################
+
+DOCUMENT();      
+
+loadMacros(
+   "PGstandard.pl",     # Standard macros for PG language
+   "MathObjects.pl",
+   "GSoC_Genetics.pl",
+   "PGchoicemacros.pl"
+   #"source.pl",        # allows code to be displayed on certain sites.
+   #"PGcourse.pl",      # Customization file for the course
+);
+
+# Print problem number and point value (weight) for the problem
+TEXT(beginproblem());
+
+# Show which answers are correct and which ones are incorrect
+$showPartialCorrectAnswers = 1;
+
+# A
+
+SRAND($problemSeed);
+$as = random(0, 1000000);
+$ai = random(0, 4);
+$a = Genetics_DrawPedigree(Genetics_RandomPedigree($as, 5, 0.5, 0.5, 2, 4, $ai == 0 ? 'autosomic dominant' : ($ai == 1 ? 'autosomic recessive' : ($ai == 2 ? 'x-linked' : ($ai == 3 ? 'y-linked' : 'mitochondrial')))));
+$v = new_select_list();
+$v->rf_print_q(~~&pop_up_list_print_q);
+$v->ra_pop_up_list([
+		"No answer" => "?",
+		"0"  => "Autosomic Dominant",
+		"1"  => "Autosomic Recessive",
+		"2"  => "X-Linked",
+		"3"  => "Y-Linked",
+		"4"  => "Mitochondrial"
+	]);
+$v->qa("Inheritance pattern", sprintf("%i", $ai));
+$v->choose(1);
+
+$bs = random(0, 1000000);
+$bi = random(0, 4);
+$b = Genetics_DrawPedigree(Genetics_RandomPedigree($bs, 5, 0.5, 0.5, 2, 4, $bi == 0 ? 'autosomic dominant' : ($bi == 1 ? 'autosomic recessive' : ($bi == 2 ? 'x-linked' : ($bi == 3 ? 'y-linked' : 'mitochondrial')))));
+$w = new_select_list();
+$w->rf_print_q(~~&pop_up_list_print_q);
+$w->ra_pop_up_list([
+		"No answer" => "?",
+		"0"  => "Autosomic Dominant",
+		"1"  => "Autosomic Recessive",
+		"2"  => "X-Linked",
+		"3"  => "Y-Linked",
+		"4"  => "Mitochondrial"
+	]);
+$w->qa("Inheritance pattern", sprintf("%i", $bi));
+$w->choose(1);
+
+$cs = random(0, 1000000);
+$ci = random(0, 4);
+$c = Genetics_DrawPedigree(Genetics_RandomPedigree($cs, 5, 0.5, 0.5, 2, 4, $ci == 0 ? 'autosomic dominant' : ($ci == 1 ? 'autosomic recessive' : ($ci == 2 ? 'x-linked' : ($ci == 3 ? 'y-linked' : 'mitochondrial')))));
+$x = new_select_list();
+$x->rf_print_q(~~&pop_up_list_print_q);
+$x->ra_pop_up_list([
+		"No answer" => "?",
+		"0"  => "Autosomic Dominant",
+		"1"  => "Autosomic Recessive",
+		"2"  => "X-Linked",
+		"3"  => "Y-Linked",
+		"4"  => "Mitochondrial"
+	]);
+$x->qa("Inheritance pattern", sprintf("%i", $ci));
+$x->choose(1);
+
+$ds = random(0, 1000000);
+$di = random(0, 4);
+$d = Genetics_DrawPedigree(Genetics_RandomPedigree($ds, 5, 0.5, 0.5, 2, 4, $di == 0 ? 'autosomic dominant' : ($di == 1 ? 'autosomic recessive' : ($di == 2 ? 'x-linked' : ($di == 3 ? 'y-linked' : 'mitochondrial')))));
+$y = new_select_list();
+$y->rf_print_q(~~&pop_up_list_print_q);
+$y->ra_pop_up_list([
+		"No answer" => "?",
+		"0"  => "Autosomic Dominant",
+		"1"  => "Autosomic Recessive",
+		"2"  => "X-Linked",
+		"3"  => "Y-Linked",
+		"4"  => "Mitochondrial"
+	]);
+$y->qa("Inheritance pattern", sprintf("%i", $di));
+$y->choose(1);
+
+$es = random(0, 1000000);
+$ei = random(0, 4);
+$e = Genetics_DrawPedigree(Genetics_RandomPedigree($es, 5, 0.5, 0.5, 2, 4, $ei == 0 ? 'autosomic dominant' : ($ei == 1 ? 'autosomic recessive' : ($ei == 2 ? 'x-linked' : ($ei == 3 ? 'y-linked' : 'mitochondrial')))));
+$z = new_select_list();
+$z->rf_print_q(~~&pop_up_list_print_q);
+$z->ra_pop_up_list([
+		"No answer" => "?",
+		"0"  => "Autosomic Dominant",
+		"1"  => "Autosomic Recessive",
+		"2"  => "X-Linked",
+		"3"  => "Y-Linked",
+		"4"  => "Mitochondrial"
+	]);
+$z->qa("Inheritance pattern", sprintf("%i", $ei));
+$z->choose(1);
+
+
+# B
+BEGIN_TEXT
+
+Choose the right inheritance pattern for each peddigree shown below:
+$BR
+$BR
+$a
+$BR
+\{$v->print_q()\}
+$BR
+$BR
+$b
+$BR
+\{$w->print_q()\}
+$BR
+$BR
+$c
+$BR
+\{$x->print_q()\}
+$BR
+$BR
+$d
+$BR
+\{$y->print_q()\}
+$BR
+$BR
+$e
+$BR
+\{$z->print_q()\}
+
+END_TEXT
+
+# C
+ANS(str_cmp($v->ra_correct_ans()));
+ANS(str_cmp($w->ra_correct_ans()));
+ANS(str_cmp($x->ra_correct_ans()));
+ANS(str_cmp($y->ra_correct_ans()));
+ANS(str_cmp($z->ra_correct_ans()));
+
+ENDDOCUMENT();        

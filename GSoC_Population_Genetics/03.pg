@@ -1,0 +1,240 @@
+##############################################################################
+# DESCRIPTION
+# Problem from Gillespi, Population Genetics, 1th ed.
+# WeBWorK problem written by Nelly Sélem LANGEBIO CINVESTAV <nselem84@gmail.com>
+# ENDDESCRIPTION
+
+## KEYWORDS('probability','allele', 'gen', 'selection')
+## Tagged by nselem 22/04/2012
+
+## DBsubject('Probability')
+## DBchapter('Aplications')
+## DBsection('Genetics')
+## Date('22/04/2012')
+## Author('Nelly Selem')
+## Institution('LANGEBIO CINVESTAV')
+## TitleText1('Population Genetics')
+## EditionText1('1')
+## AuthorText1('Jhon H. Gillespie')
+## Section1('3.1')
+
+
+## Textbook tags
+## HHChapter1('Natural Selection')
+
+# DESCRIPTION
+# Problema de Genetica, Jhon H. Gillespie, 1th ed.
+# escrito en WeBWork por Nelly Selem <nselem84@gmail.com>
+# ENDDESCRIPTION
+
+## KEYWORDS('probabilidad','allelo', 'gen', 'seleccion')
+## Tagged by nselem 22/04/12
+
+## DBsubject('Probabilidad')
+## DBchapter('Aplicaciones')
+## DBsection('Genetica')
+## Date('22-04-2012')
+## Translate('Nelly Sélem')
+## Institution('LANGEBIO CINVESTAV')
+
+DOCUMENT();
+
+loadMacros(
+"PGstandard.pl",
+"MathObjects.pl",
+"PGchoicemacros.pl",
+"PGgraphmacros.pl",
+"unionTables.pl",
+"parserPopUp.pl",
+);
+
+Context("Numeric");
+Context()->flags->set( reduceConstants=>0 );
+Context()->variables->add(P=>'Real',h=>'Real');
+$refreshCachedImages=1;
+$showPartialCorrectAnswers = 1;
+#####################################################
+
+######################################################################
+##  Set Variables
+#
+$s=.1;
+$h=-1*random(1,1.5,.1); $h[0]=$h;
+$h1=0; $h[1]=$h1;
+$h2=random(.5,.8,.2); $h[2]=$h2;
+$h3=random(1.1,2,.1); $h[3]=$h3;
+$hs=1.5*.1;
+$p=random(.05,.15,.01);
+$p0=$p;
+$p1=random(.8,.9,.01);
+$Q=Compute("1-P");
+
+#############################################################################
+
+$BarOmega=Compute("1-2*P*$Q*$h*$s-$Q*$Q*$s");
+$Delta=Compute("(P*$Q*$s)*(P*$h+$Q*(1-$h))/($BarOmega)");
+$f[0] = "$Delta for P in <0,1> using color:blue and weight:1";
+$gr[0] = init_graph(-0.2,-0.01,1,0.03,axes=>[0,0],size=>[250,250]);
+$gr[0]->lb('reset');
+$gr[0]->lb( new Label(-0.1,.01,'0.01',  'black','left','top'));
+$gr[0]->lb( new Label(-0.1,.02,'0.02',  'black','left','top'));
+$gr[0]->lb( new Label(-0.1,.03,'0.03',  'black','left','top'));
+$gr[0]->lb( new Label(0.2,-.001,'0.2',  'black','left','top'));
+$gr[0]->lb( new Label(0.4,-.001,'0.4',  'black','left','top'));
+$gr[0]->lb( new Label(0.6,-.001,'0.6',  'black','left','top'));
+$gr[0]->lb( new Label(0.8,-.001,'0.8',  'black','left','top'));
+$gr[0]->v_grid("gray",.2,.40,.60,.80); 
+$gr[0]->h_grid("gray",-.01,0,.01,.02,.03,.04);
+
+$BarOmega=Compute("1-2*P*$Q*$h1*$s-$Q*$Q*$s");
+$Delta=Compute("(P*$Q*$s)*(P*$h1+$Q*(1-$h1))/($BarOmega)");
+$f[1] = "$Delta for P in <0,1> using color:blue and weight:1";
+$gr[1] = init_graph(-0.2,-0.01,1,0.03,axes=>[0,0],size=>[250,250]);
+$gr[1]->lb('reset');
+$gr[1]->lb( new Label(-0.1,.01,'0.01',  'black','left','top'));
+$gr[1]->lb( new Label(-0.1,.02,'0.02',  'black','left','top'));
+$gr[1]->lb( new Label(-0.1,.03,'0.03',  'black','left','top'));
+$gr[1]->lb( new Label(0.2,-.001,'0.2',  'black','left','top'));
+$gr[1]->lb( new Label(0.4,-.001,'0.4',  'black','left','top'));
+$gr[1]->lb( new Label(0.6,-.001,'0.6',  'black','left','top'));
+$gr[1]->lb( new Label(0.8,-.001,'0.8',  'black','left','top'));
+$gr[1]->v_grid("gray",.2,.40,.60,.80); 
+$gr[1]->h_grid("gray",-.01,0,.01,.02,.03,.04);
+
+$BarOmega=Compute("1-2*P*$Q*$h2*$s-$Q*$Q*$s");
+$Delta=Compute("(P*$Q*$s)*(P*$h2+$Q*(1-$h2))/($BarOmega)");
+$f[2] = "$Delta for P in <0,1> using color:blue and weight:1";
+$gr[2] = init_graph(-0.2,-0.01,1,0.03,axes=>[0,0],size=>[250,250]);
+$gr[2]->lb('reset');
+$gr[2]->lb( new Label(-0.1,.01,'0.01',  'black','left','top'));
+$gr[2]->lb( new Label(-0.1,.02,'0.02',  'black','left','top'));
+$gr[2]->lb( new Label(-0.1,.03,'0.03',  'black','left','top'));
+$gr[2]->lb( new Label(0.2,-.001,'0.2',  'black','left','top'));
+$gr[2]->lb( new Label(0.4,-.001,'0.4',  'black','left','top'));
+$gr[2]->lb( new Label(0.6,-.001,'0.6',  'black','left','top'));
+$gr[2]->lb( new Label(0.8,-.001,'0.8',  'black','left','top'));
+$gr[2]->v_grid("gray",.2,.40,.60,.80); 
+$gr[2]->h_grid("gray",-.01,0,.01,.02,.03,.04);
+
+$BarOmega=Compute("1-2*P*$Q*$h3*$s-$Q*$Q*$s");
+$Delta=Compute("(P*$Q*$s)*(P*$h3+$Q*(1-$h3))/($BarOmega)");
+$f[3] = "$Delta for P in <0,1> using color:blue and weight:1";
+$gr[3] = init_graph(-0.2,-0.01,1,0.03,axes=>[0,0],size=>[250,250]);
+$gr[3]->lb('reset');
+$gr[3]->lb( new Label(-0.1,.01,'0.01',  'black','left','top'));
+$gr[3]->lb( new Label(-0.1,.02,'0.02',  'black','left','top'));
+$gr[3]->lb( new Label(-0.1,.03,'0.03',  'black','left','top'));
+$gr[3]->lb( new Label(0.2,-.001,'0.2',  'black','left','top'));
+$gr[3]->lb( new Label(0.4,-.001,'0.4',  'black','left','top'));
+$gr[3]->lb( new Label(0.6,-.001,'0.6',  'black','left','top'));
+$gr[3]->lb( new Label(0.8,-.001,'0.8',  'black','left','top'));
+$gr[3]->v_grid("gray",.2,.40,.60,.80); 
+$gr[3]->h_grid("gray",-.01,0,.01,.02,.03,.04);
+
+for $i (0..3) {
+  plot_functions( $gr[$i], $f[$i]); 
+  $fig[$i]=image(insertGraph($gr[$i]),
+  width=>200,height=>200,tex_size=>450);
+}
+
+@eqn =("\( h=$h \)",  "\( h=$h1 \)", 
+       "\( h=$h2 \)", "\( h=$h3 \)");
+
+$k = random(0,3,1);
+
+@perm = shuffle(4);
+@letter = ("A", "B", "C", "D");
+
+$popup0 = PopUp(["?","A","B","C","D"], $letter[$k%4]);
+$popup1 = PopUp(["?","A","B","C","D"], $letter[($k+1)%4]);
+$popup2 = PopUp(["?","A","B","C","D"], $letter[($k+2)%4]);
+$popup3 = PopUp(["?","A","B","C","D"], $letter[($k+3)%4]);
+
+
+###################################################
+BEGIN_TEXT_ES
+Sin usar una calculadora esboza en un papel la grafica de \(\Delta_sp = \frac{pqs(ph+q(1-h)}{\bar\omega}\).  
+Cual de las graficas A-D de abajo corresponde a cuando: $PAR
+\(h = $h[$k%4]?\) \{ $popup0->menu() \}.  
+\(h = $h[($k+1)%4]?\) \{ $popup1->menu() \} 
+\(h = $h[($k+2)%4]\) ? \{ $popup2->menu() \}
+\(h = $h[($k+3)%4]\) ? \{ $popup3->menu() \} 
+
+$BCENTER
+\{
+BeginTable().
+  AlignedRow([$fig[0],$fig[1]]).
+  TableSpace(5,0).
+  AlignedRow(["A","B"]).
+  TableSpace(25,6).
+  AlignedRow([$fig[2],$fig[3]]).
+  TableSpace(5,0).
+  AlignedRow(["C","D"]).
+EndTable();
+\}
+$BR
+(Click en la grafica para aumentar el tamaño)
+$ECENTER
+END_TEXT
+
+BEGIN_TEXT
+Without using a calculator, draw on paper a graph for the function \(\Delta_sp = \frac{pqs(ph+q(1-h)}{\bar\omega}\).  
+Which of the graphs below correspond to a particular \(h\) value? $PAR
+\(h = $h[$k%4]?\) \{ $popup0->menu() \}.  
+\(h = $h[($k+1)%4]?\) \{ $popup1->menu() \} 
+\(h = $h[($k+2)%4]\) ? \{ $popup2->menu() \}
+\(h = $h[($k+3)%4]\) ? \{ $popup3->menu() \} 
+
+$BCENTER
+\{
+BeginTable().
+  AlignedRow([$fig[0],$fig[1]]).
+  TableSpace(5,0).
+  AlignedRow(["A","B"]).
+  TableSpace(25,6).
+  AlignedRow([$fig[2],$fig[3]]).
+  TableSpace(5,0).
+  AlignedRow(["C","D"]).
+EndTable();
+\}
+$BR
+(Click on a graph to enlarge it)
+$ECENTER
+END_TEXT
+install_problem_grader(~~&std_problem_grader);
+$showPartialCorrectAnswers = 0;
+
+ANS( $popup0->cmp() );
+ANS( $popup1->cmp() );
+ANS( $popup2->cmp() );
+ANS( $popup3->cmp() );
+
+####################################################
+TEXT(beginproblem());
+Context()->texStrings;
+Context()->normalStrings;
+##############################################
+Context()->texStrings;
+BEGIN_SOLUTION_ES
+Para reconocer las graficas se pueden seguir las siguientes reflexiones $PAR
+
+Cuando \(h<0\) (Seleccion balanceadora), hay un punto de equilibrio. Es decir \(\Delta_sp=0\) para algun \(p \) entre \(0\) y \(1\). Al calcular \(\hat p\) en funcion de \(h\) vemos que en este caso \(\hat p\in(.5,1)\). Es decir el punto donde la grafica de \(\Delta_sp=0\) es menor que \(.5\) $PAR 
+
+Cuando \(h>1\) Hay un punto de equilibrio inestable (Seleccion disruptiva). Es decir \(\Delta_sp=0\) para algun \(p \) entre \(0\) y \(1\). Al calcular \(\hat p\) en funcion de \(h\) vemos que en este caso \(\hat p\in(0,.5)\). $PAR 
+
+En las otras graficas podemos apreciar que \(\Delta_sp\) no toma el valor cero. Esto es porque para \(0\le h\le 1\) no hay frecuencia alelica \(\hat p\) de equilibrio.
+END_SOLUTION
+
+BEGIN_SOLUTION
+To identify each graph you can look out for the following features $PAR
+
+When \(h<0\) (balancing selection), there is a point of equilibrium. That is, \(\Delta_sp=0\) for some \(p \) between \(0\) and \(1\). By solving \(\hat p\) depending on \(h\) we see that for this case \(\hat p\in(.5,1)\). In other words, the point where the \(\Delta_sp=0\) function is smaller than \(.5\) $PAR 
+
+When \(h>1\), there is a non-stable equilibrium point (disuptive selection). That is, \(\Delta_sp=0\) for some \(p \) between \(0\) and \(1\). By solving \(\hat p\) depending on \(h\) we see that for this case \(\hat p\in(0,.5)\). $PAR 
+
+On the other graphs we can notice that \(\Delta_sp\) never takes a zero value. This happens because for \(0\le h\le 1\) there is no allelic frequency \(\hat p\) of equilibrium.
+END_SOLUTION
+Context()->normalStrings;
+###########################################################
+ENDDOCUMENT();
+     

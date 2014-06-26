@@ -1,0 +1,70 @@
+##DESCRIPTION
+##  GSoC - Genetics
+##ENDDESCRIPTION
+
+##KEYWORDS('Genetics')
+
+## DBsubject('Genetics')
+## DBchapter('Fundamentals')
+## DBsection('')
+## Date('5/1/2014')
+## Author('Nelly Selem')
+## Institution('GSoC')
+
+########################################################################
+
+DOCUMENT();      
+
+loadMacros(
+   "PGstandard.pl",     # Standard macros for PG language
+   "MathObjects.pl",
+   "GSoC_Genetics.pl",
+   "unionTables.pl"
+   #"source.pl",        # allows code to be displayed on certain sites.
+   #"PGcourse.pl",      # Customization file for the course
+);
+
+# Print problem number and point value (weight) for the problem
+TEXT(beginproblem());
+
+# Show which answers are correct and which ones are incorrect
+$showPartialCorrectAnswers = 1;
+
+# A
+
+SRAND($problemSeed);
+$a = random(1, 99);
+$b = random(1, 4);
+$c = $b*100;
+$za = Real((100-$a)*$b);
+$zc = Real($a*$b);
+$zg = Real($a*$b);
+$zt = Real((100-$a)*$b);
+
+# B
+BEGIN_TEXT
+
+If you know that a double-stranded DNA sequence with a length of $c nucleotides has a $a% content of GC,
+$BR
+how many nucleotides would you expect for each different base?
+$BR
+$BR
+
+\{
+BeginTable(border => 1, tex_border => "1pt", spacing => 0, padding => 4).
+AlignedRow(["A", $za->ans_rule], align => LEFT, separation => 0).
+AlignedRow(["C", $zc->ans_rule], align => LEFT, separation => 0).
+AlignedRow(["G", $zg->ans_rule], align => LEFT, separation => 0).
+AlignedRow(["T", $zt->ans_rule], align => LEFT, separation => 0).
+EndTable()
+\}
+
+END_TEXT
+
+# C
+ANS($za->cmp);
+ANS($zc->cmp);
+ANS($zg->cmp);
+ANS($zt->cmp);
+
+ENDDOCUMENT();        

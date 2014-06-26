@@ -1,0 +1,143 @@
+##############################################################################
+# DESCRIPTION
+# Problem from Gillespi, Population Genetics, 1th ed.
+# WeBWorK problem written by Nelly Sélem LANGEBIO CINVESTAV <nselem84@gmail.com>
+# ENDDESCRIPTION
+
+## KEYWORDS('probability','allele', 'gen', 'selection')
+## Tagged by nselem 22/04/2012
+
+## DBsubject('Probability')
+## DBchapter('Aplications')
+## DBsection('Genetics')
+## Date('22/04/2012')
+## Author('Nelly Selem')
+## Institution('LANGEBIO CINVESTAV')
+## TitleText1('Population Genetics')
+## EditionText1('1')
+## AuthorText1('Jhon H. Gillespie')
+## Section1('3.1')
+
+
+## Textbook tags
+## HHChapter1('Natural Selection')
+
+# DESCRIPTION
+# Problema de Genetica, Jhon H. Gillespie, 1th ed.
+# escrito en WeBWork por Nelly Selem <nselem84@gmail.com>
+# ENDDESCRIPTION
+
+## KEYWORDS('probabilidad','allelo', 'gen', 'seleccion')
+## Tagged by nselem 22/04/12
+
+## DBsubject('Probabilidad')
+## DBchapter('Aplicaciones')
+## DBsection('Genetica')
+## Date('22-04-2012')
+## Translate('Nelly Sélem')
+## Institution('LANGEBIO CINVESTAV')
+
+DOCUMENT();
+
+loadMacros(
+"PGstandard.pl",
+"MathObjects.pl",
+"PGchoicemacros.pl",
+"PGgraphmacros.pl",
+"PG.pl",
+"PGbasicmacros.pl",
+"PGanswermacros.pl",
+"unionTables.pl",
+);
+
+Context("Numeric");
+Context()->flags->set( reduceConstants=>0 );
+
+$showPartialCorrectAnswers = 1;
+#############################################################
+######################################################################
+##  Set Variables
+######################################################################
+
+TEXT(beginproblem());
+
+$ml = new_match_list();
+
+BEGIN_TEXT_ES
+Fitness Relativo
+\{
+$ml->qa(
+"El fitness de \(A_1A_1\) es igual al de \(A_2A_2\), es decir no hay seleccion", "\(s=0\)",
+"1, el fitness de \(A_1A_1\) es mayor a \(1-s\) el de \(A_2A_2\). Hay seleccion a favor de \(A_1\) ", "\(s>0\)",
+"Dado que \(s>0\) se tiene que el fitness de \(A_1A_1\) es igual al de \(A_1A_2\). Es decir no hay ventaja en ser heterocigoto ", "\(h=0\)",
+"Dado que \(s>0\) se tiene que el heterocigoto tiene ventaja sobre \(A_1A_1\). Sobredominancia", "\(h<0\)",
+"Dado que \(s>0\) se tiene que fitness \(A_2A_2 =\) fitness \(A_1A_2\). Es decir \(A_2\) domina sobre \(A_1\) . ", "\(h=1\)",
+"Dado que \(s>0\) se tiene que fitness \(A_2A_2 <\) fitness \(A_1A_2\). Es decir el heterocigoto es mejor que el homocigoto menos apto. Se dice que hay underdominance", "\(h>1\)",
+);
+# use pop-up-lists
+$ml->rf_print_q(~~&pop_up_list_print_q);
+# you may need to add more letters D=>"D", etc. 
+$ml->ra_pop_up_list([No_answer=>"?",A=>"A",B=>"B",C=>"C",D=>"D",E=>"E",F=>"F",G=>"G",H=>"H"]);
+$ml->choose(6);
+#$ml->choose_extra(2);
+$ml->makeLast("Ninguna de las anteriores");
+
+BeginTable(border=>1, tex_border=>"1pt", spacing=>0, padding=>4).
+AlignedRow(["Genotipo","\(A_1A_1 \)","\(A_1A_2 \)","\(A_2A_2 \)"], align=>LEFT, separation=>0).
+AlignedRow(["Fitness Relativo","\(1 \)","\(1-hs \)","\(1-s \)"], separation=>0).
+EndTable()
+\}
+$PAR
+$PAR
+\{
+ColumnTable(
+" ".$ml->print_q()."
+$PAR ",
+" ".$ml->print_a()." $BR $PAR ",
+indent => 0, separation => 1, valign => "TOP"
+); 
+\}
+END_TEXT
+
+BEGIN_TEXT
+Relative Fitness
+\{
+$ml->qa(
+"\(A_1A_1\) fitness is the same as \(A_2A_2\) fitness, there is no selection going on", "\(s=0\)",
+"\(A_1A_1\) fitness is bettern than \(1-s\) \(A_2A_2\) fitness. There is selection favoring \(A_1\) ", "\(s>0\)",
+"Given \(s>0\), \(A_1A_1\) fitness is equal to \(A_1A_2\) fitness. There is no advantage of being heterozygote", "\(h=0\)",
+"Given \(s>0\), the heterozygote has advantage over \(A_1A_1\). Overdominance", "\(h<0\)",
+"Given \(s>0\), \(A_2A_2\) fitness is equal to \(A_1A_2\) fitness. In other words, \(A_2\) is dominant over \(A_1\) . ", "\(h=1\)",
+"Given \(s>0\), \(A_2A_2\) fitness is smaller than \(A_1A_2\) fitness. In other words, the heterozygote is bettern than the less adapted homozygote. There is underdominance.", "\(h>1\)",
+);
+# use pop-up-lists
+$ml->rf_print_q(~~&pop_up_list_print_q);
+# you may need to add more letters D=>"D", etc. 
+$ml->ra_pop_up_list([No_answer=>"?",A=>"A",B=>"B",C=>"C",D=>"D",E=>"E",F=>"F",G=>"G",H=>"H"]);
+$ml->choose(6);
+#$ml->choose_extra(2);
+$ml->makeLast("None of the above");
+
+BeginTable(border=>1, tex_border=>"1pt", spacing=>0, padding=>4).
+AlignedRow(["Genotype","\(A_1A_1 \)","\(A_1A_2 \)","\(A_2A_2 \)"], align=>LEFT, separation=>0).
+AlignedRow(["Relative Fitness","\(1 \)","\(1-hs \)","\(1-s \)"], separation=>0).
+EndTable()
+\}
+$PAR
+$PAR
+\{
+ColumnTable(
+" ".$ml->print_q()."
+$PAR ",
+" ".$ml->print_a()." $BR $PAR ",
+indent => 0, separation => 1, valign => "TOP"
+); 
+\}
+END_TEXT
+
+install_problem_grader(~~&std_problem_grader);
+
+ANS( str_cmp( $ml->ra_correct_ans ) );
+
+ENDDOCUMENT();
+     

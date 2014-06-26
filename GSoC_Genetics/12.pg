@@ -1,0 +1,70 @@
+##DESCRIPTION
+##  GSoC - Genetics
+##ENDDESCRIPTION
+
+##KEYWORDS('Genetics')
+
+## DBsubject('Genetics')
+## DBchapter('Fundamentals')
+## DBsection('')
+## Date('5/1/2014')
+## Author('Nelly Selem')
+## Institution('GSoC')
+
+########################################################################
+
+DOCUMENT();      
+
+loadMacros(
+   "PGstandard.pl",     # Standard macros for PG language
+   "MathObjects.pl",
+   "GSoC_Genetics.pl"
+   #"source.pl",        # allows code to be displayed on certain sites.
+   #"PGcourse.pl",      # Customization file for the course
+);
+
+# Print problem number and point value (weight) for the problem
+TEXT(beginproblem());
+
+# Show which answers are correct and which ones are incorrect
+$showPartialCorrectAnswers = 1;
+
+# A
+$a = Genetics_RandomDNASequence(64);
+$a =~ s/TAA//g;
+$a =~ s/TAG//g;
+$a =~ s/TTA//g;
+$b = 0;
+my $i = 0;
+while(($i+3) <= length($a)) {
+	my $codon = substr($a, $i, 3);
+	if(substr($codon, 0, 2) eq 'CT') { ++$b; }
+	elsif(substr($codon, 0, 2) eq 'GT') { ++$b; }
+	elsif(substr($codon, 0, 2) eq 'TC') { ++$b; }
+	elsif(substr($codon, 0, 2) eq 'CC') { ++$b; }
+	elsif(substr($codon, 0, 2) eq 'AC') { ++$b; }
+	elsif(substr($codon, 0, 2) eq 'GC') { ++$b; }
+	elsif(substr($codon, 0, 2) eq 'CG') { ++$b; }
+	elsif(substr($codon, 0, 2) eq 'GG') { ++$b; }
+	$i += 3;
+}
+$z = Real($b);
+
+# B
+BEGIN_TEXT
+
+Consider the following random DNA sequence:
+$BR
+$a
+$BR
+$BR
+Assuming that it gets translated following the standard code,
+$BR
+how many sites would surely tolerate a point mutation without changing the aminoacid sequence? \{$z->ans_rule\}
+
+END_TEXT
+
+# C
+ANS($z->cmp);
+
+ENDDOCUMENT();        

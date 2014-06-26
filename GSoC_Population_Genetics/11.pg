@@ -1,0 +1,125 @@
+##############################################################################
+# DESCRIPTION
+# Problem from Gillespi, Population Genetics, 1th ed.
+# WeBWorK problem written by Nelly Sélem LANGEBIO CINVESTAV <nselem84@gmail.com>
+# ENDDESCRIPTION
+
+## KEYWORDS('probability','allele', 'gen', 'selection')
+## Tagged by nselem 22/04/2012
+
+## DBsubject('Probability')
+## DBchapter('Aplications')
+## DBsection('Genetics')
+## Date('22/04/2012')
+## Author('Nelly Selem')
+## Institution('LANGEBIO CINVESTAV')
+## TitleText1('Population Genetics')
+## EditionText1('1')
+## AuthorText1('Jhon H. Gillespie')
+## Section1('3.1')
+
+
+## Textbook tags
+## HHChapter1('Natural Selection')
+
+# DESCRIPTION
+# Problema de Genetica, Jhon H. Gillespie, 1th ed.
+# escrito en WeBWork por Nelly Selem <nselem84@gmail.com>
+# ENDDESCRIPTION
+
+## KEYWORDS('probabilidad','allelo', 'gen', 'seleccion')
+## Tagged by nselem 22/04/12
+
+## DBsubject('Probabilidad')
+## DBchapter('Aplicaciones')
+## DBsection('Genetica')
+## Date('22-04-2012')
+## Translate('Nelly Sélem')
+## Institution('LANGEBIO CINVESTAV')
+
+DOCUMENT();
+
+loadMacros(
+"PGstandard.pl",
+"MathObjects.pl",
+"PGchoicemacros.pl",
+"PGgraphmacros.pl",
+);
+
+Context("Numeric");
+Context()->flags->set( reduceConstants=>0 );
+
+$showPartialCorrectAnswers = 1;
+
+######################################################################
+##  Set Variables
+######################################################################
+
+#Viability Constants of the Genotypes A11 A12 y A22 
+$w11=random(.85,.95,.01);
+$w12=random(.91,.99,.01);
+$w22=Compute("1");
+
+$p=random(.05,.15,.01); $p=Compute("$p"); #Frecuency of allele A1
+$q=Compute("1-$p");
+
+$omega=Compute("$w11*$p*$p+2*$w12*$p*$q+$w22*$q*$q");  ## Mean Fitness
+$Somega="\omega_{11}p^2+2\omega_{12}pq+\omega_{22}q^2";  ## Mean Fitness
+
+## Allele A_1 Frecuency Next Generation
+$next_p=Compute("($w11*$p*$p+$w12*$p*$q)/($omega)");  
+$Snext_p="\frac{\omega_{11}p^2+\omega_{12}pq}{\bar\omega}";  
+
+TEXT(beginproblem());
+Context()->texStrings;
+BEGIN_TEXT_ES
+En 1940 la frecuencia del alelo \(A_1\) medionigra en la poblacion de mariposas $BITALIC Panaxia Dominula $EITALIC de Oxford era alrededor de \(p=$p\). Si las viabilidades de los tres genotipos eran \(\omega_{11}=$w11\), \(\omega_{12}=$w12\), \(\omega_{22}=1\) respectivamente. ¿Cual sera la frecuencia de medionigra de los recien nacidos en 1941?  $PAR
+
+$PAR
+$BR Frecuencia\( = \) \{ ans_rule(10) \}
+END_TEXT
+
+BEGIN_TEXT
+On 1940, the frequency of the medionigra \(A_1\) allele on the Oxford $BITALIC Panaxia Dominula $EITALIC  butterfly population was around \(p=$p\). If the viabilities for each of their genotypes were  \(\omega_{11}=$w11\), \(\omega_{12}=$w12\) and \(\omega_{22}=1\) respectively, what would be the expected proportion of medionigra newborns on 1941? $PAR
+
+$PAR
+$BR Frequency\( = \) \{ ans_rule(10) \}
+END_TEXT
+Context()->normalStrings;
+
+ANS( num_cmp($next_p) );
+
+
+
+Context()->texStrings;
+BEGIN_SOLUTION_ES
+Despues de la seleccion la frecuencia del alelo \(A_1\) ha cambiado a: $BR
+\(p'=$Snext_p\)$PAR
+Donde \(\bar\omega=$Somega\)$PAR
+
+Sustituyendo los valores de \(p=$p\) y los de \(\omega_{11}=$w11,\omega_{12}=$w12,\omega_{22}=$w22\) y utilzando que \(q=1-p\) tenemos que: $BR
+
+\(\bar\omega=$w11*($p)^2+2*$w12 ($p)($q)+$w22 ($q)^2\) $BR
+\(\bar\omega=$omega\)$PAR
+Con lo cual : $BR
+\(p'= \frac{$w11($p)^2+$w12($p)($q)}{$omega}\)$PAR
+\(p'=$next_p\)$PAR
+END_SOLUTION
+
+BEGIN_SOLUTION
+After selection, the frequency of the allele \(A_1\) is now: $BR
+\(p'=$Snext_p\)$PAR
+where \(\bar\omega=$Somega\)$PAR
+
+By solving for \(p=$p\) and \(\omega_{11}=$w11,\omega_{12}=$w12,\omega_{22}=$w22\) y utilzando que \(q=1-p\) we now have: $BR
+
+\(\bar\omega=$w11*($p)^2+2*$w12 ($p)($q)+$w22 ($q)^2\) $BR
+\(\bar\omega=$omega\)$PAR
+Which leads us to: $BR
+\(p'= \frac{$w11($p)^2+$w12($p)($q)}{$omega}\)$PAR
+\(p'=$next_p\)$PAR
+END_SOLUTION
+Context()->normalStrings;
+
+ENDDOCUMENT();
+     

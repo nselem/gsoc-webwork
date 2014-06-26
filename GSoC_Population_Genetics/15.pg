@@ -1,0 +1,152 @@
+##############################################################################
+# DESCRIPTION
+# Problem from Gillespi, Population Genetics, 1th ed.
+# WeBWorK problem written by Nelly Sélem LANGEBIO CINVESTAV <nselem84@gmail.com>
+# ENDDESCRIPTION
+
+## KEYWORDS('probability','allele', 'gen', 'selection')
+## Tagged by nselem 22/04/2012
+
+## DBsubject('Probability')
+## DBchapter('Aplications')
+## DBsection('Genetics')
+## Date('22/04/2012')
+## Author('Nelly Selem')
+## Institution('LANGEBIO CINVESTAV')
+## TitleText1('Population Genetics')
+## EditionText1('1')
+## AuthorText1('Jhon H. Gillespie')
+## Section1('3.1')
+
+
+## Textbook tags
+## HHChapter1('Natural Selection')
+
+# DESCRIPTION
+# Problema de Genetica, Jhon H. Gillespie, 1th ed.
+# escrito en WeBWork por Nelly Selem <nselem84@gmail.com>
+# ENDDESCRIPTION
+
+## KEYWORDS('probabilidad','allelo', 'gen', 'seleccion')
+## Tagged by nselem 22/04/12
+
+## DBsubject('Probabilidad')
+## DBchapter('Aplicaciones')
+## DBsection('Genetica')
+## Date('22-04-2012')
+## Translate('Nelly Sélem')
+## Institution('LANGEBIO CINVESTAV')
+
+DOCUMENT();
+
+loadMacros(
+"PGstandard.pl",
+"MathObjects.pl",
+"PGchoicemacros.pl",
+"PGgraphmacros.pl",
+);
+
+Context("Numeric");
+Context()->flags->set( reduceConstants=>0 );
+Context()->variables->add(p=>'Real');
+$showPartialCorrectAnswers = 1;
+$refreshCachedImages=1;
+
+######################################################################
+##  Set Variables
+#
+$q=Compute("1-p");
+$s=.1;
+$H[1]=random(.1,.2,.1); $H[2]=0.5; $H[3]=random(.8,.9,.1);
+$I=random(1,3,1);
+$h=$H[$I];
+
+$frecuencia="1-2pqhs-sq^2";
+$ecuacion3_2="\frac{pqs[ph+q(1-h)]}{$frecuencia}";
+
+#########################################################################
+# Set functions and graph object
+###############################################################
+$omega=Compute("1-2*p*$q*$h*$s-$q*$q*$s");
+$Delta=Compute("(p*$q*$s)*(p*$h+$q*(1-$h))/($omega)");
+
+$sgr = init_graph(-0.2,-0.005,1,0.02,axes=>[0,0],grid=>[12,15],size=>[250,250]);
+add_functions( $sgr, "$Delta for p in <0,1> using color:blue and weight:1");
+
+# add a label
+$sgr->lb( new Label(-0.01,.01,'0.01', 'black','left','top'));
+###################################################################
+
+$mc = new_multiple_choice();
+###########################################################################
+TEXT(beginproblem());
+Context()->texStrings;
+BEGIN_TEXT_ES
+\{
+$mc->qa(
+"Cual es el valor de \(h\)?", "$H[$I]"
+);
+$mc->makeLast("$H[1]","$H[2]","$H[3]");
+\}
+$BR $BBOLD Seleccion direccional $BR
+Dominancia incompleta \( 0<h<1\) $EBOLD $PAR
+Grafica \( \Delta_sp= $ecuacion3_2\) para cuando \(s=$s\) con \(h=.1\) y \(h=.9\). 
+Observa tus resultados y en base a ellos decide cual es el valor de \(h\) en la siguiente grafica.
+$PAR
+$BCENTER
+\{ image( insertGraph($sgr), tex_size=>250, height=>250, width=>250,
+          extra_html_tags=>'alt="Gráfica del incremento en la frecuencia alelica"' ) \}
+$ECENTER
+$PAR
+\{ $mc->print_q() \}
+$BR
+\{ $mc->print_a() \}
+$PAR
+¿Como afecta la dominancia la la seleccion direccional? 
+$PAR
+END_TEXT
+
+BEGIN_TEXT
+\{
+$mc->qa(
+"What is the value of \(h\)?", "$H[$I]"
+);
+$mc->makeLast("$H[1]","$H[2]","$H[3]");
+\}
+$BR $BBOLD Directional selection $BR
+Incomplete dominance \( 0<h<1\) $EBOLD $PAR
+Graph \( \Delta_sp= $ecuacion3_2\) for the case when \(s=$s\) with \(h=.1\) and \(h=.9\). 
+By looking at your results decide which would be the value of \(h\) on the next graph.
+$PAR
+$BCENTER
+\{ image( insertGraph($sgr), tex_size=>250, height=>250, width=>250,
+          extra_html_tags=>'alt="Allelic frequency increase"' ) \}
+$ECENTER
+$PAR
+\{ $mc->print_q() \}
+$BR
+\{ $mc->print_a() \}
+$PAR
+What is the effect of dominance over directional selection? 
+$PAR
+END_TEXT
+
+##################################################################
+# Answers
+#################################################################
+
+ANS( radio_cmp( $mc->correct_ans() ) );
+
+##############################################################
+#   SOLUTION
+################################################################
+
+Context()->texStrings;
+BEGIN_SOLUTION
+\(h=$h\).
+END_SOLUTION
+Context()->normalStrings;
+##################################################################
+
+ENDDOCUMENT();
+     

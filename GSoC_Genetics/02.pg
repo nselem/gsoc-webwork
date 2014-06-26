@@ -1,0 +1,53 @@
+##DESCRIPTION
+##  GSoC - Genetics
+##ENDDESCRIPTION
+
+##KEYWORDS('Genetics')
+
+## DBsubject('Genetics')
+## DBchapter('Fundamentals')
+## DBsection('')
+## Date('5/1/2014')
+## Author('Nelly Selem')
+## Institution('GSoC')
+
+########################################################################
+
+DOCUMENT();      
+
+loadMacros(
+   "PGstandard.pl",     # Standard macros for PG language
+   "MathObjects.pl",
+   "GSoC_Genetics.pl"
+   #"source.pl",        # allows code to be displayed on certain sites.
+   #"PGcourse.pl",      # Customization file for the course
+);
+
+# Print problem number and point value (weight) for the problem
+TEXT(beginproblem());
+
+# Show which answers are correct and which ones are incorrect
+$showPartialCorrectAnswers = 1;
+
+# A
+
+SRAND($problemSeed);
+$a = random(4, 16);
+$z = Real(4**$a);
+
+# B
+BEGIN_TEXT
+
+If we only take into account four different nucleotides of DNA (ACGT),
+$BR
+how many different sequences can we generate with $a letters?
+$BR
+$BR
+\{$z->ans_rule\}
+
+END_TEXT
+
+# C
+ANS($z->cmp);
+
+ENDDOCUMENT();        

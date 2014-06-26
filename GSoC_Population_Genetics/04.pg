@@ -1,0 +1,401 @@
+##############################################################################
+# DESCRIPTION
+# Problem from Gillespi, Population Genetics, 1th ed.
+# WeBWorK problem written by Nelly Sélem LANGEBIO CINVESTAV <nselem84@gmail.com>
+# ENDDESCRIPTION
+
+## KEYWORDS('probability','allele', 'gen', 'selection')
+## Tagged by nselem 22/04/2012
+
+## DBsubject('Probability')
+## DBchapter('Aplications')
+## DBsection('Genetics')
+## Date('22/04/2012')
+## Author('Nelly Selem')
+## Institution('LANGEBIO CINVESTAV')
+## TitleText1('Population Genetics')
+## EditionText1('1')
+## AuthorText1('Jhon H. Gillespie')
+## Section1('3.1')
+
+
+## Textbook tags
+## HHChapter1('Natural Selection')
+
+# DESCRIPTION
+# Problema de Genetica, Jhon H. Gillespie, 1th ed.
+# escrito en WeBWork por Nelly Selem <nselem84@gmail.com>
+# ENDDESCRIPTION
+
+## KEYWORDS('probabilidad','allelo', 'gen', 'seleccion')
+## Tagged by nselem 22/04/12
+
+## DBsubject('Probabilidad')
+## DBchapter('Aplicaciones')
+## DBsection('Genetica')
+## Date('22-04-2012')
+## Translate('Nelly Sélem')
+## Institution('LANGEBIO CINVESTAV')
+
+DOCUMENT();
+
+loadMacros(
+"PGstandard.pl",
+"MathObjects.pl",
+"PGchoicemacros.pl",
+"PGgraphmacros.pl",
+"unionTables.pl",
+);
+
+Context("Numeric");
+Context()->flags->set( reduceConstants=>0 );
+Context()->variables->add(P=>'Real');
+$refreshCachedImages=1;
+$showPartialCorrectAnswers = 1;
+#####################################################
+
+######################################################################
+##  Set Variables
+
+#####################SEQUENCES MODEL  ##################################
+###### Transition probabilities between states
+$A[0][0]=random(.87,.95,.01); $A[0][1]=1.0-($A[0][0]);  $A[0][2]=0;
+$A[1][0]=0;                   $A[1][1]=0;           $A[1][2]=1;
+$A[2][0]=random(.07,.1,.01);  $A[2][1]=0;           $A[2][2]=1.0-$A[2][0];
+
+############## emision probabilities
+$B[0]=["A=.25","C=.25","G=.25","T=.25"];
+$B[1]=["A=.05","C=0","G=.95","T=0"];
+$B[2]=["A=.4","C=.1","G=.1","T=.4"];
+#####################SEQUENCES MODEL  ##################################
+###### Transition probabilities between states
+$A[0][0]=.9; $A[0][1]=.1;  $A[0][2]=0;
+$A[1][0]=0;                   $A[1][1]=0;           $A[1][2]=1;
+$A[2][0]=.1;  $A[2][1]=0;           $A[2][2]=.9;
+
+############## emision probabilities
+$B[0]=["A=.25","C=.25","G=.25","T=.25"];
+$B[1]=["A=.05","C=0","G=.95","T=0"];
+$B[2]=["A=.4","C=.1","G=.1","T=.4"];
+
+$sB[0][0]=.25; $sB[0][1]=.25; $sB[0][2]=.25; $sB[0][3]=.25;
+$sB[1][0]=.05; $sB[1][1]=0;   $sB[1][2]=.95; $sB[1][3]=0;
+$sB[2][0]=.4;  $sB[2][1]=.1;  $sB[2][2]=.1;  $sB[2][3]=.4;
+
+##################### WEATHER MODEL  ##################################
+###### Transition probabilities between states
+##  H            ###       C
+$wA[0][0]=.7;       $wA[0][1]=.3;  
+$wA[1][0]=.4;       $wA[1][1]=.6;           
+
+############## emision probabilities
+##  S                     M         L
+ $wB[0][0]=.1; $wB[0][1]=.4;   $wB[0][2]=.5; 
+ $wB[1][0]=.7; $wB[1][1]=0.2;  $wB[1][2]=.1;
+
+
+###
+$pi[0]=.6; $pi[1]=.4;
+
+########### state probability
+################ given the observed sequence 0,1,0,2 = S, M, S, L
+      ###           I ES  T1 EM T2 ES T3 EL
+$sP{HHHH}=Compute("0.6*.1*0.7*.4*.7*.1*.7*.5");$lsP{HHHH}=log($sP{HHHH});
+$sP{HHHC}=Compute("0.6*.1*0.7*.4*.7*.1*.3*.1");$lsP{HHHC}=log($sP{HHHC});
+$sP{HHCH}=Compute("0.6*.1*0.7*.4*.3*.7*.4*.5");$lsP{HHCH}=log($sP{HHCH});
+$sP{HHCC}=Compute("0.6*.1*0.7*.4*.3*.7*.6*.1");$lsP{HHCC}=log($sP{HHCC});
+$sP{HCHH}=Compute("0.6*.1*0.3*.2*.4*.1*.7*.5");$lsP{HCHH}=log($sP{HCHH});
+$sP{HCHC}=Compute("0.6*.1*0.3*.2*.4*.1*.3*.1");$lsP{HCHC}=log($sP{HCHC});
+$sP{HCCH}=Compute("0.6*.1*0.3*.2*.6*.7*.4*.5");$lsP{HCCH}=log($sP{HCCH});
+$sP{HCCC}=Compute("0.6*.1*0.3*.2*.6*.7*.6*.1");$lsP{HCCC}=log($sP{HCCC});
+$sP{CHHH}=Compute("0.4*.7*0.4*.4*.7*.1*.7*.5");$lsP{CHHH}=log($sP{CHHH});
+$sP{CHHC}=Compute("0.4*.7*0.4*.4*.7*.1*.3*.1");$lsP{CHHC}=log($sP{CHHC});
+$sP{CHCH}=Compute("0.4*.7*0.4*.4*.3*.7*.4*.5");$lsP{CHCH}=log($sP{CHCH});
+$sP{CHCC}=Compute("0.4*.7*0.4*.4*.3*.7*.6*.1");$lsP{CHCC}=log($sP{CHCC});
+$sP{CCHH}=Compute("0.4*.7*0.6*.2*.4*.1*.7*.5");$lsP{CCHH}=log($sP{CCHH});
+$sP{CCHC}=Compute("0.4*.7*0.6*.2*.4*.1*.3*.1");$lsP{CCHC}=log($sP{CCHC});
+$sP{CCCH}=Compute("0.4*.7*0.6*.2*.6*.7*.4*.5");$lsP{CCCH}=log($sP{CCCH});
+$sp{CCCC}=Compute("0.4*.7*0.6*.2*.6*.7*.6*.1");$lsP{CCCC}="log(0)";
+
+$PH[0]=.188182;$PH[1]=.519576;$PH[2]=.228788;$PH[3]=.804029;
+$PC[0]=.811818;$PC[1]=.480424;$PC[2]=.771212;$PC[3]=.195971;
+###########################################################################
+
+Context()->normalStrings;
+$Sequence= "Sequence C T T C A T G T G A A A G C A G A C G T A A G T C A";
+$State =   "State    E E E E E E E E E E E E E E E E E E 5 I I I I I I I";
+$log="  log P";
+
+  $gr = init_graph(-5,-5,5,5,pixels=>[500,400]);
+  $gr->lb( new Label(4.7,0.2,'x','black','center','middle'));
+  $gr->lb( new Label(0.2,4.7,'y','black','center','middle'));
+  $gr->new_color("lightblue", 214,230,244); # RGB
+  $gr->new_color("darkblue",  100,100,255);
+  $gr->new_color("lightgreen",156,215,151); 
+  $gr->new_color("darkgreen",   0, 86, 34);
+  $gr->new_color("lightred",  245,234,229); # light red-purple
+  $gr->new_color("darkred",   159, 64, 16); # red-brown
+  $gr->new_color("nicegreen",   0,110,  0);
+  $gr->lb('reset');
+
+  foreach my $j (1..4) {
+    $gr->moveTo(-4,-$j-.25);$gr->lineTo(-4,-$j+.25,"darkgreen",2);
+    $gr->lineTo(-1,-$j+.25,"darkgreen",2);$gr->lineTo(-1,-$j-.25,"darkgreen",2);
+    $gr->lineTo(-4,-$j-.25,"darkgreen",2);
+    $gr->fillRegion([-3,-$j,"lightgreen"]);
+
+    $gr->moveTo(-1,-$j-.25);$gr->lineTo(-1,-$j+.25,"darkblue",2);
+    $gr->lineTo(1,-$j+.25,"darkblue",2);$gr->lineTo(1,-$j-.25,"darkblue",2);
+    $gr->lineTo(-1,-$j-.25,"darkblue",2);
+    $gr->fillRegion([0,-$j,"lightblue"]);
+
+    $gr->moveTo(1,-$j-.25);$gr->lineTo(1,-$j+.25,"darkred",2);
+    $gr->lineTo(4,-$j+.25,"darkred",2);$gr->lineTo(4,-$j-.25,"darkred",2);
+    $gr->lineTo(1,-$j-.25,"darkred",2);
+    $gr->fillRegion([3,-$j,"lightred"]);
+
+    $gr->lb( new Label(0, 1,"$Sequence",'nicegreen','center','middle'));
+    $gr->lb( new Label(0, 0.5,"$State",'nicegreen','center','middle'));
+
+  }
+
+
+$gr->lb( new Label(-3.5,4.5, "$B[0][0]",'black','center','middle')); 
+$gr->lb( new Label(-3.5,4, "$B[0][1]",'black','center','middle')); 
+$gr->lb( new Label(-3.5,3.5, "$B[0][2]",'black','center','middle')); 
+$gr->lb( new Label(-3.5,3, "$B[0][3]",'black','center','middle')); 
+
+$gr->lb( new Label(0,4.5, "$B[1][0]",'black','center','middle')); 
+$gr->lb( new Label(0,4, "$B[1][1]",'black','center','middle')); 
+$gr->lb( new Label(0,3.5, "$B[1][2]",'black','center','middle')); 
+$gr->lb( new Label(0,3, "$B[1][3]",'black','center','middle')); 
+
+$gr->lb( new Label(3.5,4.5, "$B[2][0]",'black','center','middle')); 
+$gr->lb( new Label(3.5,4, "$B[2][1]",'black','center','middle')); 
+$gr->lb( new Label(3.5,3.5, "$B[2][2]",'black','center','middle')); 
+$gr->lb( new Label(3.5,3, "$B[2][3]",'black','center','middle')); 
+
+
+#  A filled in circle
+#  
+add_functions($gr,
+"2+sqrt(.25-(x+3)^2) for x in <-3.5,-2.5> using color:darkgreen and weight:2",
+"2-sqrt(.25-(x+3)^2) for x in <-3.5,-2.5> using color:darkgreen and weight:2", "1.75-sqrt(.25-(x+3)^2) for x in <-3.5,-2.5> using color:darkgreen and weight:2", 
+
+"2+sqrt(.25-(x-3)^2) for x in <1.5,3.5> using color:darkred and weight:2",
+"2-sqrt(.25-(x-3)^2) for x in <1.5,3.5> using color:darkred and weight:2", 
+"1.75-sqrt(.25-(x-3)^2) for x in <1.5,3.5> using color:darkred and weight:2", 
+
+"2+sqrt(.25-(x)^2) for x in <-.5,.5> using color:darkblue and weight:2",
+"2-sqrt(.25-(x)^2) for x in <-.5,.5> using color:darkblue and weight:2",
+);
+
+######### transition probabilities
+    $gr->lb( new Label(-4,1.5, "$A[0][0]",'black','center','middle'));     
+    $gr->lb( new Label(2.5,1.5, "$A[2][2]",'black','center','middle'));
+    $gr->lb( new Label(-2,2.2, "$A[0][1]",'black','center','middle'));   
+    $gr->lb( new Label(1,2.2, "$A[1][2]",'black','center','middle'));   
+    $gr->lb( new Label(3.9,2.2, "$A[2][0]",'black','center','middle'));   
+   
+
+$gr->fillRegion([-3,2,"lightgreen"]);
+$gr->lb( new Label(-3, 2,"E",'black','center','middle'));
+
+$gr->fillRegion([0,2,"lightblue"]);
+$gr->lb( new Label(0, 2,"5's",'black','center','middle'));
+
+$gr->fillRegion([3,2,"lightred"]);
+$gr->lb( new Label(3,2,"I",'black','center','middle'));
+
+$gr->moveTo(-2.5,2);$gr->lineTo(-.5,2,"darkgreen",2); # bottom edge
+$gr->moveTo(.5,2);$gr->lineTo(2.5,2,"darkgreen",2); # bottom edge
+$gr->moveTo(3.5,2);$gr->lineTo(4.0,2,"darkgreen",2); # bottom edge
+
+# and a point
+#$gr->stamps( closed_circle(0,3,'blue') );
+####################################################
+TEXT(beginproblem());
+Context()->texStrings;
+BEGIN_TEXT
+We will work with two examples: $PAR
+
+ Sequence Model 
+<table border="1" cellpadding="5" >
+<tr bgcolor ="salmon", ><td>Tansition Matrix </td> <td> Emision Matrix </td></tr>
+<tr><td><table border ="0"><center>
+<tr><td></td><td><center> E </td><td> <center> 5's  </td>
+<td> <center> I  </td></tr>
+<tr><td><center> E  |</td><td><center> $A[0][0] , </td><td> <center>$A[0][1] , </td><td><center> $A[0][2]  </td></tr>
+<tr><td><center> 's|</td><td> <center>$A[1][0] , </td><td><center> $A[1][1] , </td><td><center> $A[1][2]  </td></tr>
+<tr><td><center> I  |</td><td> <center>$A[2][0] , </td><td><center> $A[2][1] ,</td><td> <center>$A[2][2] </td></tr>
+</tr>
+</table></td>
+
+<td><table>
+<tr><td></td><td><center> A </td><td><center>G ,</td><td><center>C ,</td><td><center>T ,</td></tr>
+
+<tr><td><center> E  |</td><td><center>$sB[0][0] ,</td><td><center>$sB[1][0] ,</td><td><center>$sB[0][2] ,</td><td>$sB[0][3]</td></tr>
+<tr><td><center> 's  |</td><td><center>$sB[1][0] ,</td><td><center>$sB[1][1] ,</td><td><center>$sB[1][2] ,</td><td><center>$sB[1][3] </td></tr>
+<tr><td><center> I|</td><td><center>$sB[2][0] ,</td><td><center>$sB[2][1] ,</td><td><center>$sB[2][2] ,</td><td><center>$sB[2][3]</td></tr>
+</table></td>
+
+</tr>
+</table>
+$PAR
+   Weather Model $BR
+
+<table border="1" cellpadding="5" >
+<tr bgcolor ="salmon", ><td>Tansition Matrix </td> <td> Emision Matrix </td></tr>
+<tr><td><table border ="0"><center>
+<tr><td></td><td><center> H </td><td> <center> C  </td></tr>
+<tr><td> H  |</td><td><center> $wA[0][0] , </td><td> <center>$wA[0][1]  </td></tr>
+<tr><td> C  |</td><td> <center>$wA[1][0] , </td><td><center> $wA[1][1]  </td></tr>
+</tr>
+</tr>
+
+</table></td>
+
+<td><table>
+<tr><td></td><td><center> S </td><td> <center> M  </td>
+<td> <center> L  </td></tr>
+<tr><td>H  |</td><td><center>$wB[0][0] ,</td><td><center>$wB[1][0] ,</td><td><center>$wB[0][2] </td></tr>
+<tr><td>C  |</td><td><center>$wB[1][0] ,</td><td><center>$wB[1][1] ,</td><td><center>$wB[1][2] </td></tr>
+
+</table></td>
+
+</tr>
+</table>
+
+$PAR
+###########################################################################
+$PAR 
+$BBOLD Weather $EBOLD $BR
+For the observation (0,1,0,2)=(S,M,S,L) $BR
+I need to calculate what are the probabilities of the hidden states
+$PAR Weather example: \(P(HHCC)\) 
+
+\(\pi_x_0=\)The probability of starting in state \(x_0\) $BR
+$BR Weather example: \(P(H)\) 
+
+\(b(O_0)=\) The probability of observing \(O_0\) $BR
+$BR Weather example: \(P(S)\) 
+
+\(a_{x_0x_1}=\) The transition probability between state \(x_0\) to state \(x_1\) $BR
+$BR Weather example: \(P(HHCC)\)
+
+
+The probabilities
+\(P(X)=P(HHCC)=
+\pi_x_0
+\cdot b_x_0(O_0)\cdot a_{x_0x_1} 
+\cdot b_x_1(O_1)\cdot a_{x_1x_2}
+\cdot b_x_2(O_2)\cdot a_{x_2x_3}
+\cdot b_x_3(O_3)\)
+$PAR
+\(P({HHCC})=0.6*.1*0.7*.4*.3*.7*.6*.1=$sP{HHCC}\)
+
+###########################################################################
+
+What is the best sequence: $BR
+Dynamical computing choses the one with the best score CCCH $BR
+Hidden Markov Models choses that maximizes the expected number of correct states CHCH  $BR
+
+$BR Dynamical computing $BR
+$BCENTER
+\{ begintable(4) \}
+\{ row( "Hidden States", "Probabilities", "Logaritmo", "" ) \}
+\{ row( "HHHH", "$sP{HHHH}", "$lsP{HHHH}", "" ) \}
+\{ row( "HHHC", "$sP{HHHC}", "$lsP{HHHC}", "" ) \}
+\{ row( "HHCH", "$sP{HHHC}", "$lsP{HHHC}", "" ) \}
+\{ row( "HHCC", "$sP{HHCC}", "$lsP{HHCC}", "" ) \}
+\{ row( "HCHH", "$sP{HCHH}", "$lsP{HCHH}", "" ) \}
+\{ row( "HCHC", "$sP{HCHC}", "$lsP{HCHC}", "" ) \}
+\{ row( "HCCH", "$sP{HCCH}", "$lsP{HCCH}", "" ) \}
+\{ row( "HCCC", "$sP{HCCC}", "$lsP{HCCC}", "" ) \}
+\{ row( "CHHH", "$sP{CHHH}", "$lsP{CHHH}", "" ) \}
+\{ row( "CHHC", "$sP{CHHC}", "$lsP{CHHC}", "" ) \}
+\{ row( "$BBOLD CHCH $EBOLD", "$sP{CHCH}", "$lsP{CHCH}", "" ) \}
+\{ row( "CHCC", "$sP{CHCC}", "$lsP{CHCC}", "" ) \}
+\{ row( "CCHH", "$sP{CCHH}", "$lsP{CCHH}", "" ) \}
+\{ row( "CCHC", "$sP{CCHC}", "$lsP{CCHC}", "" ) \}
+\{ row( "$BBOLD CCCH $EBOLD", "$sP{CCCH}", "$lsP{CCCH}", "" ) \}
+\{ row( "CCCC", "$sp{CCCC}", "$lsp{CCCC}", "" ) \}
+\{ endtable() \}
+$ECENTER
+
+$PAR HMM $BR
+<table border ="2">
+<tr bgcolor ="salmon"><td></td><td>Position 0</td><td>Position 1</td><td>Position 2</td><td>Position 3</td></tr>
+<tr><td>\(P(H)\)</td><td>$PH[0]</td><td>$PH[1]</td><td>$PH[2]</td><td>$PH[3]</td></tr>
+<tr><td>\(P(C)\)</td><td>$PC[0]</td><td>$PC[1]</td><td>$PC[2]</td><td>$PC[3]</td></tr>
+<tr><td>Winnner</td><td>C</td><td>H</td><td>C</td><td>H</td></tr>
+
+</table>
+$PAR 
+Next a problem
+####################################################################
+
+This exercise is based on the articles 
+$BR A revealing introduction to Hidden Markov Models (Mark Stamp) $BR
+and What is a Hidden Markov Model? (Sean R Eddy). $PAR
+$BCENTER
+$PAR
+\{ image( insertGraph($gr), height=>400, width=>400, tex_size=>800 ) \}
+$ECENTER
+
+Notation of Hidden Markov Models $PAR
+$PAR \(\lambda=(A,B,\pi)\)
+$PAR \(O\)
+$PAR \(N\)
+$PAR \(M\)
+$PAR \(A\)
+$PAR \(B\)
+$PAR \(\pi\)
+$PAR \(P(O|\lambda)\)
+$BR \(\)
+
+$PAR
+$BCENTER
+\{ begintable(4) \}
+\{ row( "Variable", "Descripcion", "Ejemplo", "Ejercicio" ) \}
+\{ row( "$BCENTER \(T  \)$ECENTER ", "Length of the observation sequence", 
+"$BCENTER 4 $ECENTER", "2" ) \}
+
+\{ row( "$BCENTER \(O  \)$ECENTER", "Observation sequence $BR 
+                   = (\(O_0,O_1,...,O_{T-1}\))",
+ "Sequence Observed: $BR (S,M,S,L)=(0,1,0,2)", "2" ) \}
+\{ row( "$BCENTER \(N  \)$ECENTER", "Number of states in the model", " $BCENTER 2 $ECENTER",ans_rule(5) ) \}
+\{ row( "$BCENTER \(Q  \)$ECENTER", "Distict states of the Markov Process $BR  = {\(q_0,q_1,...,q_{N-1}\)}", "$BCENTER {H,C} $ECENTER", "2" ) \}
+\{ row( "$BCENTER \(M  \)$ECENTER", "Number of observation symbols",
+ "$BCENTER 3 $ECENTER", "2" ) \}
+\{ row( "$BCENTER \(V  \)$ECENTER", "Set of possible observations $BR
+                     = {\(0,1,...,M-1\)}", "$BCENTER {S,M,L} $ECENTER", "2" ) \}
+\{ row( "$BCENTER \(A  \)$ECENTER", "State transition probabilities",
+ "$BCENTER Matrix A $ECENTER", "2" ) \}
+\{ row( "$BCENTER \(B  \)$ECENTER", "Observation probability matrix", 
+"$BCENTER Matrix B $ECENTER", "2" ) \}
+\{ row( "$BCENTER \(\pi  \)$ECENTER", "initial state distribution", 
+"$BCENTER (.4,.6)$ECENTER", "2" ) \}
+\{ endtable() \}
+$ECENTER
+
+$PAR
+END_TEXT
+Context()->normalStrings;
+
+ANS( num_cmp($A[1][1]) );
+ANS( num_cmp($A[1][1]) );
+ANS( num_cmp($A[1][1]) );
+ANS( num_cmp($A[1][1]) );
+
+Context()->texStrings;
+
+SOLUTION(EV3(<<'END_SOLUTION'));
+$PAR SOLUTION $PAR
+END_SOLUTION
+
+
+
+
+ENDDOCUMENT();
+     

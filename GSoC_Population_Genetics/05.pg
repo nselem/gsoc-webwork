@@ -1,0 +1,216 @@
+##############################################################################
+# DESCRIPTION
+# Problem from Gillespi, Population Genetics, 1th ed.
+# WeBWorK problem written by Nelly Sélem LANGEBIO CINVESTAV <nselem84@gmail.com>
+# ENDDESCRIPTION
+
+## KEYWORDS('probability','allele', 'gen', 'selection')
+## Tagged by nselem 22/04/2012
+
+## DBsubject('Probability')
+## DBchapter('Aplications')
+## DBsection('Genetics')
+## Date('22/04/2012')
+## Author('Nelly Selem')
+## Institution('LANGEBIO CINVESTAV')
+## TitleText1('Population Genetics')
+## EditionText1('1')
+## AuthorText1('Jhon H. Gillespie')
+## Section1('3.1')
+
+
+## Textbook tags
+## HHChapter1('Natural Selection')
+
+# DESCRIPTION
+# Problema de Genetica, Jhon H. Gillespie, 1th ed.
+# escrito en WeBWork por Nelly Selem <nselem84@gmail.com>
+# ENDDESCRIPTION
+
+## KEYWORDS('probabilidad','allelo', 'gen', 'seleccion')
+## Tagged by nselem 22/04/12
+
+## DBsubject('Probabilidad')
+## DBchapter('Aplicaciones')
+## DBsection('Genetica')
+## Date('22-04-2012')
+## Translate('Nelly Sélem')
+## Institution('LANGEBIO CINVESTAV')
+
+DOCUMENT();
+
+loadMacros(
+"PGstandard.pl",
+"MathObjects.pl",
+"PGchoicemacros.pl",
+"PGgraphmacros.pl",
+"unionTables.pl",
+"PG.pl",
+"PGbasicmacros.pl",
+"PGchoicemacros.pl",
+"PGanswermacros.pl",
+);
+
+Context("Numeric");
+Context()->flags->set( reduceConstants=>0 );
+Context()->variables->add(P=>'Real',h=>'Real');
+$refreshCachedImages=1;
+$showPartialCorrectAnswers = 1;
+#####################################################
+
+######################################################################
+##  Set Variables
+#
+$s=.1;
+$h=-1*random(1,2,.1);
+$hs=-1*.5*.1;
+$p=random(.05,.15,.01);
+$p0=$p;
+$p1=random(.8,.9,.01);
+$p_hat=Compute("($h-1)/(2*$h-1)");
+$p_equilibrio=Compute("(h-1)/(2*h-1)");
+#######################################################################
+
+########Grafico de la probabilidad de equilibrio segun h
+
+$sgr = init_graph(-1,-2,2,2,axes=>[0,0],size=>[250,250]);
+add_functions( $sgr, "$p_equilibrio for h in <-1,2> using color:blue and weight:1");
+$sgr->v_grid("gray",-.5,.5,1,1.5); 
+$sgr->h_grid("gray",-1.5,-1,-.5,.5,1,1.5);
+$sgr->lb( new Label(-0.1,-.5,'-0.5',  'black','left','top'));
+$sgr->lb( new Label(-0.1,-1,'-1',  'black','left','top'));
+$sgr->lb( new Label(-0.1,-1.5,'-1.5',  'black','left','top'));
+$sgr->lb( new Label(-0.1,.5,'0.5',  'black','left','top'));
+$sgr->lb( new Label(-0.1,1,'1',  'black','left','top'));
+$sgr->lb( new Label(-0.1,1.5,'1.5',  'black','left','top'));
+$sgr->lb( new Label(-0.1,2,'p',  'black','left','top'));
+
+$sgr->lb( new Label(0.5,-.1,'0.5',  'black','left','top'));
+$sgr->lb( new Label(1,-.1,'1',  'black','left','top'));
+$sgr->lb( new Label(1.5,-.1,'1.5',  'black','left','top'));
+$sgr->lb( new Label(2,-.1,'h',  'black','right','top'));
+
+#########################################################################
+#  Multiple choice object 
+#
+####################################################
+### the radio button
+
+$ml = new_match_list();
+###########################################
+
+####################################################
+TEXT(beginproblem());
+Context()->texStrings;
+BEGIN_TEXT_ES
+\{
+$ml->qa(
+"Si \(h<0\) y se presenta $BBOLD sobredominancia $EBOLD entonces", " los valores de \(\hat p\) estan entre \((.5,1) \), mas cerca de \(.5\) entre menor sea \(h\). Recordemos que en este caso si existe una frecuencia de equilibrio y es un atractor estable. 
+",
+"Si \(0<h<1\) y se presenta $BBOLD dominancia incompleta $EBOLD", "entonces \(\hat p\in(1,\infty)\cup(-\infty,0)\) lo que no es un valor aceptable para \(p\) que debe mantenerse entre \(0\) y \(1\). No existe una frecuencia de equilibrio. ",
+
+"Si \(1<h<2\) se presenta $BBOLD subdominancia $EBOLD ", "entonces \(\hat p\in(0,.5)\), mas cerca de \(.5\) mientras mayor sea \(h\). Existe una frecuencia de equilibrio \(\hat p\) pero es inestable. "
+);
+$ml->rf_print_q(~~&pop_up_list_print_q);
+$ml->ra_pop_up_list([No_answer=>"?",A=>"A",B=>"B",C=>"C"]);
+$ml->choose(3);
+\}
+$BBOLD Seleccion Balanceadora $BR $EBOLD
+
+Grafica \(\hat p=\frac{h-1}{2h-1}\) como una funcion de \( h \) para \( -1 <h <2\). Localiza las regiones de la grafica que corresponden a dominancia incompleta y sobre dominancia. Finalmente discute los valores de \( \hat p\) en estas dos regiones. $PAR
+
+
+$PAR
+Contesta las siguientes preguntas en base a tu grafica.
+\{
+ColumnTable(
+"".$ml->print_q()." ",
+"".$ml->print_a()."",
+indent => 0, separation => 30, valign => "TOP"); \}
+
+$PAR
+Si \( h =$h \) Cuanto vale el valor de equilibrio \(\hat p \):
+$BR\( \hat p = \) \{ ans_rule(35) \}
+
+END_TEXT
+
+BEGIN_TEXT
+\{
+$ml->qa(
+"If \(h<0\), there is $BBOLD overdominance $EBOLD then", " \(\hat p\) is between \((.5,1) \), approaching \(.5\) as \(h\) is smaller. Let's recall that, on this particular case, an equilibrium frequency exists and it is a stable attractor.
+",
+"If \(0<h<1\), there is $BBOLD incomplete dominance $EBOLD", " then \(\hat p\in(1,\infty)\cup(-\infty,0)\) this is not acceptable for \(p\) which should remain between \(0\) and \(1\). There is no equilibrium frequency. ",
+
+"If \(1<h<2\), there is $BBOLD underdominance $EBOLD ", " then \(\hat p\in(0,.5)\), approaching \(.5\) as \(h\) is bigger. There is an equilibrium frequency \(\hat p\) but it's not stable. "
+);
+$ml->rf_print_q(~~&pop_up_list_print_q);
+$ml->ra_pop_up_list([No_answer=>"?",A=>"A",B=>"B",C=>"C"]);
+$ml->choose(3);
+\}
+$BBOLD Balancing Selection $BR $EBOLD
+
+Solve the graph for \(\hat p=\frac{h-1}{2h-1}\) dependent on \( h \) for \( -1 <h <2\). Find the regions that belong to incomplete dominance and overdominance. Discuss the different values of \( \hat p\) within these two regions. $PAR
+
+
+$PAR
+By looking at your graph, answer the following questions:
+\{
+ColumnTable(
+"".$ml->print_q()." ",
+"".$ml->print_a()."",
+indent => 0, separation => 30, valign => "TOP"); \}
+
+$PAR
+If \( h =$h \), what is the equilibrium point \(\hat p \):
+$BR\( \hat p = \) \{ ans_rule(35) \}
+
+END_TEXT
+
+install_problem_grader(~~&std_problem_grader);
+$showPartialCorrectAnswers = 0;
+
+ANS( str_cmp( $ml->ra_correct_ans ) );
+
+BEGIN_SOLUTION_ES
+$ECENTER
+\{
+ColumnTable(
+$BCENTER.
+  image( insertGraph($sgr), tex_size=>250, height=>250, width=>250,
+          extra_html_tags=>'alt="Gráfica del incremento en la frecuencia alelica"' ) .PAR."$BBOLD Figura 1 $EBOLD Gráfica de \(\hat p=\frac{h-1}{2h-1}\)".$ECENTER,
+
+"A partir de la grafica podemos saber las respuestas a las preguntas. $PAR
+
+Finalmente, cuando \(h=$h\) , la frecuencia alelica de equilibrio sera   $PAR
+\(p=\frac{1-$h}{1-2($h)}=$p_hat\)
+",
+indent => 0, separation => 30, valign => "TOP"
+); 
+\}
+END_SOLUTION
+
+BEGIN_SOLUTION
+$ECENTER
+\{
+ColumnTable(
+$BCENTER.
+  image( insertGraph($sgr), tex_size=>250, height=>250, width=>250,
+          extra_html_tags=>'alt="Allelic frequency increase"' ) .PAR."$BBOLD Figure 1 $EBOLD \(\hat p=\frac{h-1}{2h-1}\) graph".$ECENTER,
+
+"From this graph, we can solve the given questions. $PAR
+
+Finally, when \(h=$h\) , the equilibrium allelic frequency will be   $PAR
+\(p=\frac{1-$h}{1-2($h)}=$p_hat\)
+",
+indent => 0, separation => 30, valign => "TOP"
+); 
+\}
+END_SOLUTION
+Context()->normalStrings;
+
+ANS( num_cmp($p_hat) );
+###########################################################
+
+
+ENDDOCUMENT();
+     

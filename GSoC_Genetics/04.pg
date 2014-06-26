@@ -1,0 +1,99 @@
+##DESCRIPTION
+##  GSoC - Genetics
+##ENDDESCRIPTION
+
+##KEYWORDS('Genetics')
+
+## DBsubject('Genetics')
+## DBchapter('Fundamentals')
+## DBsection('')
+## Date('5/1/2014')
+## Author('Nelly Selem')
+## Institution('GSoC')
+
+########################################################################
+
+DOCUMENT();      
+
+loadMacros(
+   "PGstandard.pl",     # Standard macros for PG language
+   "MathObjects.pl",
+   "GSoC_Genetics.pl",
+   "unionTables.pl"
+   #"source.pl",        # allows code to be displayed on certain sites.
+   #"PGcourse.pl",      # Customization file for the course
+);
+
+# Print problem number and point value (weight) for the problem
+TEXT(beginproblem());
+
+# Show which answers are correct and which ones are incorrect
+$showPartialCorrectAnswers = 1;
+
+# A
+
+SRAND($problemSeed);
+$a = random(12, 128)*16;
+$za = Real(($a/16)*9);
+$zb = Real(($a/16)*3);
+$zc = Real(($a/16)*3);
+$zd = Real($a/16);
+$ze = Real($a/16);
+$zf = Real(($a/16)*6);
+$zg = Real(($a/16)*4);
+$zh = Real(($a/16)*8);
+
+# B
+BEGIN_TEXT
+
+You are looking at the phenotype of two alleles within a population of $a individuals.
+$BR
+The two alleles describe the color and the size of an individual in the following manner:
+$BR
+$BR
+\{
+BeginTable(border => 1, tex_border => "1pt", spacing => 0, padding => 4).
+AlignedRow([$BBOLD . "Trait" . $EBOLD, $BBOLD . "Dominant" . $EBOLD, $BBOLD . "Recessive" . $EBOLD], align => LEFT, separation => 0).
+AlignedRow(["Color", "Dark", "Light"], align => LEFT, separation => 0).
+AlignedRow(["Size", "Big", "Small"], align => LEFT, separation => 0).
+EndTable()
+\}
+$BR
+Assuming independent mendelian segregation of two dominant traits, how many individuals would you expect for the following phenotypes:
+$BR
+$BR
+\{
+BeginTable(border => 1, tex_border => "1pt", spacing => 0, padding => 4).
+AlignedRow(["Dark and Big", $za->ans_rule], align => LEFT, separation => 0).
+AlignedRow(["Dark and Small", $zb->ans_rule], align => LEFT, separation => 0).
+AlignedRow(["Light and Big", $zc->ans_rule], align => LEFT, separation => 0).
+AlignedRow(["Light and Small", $zd->ans_rule], align => LEFT, separation => 0).
+EndTable()
+\}
+$BR
+$BR
+If we focus on the Dark and Big individuals, how many of them:
+$BR
+$BR
+\{
+BeginTable(border => 1, tex_border => "1pt", spacing => 0, padding => 4).
+AlignedRow(["Are homozygous for both traits", $ze->ans_rule], align => LEFT, separation => 0).
+AlignedRow(["Are homozygous for at least one trait", $zf->ans_rule], align => LEFT, separation => 0).
+AlignedRow(["Are heterozygous on both alleles", $zg->ans_rule], align => LEFT, separation => 0).
+AlignedRow(["Are heterozygous", $zh->ans_rule], align => LEFT, separation => 0).
+EndTable()
+\}
+
+END_TEXT
+
+# C
+ANS($za->cmp);
+ANS($zb->cmp);
+ANS($zc->cmp);
+ANS($zd->cmp);
+ANS($ze->cmp);
+ANS($zf->cmp);
+ANS($zg->cmp);
+ANS($zh->cmp);
+
+ENDDOCUMENT();        

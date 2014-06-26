@@ -1,0 +1,293 @@
+##############################################################################
+# DESCRIPTION
+# Problem from Gillespi, Population Genetics, 1th ed.
+# WeBWorK problem written by Nelly Sélem LANGEBIO CINVESTAV <nselem84@gmail.com>
+# ENDDESCRIPTION
+
+## KEYWORDS('probability','allele', 'gen', 'selection')
+## Tagged by nselem 22/04/2012
+
+## DBsubject('Probability')
+## DBchapter('Aplications')
+## DBsection('Genetics')
+## Date('22/04/2012')
+## Author('Nelly Selem')
+## Institution('LANGEBIO CINVESTAV')
+## TitleText1('Population Genetics')
+## EditionText1('1')
+## AuthorText1('Jhon H. Gillespie')
+## Section1('3.1')
+
+
+## Textbook tags
+## HHChapter1('Natural Selection')
+
+# DESCRIPTION
+# Problema de Genetica, Jhon H. Gillespie, 1th ed.
+# escrito en WeBWork por Nelly Selem <nselem84@gmail.com>
+# ENDDESCRIPTION
+
+## KEYWORDS('probabilidad','allelo', 'gen', 'seleccion')
+## Tagged by nselem 22/04/12
+
+## DBsubject('Probabilidad')
+## DBchapter('Aplicaciones')
+## DBsection('Genetica')
+## Date('22-04-2012')
+## Translate('Nelly Sélem')
+## Institution('LANGEBIO CINVESTAV')
+
+DOCUMENT();
+
+loadMacros(
+"PGstandard.pl",
+"MathObjects.pl",
+"PGchoicemacros.pl",
+"PGgraphmacros.pl",
+"unionTables.pl",
+);
+
+Context("Numeric");
+Context()->flags->set( reduceConstants=>0 );
+Context()->variables->add(P=>'Real',h=>'Real');
+$refreshCachedImages=1;
+$showPartialCorrectAnswers = 1;
+#####################################################
+
+######################################################################
+##  Set Variables
+#
+$s=.1;
+$h=random(.1,.9,.1);
+$hs=$h*$s;
+$p=random(.05,.15,.01);
+$p0=$p;
+$p1=random(.8,.9,.01);
+
+#######################################################################
+#  Grafica de Delta_sp
+#
+
+$Q=Compute("1-P");
+$BarOmega=Compute("1-2*P*$Q*$h*$s-$Q*$Q*$s");
+$Delta=Compute("(P*$Q*$s)*(P*$h+$Q*(1-$h))/($BarOmega)");
+
+#############################################################
+#  Grafico mean fitness
+$gromega = init_graph(-0.1,.8,1,1.1,axes=>[0,0],size=>[250,250]);
+
+### 0<h<1 Dominancia incompleta. Seleccion direccional. color azul
+$h[0]=$h;  $Color[0]="azul";  $Seleccion[0]="direccional"; $Dominancia[0]="dominancia incompleta";
+$BarOmega=Compute("1-2*P*$Q*$h[0]*$s-$Q*$Q*$s"); 
+add_functions( $gromega, "$BarOmega for P in <0,1> using color:blue and weight:1");
+
+## h<0  Seleccion balanceadora. Sobredominancia. Color rojo.
+$h[1]=-$h;       $Color[1]="roja";  $Seleccion[1]="balanceadora"; $Dominancia[1]="sobredominancia";
+$BarOmega=Compute("1-2*P*$Q*$h[1]*$s-$Q*$Q*$s");
+add_functions( $gromega, "$BarOmega for P in <0,1> using color:red and weight:1");
+$p_eq=Compute("($h[1]-1)/(2*$h[1]-1)");
+
+## h>1 Seleccion disruptiva. Dominancia incompleta. Color negro. 
+$h[2]=1+$h;  $Color[2]="negra"; $Seleccion[2]="disruptiva";$Dominancia[2]="subdominancia"; 
+$BarOmega=Compute("1-2*P*$Q*$h[2]*$s-$Q*$Q*$s");
+add_functions( $gromega, "$BarOmega for P in <0,1> using color:black and weight:1");
+
+$gromega->lb( new Label(0.2,.85,'p Frequency', 'black','left','top'));
+$gromega->lb( new Label(0.1,1.1,'Fitness', 'black','left','top'));
+$gromega->lb( new Label(-0.1,.8,'0.8', 'black','left','top'));
+$gromega->lb( new Label(-0.1,.85,'.85', 'black','left','top'));
+$gromega->lb( new Label(-0.1,.9,'0.9', 'black','left','top'));
+$gromega->lb( new Label(-0.1,.95,'0.95', 'black','left','top'));
+$gromega->lb( new Label(-0.1,1,'1.0', 'black','left','top'));
+$gromega->lb( new Label(-0.1,1.05,'1.05', 'black','left','top'));
+$gromega->lb( new Label(-0.1,1.1,'1.1', 'black','left','top'));
+$gromega->lb( new Label(0.2,.8,'0.2', 'black','left','bottom'));
+$gromega->lb( new Label(0.4,.8,'0.4', 'black','left','bottom'));
+$gromega->lb( new Label(0.6,.8,'0.6', 'black','left','bottom'));
+$gromega->lb( new Label(0.8,.8,'0.8', 'black','left','bottom'));
+
+$gromega->v_grid("gray",.2,.4,.6,.8); 
+$gromega->h_grid("gray",0.8,.85,.9,.95,1,1.05,1.1);
+
+TEXT(beginproblem());
+Context()->texStrings;
+BEGIN_TEXT_ES
+\{
+$I=random(1,3,1);
+$ml = new_match_list();
+$ml->qa(
+"\(h=$h[$I%3]\). Fitness promedio de la seleccion $Seleccion[$I%3] ?", "Grafica $Color[$I%3]",
+"\(h=$h[($I+1)%3]\). Fitness promedio cuando hay $Dominancia[($I+1)%3]?", "Grafica $Color[($I+1)%3]",
+"\(h=$h[($I+2)%3]\). Fitness promedio de la seleccion $Seleccion[($I+2)%3] ?", "Grafica $Color[($I+2)%3]"
+);
+
+$ml->rf_print_q(~~&pop_up_list_print_q);
+$ml->ra_pop_up_list([No_answer=>"?",A=>"A",B=>"B",C=>"C"]);
+$ml->choose(3);  
+$ml->makeLast("Ninguna de las anteriores");
+\}
+$BBOLD Fitness promedio $BR $EBOLD
+
+Grafica \(\bar\omega=1-2hspq-sq^2\) el fitness promedio de una poblacion, en funcion de \(p\) para cuando \(s=0.1\) y \(h=$h[1]\), \(h=$h\) y \(h=$h[2]\). 
+$PAR
+
+\{
+ColumnTable(
+$BCENTER.
+ image( insertGraph($gromega), width=>250, 
+    height=>250, tex_size=>250 ).PAR."$BBOLD Figura 1 $EBOLD Gráfica de Fitness promedio $BR \(s=$s\)".$ECENTER,
+$BCENTER.
+"$PAR
+$BBOLD Selecciona la grafica correspondiente a: $EBOLD
+".$ml->print_q()." 
+$BR
+".$ml->print_a()."$PAR
+",
+indent => 0, separation => 30, valign => "TOP"
+); 
+\}
+
+$BBOLD Finalmente, $EBOLD Utiliza tus conocimientos de maximos y minimos de calculo diferencial para calcular el valor de \(p\) en el que se alcanza el maximo fitness promedio posible. $BR
+\(p=\) \{ans_rule(8)\} $PAR
+END_TEXT
+
+BEGIN_TEXT
+\{
+$Color[0]="blue";
+$Color[1]="red";
+$Color[2]="black";
+
+$I=random(1,3,1);
+$ml = new_match_list();
+$ml->qa(
+"\(h=$h[$I%3]\). Average fitness of $Seleccion[$I%3] selection?", "$Color[$I%3] graph",
+"\(h=$h[($I+1)%3]\). Average fitness when there is $Dominancia[($I+1)%3]?", "$Color[($I+1)%3] graph",
+"\(h=$h[($I+2)%3]\). Average fitness of $Seleccion[($I+2)%3] selection?", "$Color[($I+2)%3] graph"
+);
+
+$ml->rf_print_q(~~&pop_up_list_print_q);
+$ml->ra_pop_up_list([No_answer=>"?",A=>"A",B=>"B",C=>"C"]);
+$ml->choose(3);  
+$ml->makeLast("None of the above");
+\}
+$BBOLD Average fitness $BR $EBOLD
+
+Graph the average fitness of a population \(\bar\omega=1-2hspq-sq^2\) as a function of \(p\) when \(s=0.1\) and \(h=$h[1]\), \(h=$h\) and \(h=$h[2]\). 
+$PAR
+
+\{
+ColumnTable(
+$BCENTER.
+ image( insertGraph($gromega), width=>250, 
+    height=>250, tex_size=>250 ).PAR."$BBOLD Figure 1 $EBOLD Average fitness graph $BR \(s=$s\)".$ECENTER,
+$BCENTER.
+"$PAR
+$BBOLD Choose the corresponding graph for: $EBOLD
+".$ml->print_q()." 
+$BR
+".$ml->print_a()."$PAR
+",
+indent => 0, separation => 30, valign => "TOP"
+); 
+\}
+
+$BBOLD Finally, $EBOLD recall how minimal and maximal regions are found using differential calculus and find the value of \(p\) where the maximum possible fitness is achieved. $BR
+\(p=\) \{ans_rule(8)\} $PAR
+END_TEXT
+
+#############Answers#####################
+Context()->normalStrings;
+install_problem_grader(~~&std_problem_grader);
+$showPartialCorrectAnswers = 0;
+
+ANS( str_cmp( $ml->ra_correct_ans ) );
+ANS( $p_eq->cmp() );
+
+#####################################################
+
+BEGIN_SOLUTION_ES
+\{
+@correctAns = @{$ml->ra_correct_ans};
+@explanations = (
+"Cuando  \(h=$h\) el termino \(-2hspq\) es negativo en \(\bar\omega\) ,asi que esta grafica va debajo de la roja  $BR",
+"Cuando  \(h=-$h\) el termino \(-2hspq\) se vuelve positivo en \(\bar\omega\) , por lo que esta va por arriba de las demas graficas $BR",
+"Cuando  \(h=1.$h\) el termino \(-2hspq\) es negativo en \(\bar\omega\) y menor que si \(h=$h\), asi que esta grafica va debajo de la azul  $BR"
+);
+
+@askedQuestions = ();
+foreach $q ( @{$ml->selected_q} ) {
+  $i = 0;
+  foreach $mq ( @{$ml->questions} ) {
+    if ( $q eq $mq ) {
+      push(@askedQuestions, $i);
+      last;
+    }
+    $i++;
+  } 
+}
+\}
+La respuesta a la primera pregunta es 
+$correctAns[0], porque
+$explanations[$askedQuestions[0]]
+
+$PAR
+La respuesta a la segunda pregunta es
+$correctAns[1], porque
+$explanations[$askedQuestions[1]]
+
+$PAR
+La respuesta a la segunda pregunta es
+$correctAns[2], porque
+$explanations[$askedQuestions[2]] 
+
+$PAR Finalmente al derivar \(\bar\omega\) notamos que esta funcion tiene un punto critico cuando \(p=\frac{1-h}{1-2h}\). $BR
+Al observar las graficas, vemos que este punto critico es un maximo solo en la grafica roja, es  decir cuando \(h<0\). $BR
+Entonces \(p=\frac{1-(-$h)}{1-2(-$h)}=$p_eq\). $BR
+
+Que de hecho si recordamos es justamente el valor de equilibrio de la seleccion balanceadora. Es decir el maximo fitness posible se alcanza cuando hay sobre dominancia y se esta justo en la frecuencia alelica de balance.
+END_SOLUTION
+
+BEGIN_SOLUTION
+\{
+@correctAns = @{$ml->ra_correct_ans};
+@explanations = (
+"When \(h=$h\), the term \(-2hspq\) is negative on \(\bar\omega\), so these values appear below the red ones  $BR",
+"When \(h=-$h\), the term \(-2hspq\) is positive on \(\bar\omega\), so these values appear above all others $BR",
+"When \(h=1.$h\), the term \(-2hspq\) is negative on \(\bar\omega\) and smaller than when \(h=$h\), so these values appear below the blue ones $BR"
+);
+
+@askedQuestions = ();
+foreach $q ( @{$ml->selected_q} ) {
+  $i = 0;
+  foreach $mq ( @{$ml->questions} ) {
+    if ( $q eq $mq ) {
+      push(@askedQuestions, $i);
+      last;
+    }
+    $i++;
+  } 
+}
+\}
+The answer to the first question is
+$correctAns[0], because
+$explanations[$askedQuestions[0]]
+
+$PAR
+The answer to the second question is
+$correctAns[1], because
+$explanations[$askedQuestions[1]]
+
+$PAR
+The answer to the third question is
+$correctAns[2], because
+$explanations[$askedQuestions[2]] 
+
+$PAR Finally, when differentiating \(\bar\omega\) we can find a critical point for the function at \(p=\frac{1-h}{1-2h}\). $BR
+When looking at the graphs, we can see that this critical point its a maximum only on the red graph, that is, when \(h<0\). $BR
+Therefore \(p=\frac{1-(-$h)}{1-2(-$h)}=$p_eq\). $BR
+
+Which actually is the equilibrium value of the balacing selection. That is, the maximum possible fitness is reached when there is overdominance and the value corresponds to the balanced allelic frequency.
+END_SOLUTION
+
+ENDDOCUMENT();
+     

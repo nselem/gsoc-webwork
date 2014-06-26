@@ -1,0 +1,195 @@
+##############################################################################
+# DESCRIPTION
+# Problem from Gillespie, Population Genetics, 1th ed.
+# WeBWorK problem written by Nelly Sélem LANGEBIO CINVESTAV <nselem84@gmail.com>
+# ENDDESCRIPTION
+
+## KEYWORDS('probability','allele', 'gen', 'selection')
+## Tagged by nselem 22/04/2012
+
+## DBsubject('Probability')
+## DBchapter('Aplications')
+## DBsection('Genetics')
+## Date('22/04/2012')
+## Author('Nelly Selem')
+## Institution('LANGEBIO CINVESTAV')
+## TitleText1('Population Genetics')
+## EditionText1('1')
+## AuthorText1('Jhon H. Gillespie')
+## Section1('3.1')
+
+
+## Textbook tags
+## HHChapter1('Natural Selection')
+
+# DESCRIPTION
+# Problema de Genetica, Jhon H. Gillespie, 1th ed.
+# escrito en WeBWork por Nelly Selem <nselem84@gmail.com>
+# ENDDESCRIPTION
+
+## KEYWORDS('probabilidad','allelo', 'gen', 'seleccion')
+## Tagged by nselem 22/04/12
+
+## DBsubject('Probabilidad')
+## DBchapter('Aplicaciones')
+## DBsection('Genetica')
+## Date('22-04-2012')
+## Translate('Nelly Sélem')
+## Institution('LANGEBIO CINVESTAV')
+
+DOCUMENT();
+
+
+loadMacros(
+"PGstandard.pl",
+"PGgraphmacros.pl",
+"PGunion.pl",
+"imageChoice.pl",
+"MathObjects.pl",
+);
+######################################################################
+##  Set Variables
+#
+$s=.1;
+$h[0]=random(.4,.6,.2);
+$h[1]=-$h[0];
+$h[2]=1;
+$h[3]=1+$h[0];
+$p=.2;
+$pe[0]=$p;
+$p_eq=Compute("($h[3]-1)/(2*$h[3]-1)");
+
+TEXT(beginproblem());
+$refreshCachedImages = 1;
+
+# four sequences
+@seq = ();
+$seq[0] = "h = $h[0]";
+$seq[1] = "h = $h[1]";
+$seq[2] = "h = $h[2]";
+$seq[3] = "h = $h[3]";
+
+
+# Rutina para calcular p en la siguiente generacion
+sub sn { 
+my ( $h, $p ) = @_;
+my $q=1-$p;
+my $omega=Compute("1-2*$p*$q*$h*$s-$q*$q*$s");
+my $delta=($p*$q*$s)*($p*$h+$q*(1-$h))/($omega);
+$p=$p+$delta;
+return ($p);
+}
+
+
+# make graphs for each
+@gr = ();
+foreach my $i (0..3) {
+    $gr[$i] = init_graph(-10,-.1,100,1,'axes'=>[0,0],'grid'=>[1,1]);
+   $gr[$i]->lb( new Label(90,-.1,"generaciones",  'black','right','bottom'));
+    foreach my $j (1..100) {
+        $pe[$j]=sn($h[$i], $pe[$j-1]);
+	if($j%5==0){$gr[$i]->stamps(closed_circle($j, $pe[$j], 'blue') );}
+        if($j%10==0){$gr[$i]->lb( new Label($j,-.05,"$j",  'black','left','bottom'));}
+        if($j%10==0){$gr[$i]->lb( new Label(-.5,($j)/100,"0.$j",  'black','right','bottom'));}
+    }
+}
+
+@QA = ();
+foreach my $i (0..3) { push( @QA, "\($seq[$i]\)",  $gr[$i] ); }
+
+$ml = new_image_match_list(
+  link => 1,                #  do not link to separate image
+  size => [200,200],        #  image size in pixels
+  tex_size => 450,          #  tex size in precent times 10
+  columns => 2,             #  number of columns
+  separation => 20,         #  separation between image columns 
+);
+
+$ml->rf_print_q(~~&pop_up_list_print_q); # use pop-up-lists
+$ml->ra_pop_up_list([ No_answer=>"?", A=>"A", B=>"B", C=>"C", D=>"D"] );
+
+$ml->qa(@QA);               #  set the questions and answers
+$ml->choose(4);             #  select 4 of them
+#$ml->choose_extra(0);      #  and show the other 1
+
+foreach my $i (0..3) {
+  $a[$i] = $ml->ra_correct_ans->[$i];
+}
+
+BEGIN_TEXT_ES
+$BBOLD Los tres tipos de seleccion  $BR $EBOLD $PAR
+$BBOLD 1. Graficas de \(p\) vs generaciones $EBOLD
+
+\{
+ColumnTable(
+"$PAR 
+$ BR
+Relaciona las graficas de la tendencia de \(p\) al paso de las generaciones con el valor de \(h\) que mejor se ajuste a ellas".
+$ml->print_q() .
+""
+, 
+$BCENTER.
+$ml->print_a().$BR."(Click sobre una grafica para alargarla)".
+$ECENTER 
+
+, 
+indent => 0, separation => 30, valign => "TOP"
+)
+\}
+END_TEXT
+
+BEGIN_TEXT
+$BBOLD Three different types of selection $BR $EBOLD $PAR
+$BBOLD 1. \(p\) vs generation graph $EBOLD
+
+\{
+ColumnTable(
+"$PAR 
+$ BR
+Choose the graph that better fits \(p\) across the number of generations for a given value of \(h\)".
+$ml->print_q() .
+""
+, 
+$BCENTER.
+$ml->print_a().$BR."(Click on a graph to enlarge it)".
+$ECENTER 
+
+, 
+indent => 0, separation => 30, valign => "TOP"
+)
+\}
+END_TEXT
+
+install_problem_grader(~~&std_problem_grader);
+$showPartialCorrectAnswers = 0;
+
+ANS(str_cmp($ml->ra_correct_ans));
+
+foreach my $i (0..3) {
+  $a[$i] = $ml->ra_correct_ans->[$i];
+}
+
+BEGIN_SOLUTION_ES
+1 corresponde a la grafica $a[0], 
+2 corresponde a la grafica $a[1], 
+3 corresponde a la grafica $a[2], and
+4 corresponde a la grafica $a[3]. $PAR 
+Si \(h = $h[0]\), entonces la dominancia es incompleta y se lleva a cabo seleccion direccional. Con lo cual \(p\) tiende a 1 describiendo una s $PAR
+Si \(h = $h[1]\), entonces \(A_1\) sobredomina a \(A_2\) y se lleva a cabo seleccion balanceadora, por lo que p tiende a un valor de equilibrio \(\hat p\) mayor que \(.5\) $PAR
+Si \(h = $h[2]\), entonces la dominancia de \(A_2\)sobre \(A_1\) es completa por lo que p tiende 1 $PAR
+Si \(h = $h[3]\), entonces \(A_1\) esta subdominado por \(A_2\). Es decir el fitness del heterocigoto se parece mas al fitness del homocigoto de \(A_2\) que al del homocigoto de \(A_1\), en este caso ocurre seleccion disruptiva y el comportamiento de \(p\) depende de su frecuencia inicial. En la grafica la frecuencia inicial \(p=$p\) esta por debajo de \(.5\) que es lo minimo que puede valer el valor de equilibrio. De hecho \(p=$p\) y \(\hat p =$p_eq\), por lo cual \(p\rightarrow 0\) $PAR
+END_SOLUTION
+
+BEGIN_SOLUTION
+1 belongs to graph $a[0], 
+2 belongs to graph $a[1], 
+3 belongs to graph $a[2], and
+4 belongs to graph $a[3]. $PAR 
+If \(h = $h[0]\), then there is incomplete dominance and, thus, directional selection occurs. \(p\) approaches to 1 following s $PAR
+If \(h = $h[1]\), then \(A_1\) is overdominant to \(A_2\) and balancing selection occurs, \(p\) approaches a steady equilibrium value \(\hat p\) bigger than \(.5\) $PAR
+If \(h = $h[2]\), then \(A_2\) is fully dominant over \(A_1\), \(p\) approaches 1 $PAR
+If \(h = $h[3]\), then \(A_1\) is underdominant to \(A_2\). That means that the heterozygote fitness' is more similar with the \(A_2\) homozygote compared with the \(A_1\) homozygote, in this case disruptive selection occurs and the behavior of \(p\) depends on its initial frequency. On the graph, the initial frequency \(p=$p\) is below \(.5\) which is the minimum value that the equilibrium value can take. In fact, \(p=$p\) and \(\hat p =$p_eq\), therefore \(p\rightarrow 0\) $PAR
+
+END_SOLUTION
+
+ENDDOCUMENT();

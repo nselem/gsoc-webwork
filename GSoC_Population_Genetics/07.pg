@@ -1,0 +1,235 @@
+##############################################################################
+# DESCRIPTION
+# Problem from Gillespi, Population Genetics, 1th ed.
+# WeBWorK problem written by Nelly Sélem LANGEBIO CINVESTAV <nselem84@gmail.com>
+# ENDDESCRIPTION
+
+## KEYWORDS('probability','allele', 'gen', 'selection')
+## Tagged by nselem 22/04/2012
+
+## DBsubject('Probability')
+## DBchapter('Aplications')
+## DBsection('Genetics')
+## Date('22/04/2012')
+## Author('Nelly Selem')
+## Institution('LANGEBIO CINVESTAV')
+## TitleText1('Population Genetics')
+## EditionText1('1')
+## AuthorText1('Jhon H. Gillespie')
+## Section1('3.1')
+
+
+## Textbook tags
+## HHChapter1('Natural Selection')
+
+# DESCRIPTION
+# Problema de Genetica, Jhon H. Gillespie, 1th ed.
+# escrito en WeBWork por Nelly Selem <nselem84@gmail.com>
+# ENDDESCRIPTION
+
+## KEYWORDS('probabilidad','allelo', 'gen', 'seleccion')
+## Tagged by nselem 22/04/12
+
+## DBsubject('Probabilidad')
+## DBchapter('Aplicaciones')
+## DBsection('Genetica')
+## Date('22-04-2012')
+## Translate('Nelly Sélem')
+## Institution('LANGEBIO CINVESTAV')
+
+DOCUMENT();
+
+loadMacros(
+"PGstandard.pl",
+"MathObjects.pl",
+"PGchoicemacros.pl",
+"PGgraphmacros.pl",
+"unionTables.pl",
+);
+
+Context("Numeric");
+Context()->flags->set( reduceConstants=>0 );
+Context()->variables->add(P=>'Real');
+$refreshCachedImages=1;
+$showPartialCorrectAnswers = 1;
+#####################################################
+
+######################################################################
+##  Set Variables
+#
+$s=.1;
+$h=.5;
+$hs=.5*.1;
+$p=random(.05,.15,.01);
+$p0=$p;
+#######################################################################
+#  Grafica de Delta_sp
+#
+
+$Q=Compute("1-P");
+$BarOmega=Compute("1-2*P*$Q*$h*$s-$Q*$Q*$s");
+$Delta=Compute("(P*$Q*$s)*(P*$h+$Q*(1-$h))/($BarOmega)");
+
+$sgr = init_graph(-0.2,-0.005,1,0.02,axes=>[0,0],grid=>[12,15],size=>[250,250]);
+add_functions( $sgr, "$Delta for P in <0,1> using color:blue and weight:1");
+$sgr->lb( new Label(-0.01,.01,'0.01',  'black','left','top'));
+
+@Frecuencia;
+@Deltas;
+@Omegas;
+
+$frecuencia="1-2pqhs-sq^2";
+$ecuacion3_2="\frac{pqs[ph+q(1-h)]}{$frecuencia}";
+
+#####################################################
+#######################################################
+#          Grafica de frecuencia alelica  p versus generaciones
+#
+
+$gr = init_graph(-10,-.1,200,1,axes=>[0,0],size=>[400,400]); # or pixels=>[400,400]
+# specify the grid manually
+$gr->v_grid("gray",20,40,60,80,100,120,140,160,180); $gr->h_grid("gray",.1,.2,.3,.4,.5,.6,.7,.8);
+
+$gr->lb( new Label(0.2,.2,'(0,.2)', 'black','center','middle'));
+$gr->lb( new Label(20,.4,'(20,0)', 'black','center','middle'));
+
+$gr->moveTo(0,$p);
+
+for($n=1;$n<=200;$n++){
+$q=1-$p;
+$omega=Compute("1-2*$p*$q*$hs-$q*$q*$s");
+$delta=($p*$q*$s)/(2*$omega);
+$p=$p+$delta;
+
+$Frecuencia[$n]=$p;
+$Deltas[$n]=$delta;
+$Omegas[$n]=$omega;
+
+$gr->lineTo($n,$p,'red');
+}	
+
+####################################################
+TEXT(beginproblem());
+Context()->texStrings;
+BEGIN_TEXT_ES
+$BBOLD Balance seleccion-mutacion (Carga Genetica) $EBOLD $PAR
+Desarrolla la ecuacion  \( \Delta_sp= $ecuacion3_2\) para el caso especial \(h=\frac{1}{2}\), y utilizala para encontrar las frecuencias alelicas en dos generaciones sucesivas cuando el valor inicial de \(p\) es \($p0\) y \(s= $s\). Finalmente, escribe un programa que calcule las frecuencias alelicas durante \(200\) generaciones y grafica tus resultados.
+
+
+$PAR
+En la primera generacion la frecuencia del alelo \(A_1\) esta dada por:
+$BR\( p_1 = \) \{ ans_rule(35) \}
+$PAR
+
+En la segunda generacion la frecuencia del alelo \(A_1\) esta dada por:
+$BR \( p_1 = \) \{ ans_rule(35) \}
+$BR
+END_TEXT
+
+BEGIN_TEXT
+$BBOLD Selection/mutation balance (Genetic Load) $EBOLD $PAR
+Solve the equation \( \Delta_sp= $ecuacion3_2\) for the particular case where \(h=\frac{1}{2}\), and make use of it to find the allelic frquencies of two succesive generations when the initial value of \(p\) is \($p0\) and \(s= $s\). Finally, write a program that solves the allelic frequencies along \(200\) generations and graph your results.
+
+
+$PAR
+On the first generation, the allele frequency of \(A_1\) is given by:
+$BR\( p_1 = \) \{ ans_rule(35) \}
+$PAR
+
+On the second generation, the allele frequency of \(A_1\) is given by:
+$BR \( p_1 = \) \{ ans_rule(35) \}
+$BR
+END_TEXT
+Context()->normalStrings;
+
+ANS( num_cmp($Frecuencia[1]) );
+ANS( num_cmp($Frecuencia[2]) );
+
+
+
+Context()->texStrings;
+BEGIN_SOLUTION_ES
+La ecuacion 3.2 del libro de Gillespie es: 
+    \[\Delta_{s}p = \frac{pqs(ph+q(1-h))}{\bar\omega}\] 
+$PAR
+Donde \[\bar\omega=1-2pqsh-q^2s\] 
+$PAR
+Si \(h=.5\) la ecuacion se transforma en: $BR
+
+         \[\Delta_{s}p = \frac{pqs(p(.5)+q(.5))}{\bar\omega}=\frac{pqs(.5)(p+q)}{\bar\omega}=\frac{pqs}{2\bar\omega}\]$BR
+
+(Recordemos que \(p+q =1\) porque solo estamos trabajando con dos alelos y \(p\) representa la frecuencia relativa del alelo \(A_1\) y \(q\) la frecuencia del alelo \(A_2\). ) $PAR
+
+Asi pues en la primera generacion la frecuencia p cambia a: $BR
+\(p'=p+\Delta_sp = $p0 + $Deltas[1]= $Frecuencia[1]\) $PAR
+Donde: $BR
+\[\Delta_{s}p =\frac{$p0*(1-$p0)*(.1)}{2\bar\omega}=$Deltas[1]\]
+ donde 
+\[\bar\omega =1-pqs-q^2s=1-$p0*(1-$p0)*(.1)-(1-$p0)^2(.1)=$Omegas[1]\]
+$PAR $BR
+Asi pues en la segunda generacion la frecuencia p cambia a: $BR
+\(p'=p+\Delta_sp = $Frecuencia[1] + $Deltas[2]= $Frecuencia[2]\) $PAR
+Donde: $BR
+\[\Delta_{s}p =\frac{$Frecuencia[1]*(1-$Frecuencia[1])*(.1)}{2\bar\omega}=$Deltas[2]\]
+ donde 
+\[\bar\omega =1-pqs-q^2s=1-$Frecuencia[1]*(1-$Frecuencia[1])*(.1)-(1-$Frecuencia[1])^2(.1)=$Omegas[2]\]
+$ECENTER
+$PAR
+\{
+ColumnTable(
+$BCENTER.
+ image( insertGraph($gr), width=>300, 
+    height=>300, tex_size=>800 ).$ECENTER
+,
+$BCENTER.
+image( insertGraph($sgr), width=>300, height=>300 ).$PAR.
+"Gráfica de un disco".
+$ECENTER,indent => 0, separation => 30, valign => "TOP"
+); 
+\}
+END_SOLUTION
+BEGIN_SOLUTION
+On Gillespie's book, equation 3.2 is: 
+    \[\Delta_{s}p = \frac{pqs(ph+q(1-h))}{\bar\omega}\] 
+$PAR
+where \[\bar\omega=1-2pqsh-q^2s\] 
+$PAR
+When \(h=.5\), the equation becomes: $BR
+
+         \[\Delta_{s}p = \frac{pqs(p(.5)+q(.5))}{\bar\omega}=\frac{pqs(.5)(p+q)}{\bar\omega}=\frac{pqs}{2\bar\omega}\]$BR
+
+(Recall that \(p+q =1\) because we are just working with two alleles and \(p\) represents the relative frequency of allele \(A_1\) and \(q\) the frequency of allele \(A_2\). ) $PAR
+
+On the first generation, \(p\) is now: $BR
+\(p'=p+\Delta_sp = $p0 + $Deltas[1]= $Frecuencia[1]\) $PAR
+where: $BR
+\[\Delta_{s}p =\frac{$p0*(1-$p0)*(.1)}{2\bar\omega}=$Deltas[1]\]
+ where:
+\[\bar\omega =1-pqs-q^2s=1-$p0*(1-$p0)*(.1)-(1-$p0)^2(.1)=$Omegas[1]\]
+$PAR $BR
+
+On the second generation, \(p\) is now: $BR
+\(p'=p+\Delta_sp = $Frecuencia[1] + $Deltas[2]= $Frecuencia[2]\) $PAR
+where: $BR
+\[\Delta_{s}p =\frac{$Frecuencia[1]*(1-$Frecuencia[1])*(.1)}{2\bar\omega}=$Deltas[2]\]
+ where:
+\[\bar\omega =1-pqs-q^2s=1-$Frecuencia[1]*(1-$Frecuencia[1])*(.1)-(1-$Frecuencia[1])^2(.1)=$Omegas[2]\]
+$ECENTER
+$PAR
+\{
+ColumnTable(
+$BCENTER.
+ image( insertGraph($gr), width=>300, 
+    height=>300, tex_size=>800 ).$ECENTER
+,
+$BCENTER.
+image( insertGraph($sgr), width=>300, height=>300 ).$PAR.
+"Arc graph".
+$ECENTER,indent => 0, separation => 30, valign => "TOP"
+); 
+\}
+END_SOLUTION
+Context()->normalStrings;
+
+ENDDOCUMENT();
+     

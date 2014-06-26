@@ -1,0 +1,354 @@
+##############################################################################
+# DESCRIPTION
+# Problem from Gillespi, Population Genetics, 1th ed.
+# WeBWorK problem written by Nelly Sélem LANGEBIO CINVESTAV <nselem84@gmail.com>
+# ENDDESCRIPTION
+
+## KEYWORDS('probability','allele', 'gen', 'selection')
+## Tagged by nselem 22/04/2012
+
+## DBsubject('Probability')
+## DBchapter('Aplications')
+## DBsection('Genetics')
+## Date('22/04/2012')
+## Author('Nelly Selem')
+## Institution('LANGEBIO CINVESTAV')
+## TitleText1('Population Genetics')
+## EditionText1('1')
+## AuthorText1('Jhon H. Gillespie')
+## Section1('3.1')
+
+
+## Textbook tags
+## HHChapter1('Natural Selection')
+
+# DESCRIPTION
+# Problema de Genetica, Jhon H. Gillespie, 1th ed.
+# escrito en WeBWork por Nelly Selem <nselem84@gmail.com>
+# ENDDESCRIPTION
+
+## KEYWORDS('probabilidad','allelo', 'gen', 'seleccion')
+## Tagged by nselem 22/04/12
+
+## DBsubject('Probabilidad')
+## DBchapter('Aplicaciones')
+## DBsection('Genetica')
+## Date('22-04-2012')
+## Translate('Nelly Sélem')
+## Institution('LANGEBIO CINVESTAV')
+
+DOCUMENT();
+
+loadMacros(
+"PGstandard.pl",
+"MathObjects.pl",
+"PGchoicemacros.pl",
+"PGgraphmacros.pl",
+"unionTables.pl",
+);
+
+Context("Numeric");
+Context()->flags->set( reduceConstants=>0 );
+Context()->variables->add(P=>'Real',h=>'Real');
+$refreshCachedImages=1;
+$showPartialCorrectAnswers = 1;
+#####################################################
+
+######################################################################
+##  Set Variables
+#
+$s=.1;
+$h=random(1.5,3);
+$hs=$h*.1;
+$fA1A2=1-$hs;
+$fA2A2=1-$s;
+$p_eq=Compute("($h-1)/(2*$h-1)");
+
+#######################################################################
+#  Grafica de Delta_sp
+#
+$Q=Compute("1-P");
+$BarOmega=Compute("1-2*P*$Q*$h*$s-$Q*$Q*$s");
+$Delta=Compute("(P*$Q*$s)*(P*$h+$Q*(1-$h))/($BarOmega)");
+ 
+$grdelta = init_graph(-0.2,-0.01,1,0.03,axes=>[0,0],size=>[250,250]);
+add_functions( $grdelta, "$Delta for P in <0,1> using color:blue and weight:1");
+$grdelta->lb( new Label(-0.1,.01,'0.01',  'black','left','top'));
+$grdelta->lb( new Label(-0.1,.02,'0.02',  'black','left','top'));
+$grdelta->lb( new Label(-0.1,.03,'0.03',  'black','left','top'));
+$grdelta->lb( new Label(0.2,-.001,'0.2',  'black','left','top'));
+$grdelta->lb( new Label(0.4,-.001,'0.4',  'black','left','top'));
+$grdelta->lb( new Label(0.6,-.001,'0.6',  'black','left','top'));
+$grdelta->lb( new Label(0.8,-.001,'0.8',  'black','left','top'));
+
+$grdelta->v_grid("gray",.2,.40,.60,.80); 
+$grdelta->h_grid("gray",-.01,0,.01,.02,.03,.04);
+
+#####################################################################
+########Grafico de la frecuencia de equilibrio vs h
+
+$p_equilibrio=Compute("(h-1)/(2*h-1)");
+
+$sgr = init_graph(-1,-2,2,2,axes=>[0,0],size=>[250,250]);
+add_functions( $sgr, "$p_equilibrio for h in <-1,2> using color:blue and weight:1");
+$sgr->v_grid("gray",-.5,.5,1,1.5); 
+$sgr->h_grid("gray",-1.5,-1,-.5,.5,1,1.5);
+$sgr->lb( new Label(-0.1,-.5,'-0.5',  'black','left','top'));
+$sgr->lb( new Label(-0.1,-1,'-1',  'black','left','top'));
+$sgr->lb( new Label(-0.1,-1.5,'-1.5',  'black','left','top'));
+$sgr->lb( new Label(-0.1,.5,'0.5',  'black','left','top'));
+$sgr->lb( new Label(-0.1,1,'1',  'black','left','top'));
+$sgr->lb( new Label(-0.1,1.5,'1.5',  'black','left','top'));
+
+$sgr->lb( new Label(0.5,-.1,'0.5',  'black','left','top'));
+$sgr->lb( new Label(1,-.1,'1',  'black','left','top'));
+$sgr->lb( new Label(1.5,-.1,'1.5',  'black','left','top'));
+
+
+#####################################################
+#######################################################
+#          Grafica de frecuencia alelica  p versus generaciones
+#
+
+$gr = init_graph(-10,-.1,100,1,axes=>[0,0],size=>[400,400]); # or pixels=>[400,400]
+# specify the grid manually
+$gr->v_grid("gray",20,40,60,80,100); 
+$gr->h_grid("gray",.2,.4,.6,.8);
+
+$gr->lb( new Label(-0.1,.2,'0.2', 'black','center','middle'));
+$gr->lb( new Label(-0.1,.4,'0.4', 'black','center','middle'));
+$gr->lb( new Label(-0.1,.6,'0.6', 'black','center','middle'));
+$gr->lb( new Label(-0.1,.8,'0.8', 'black','center','middle'));
+$gr->lb( new Label(-5,.8,'p', 'black','center','middle'));
+$gr->lb( new Label(20,-.05,'20', 'black','center','middle'));
+$gr->lb( new Label(40,-.05,'40', 'black','center','middle'));
+$gr->lb( new Label(60,-.05,'60', 'black','center','middle'));
+$gr->lb( new Label(60,-.07,'Generations', 'black','center','middle'));
+$gr->lb( new Label(80,-.05,'80', 'black','center','middle'));
+
+sub grafica_generaciones { 
+    my ( $p, $color ) = @_;
+$gr->moveTo(0,$p);
+for($n=1;$n<=100;$n++){
+my $q=1-$p;
+my $omega=Compute("1-2*$p*$q*$hs-$q*$q*$s");
+my $delta=($p*$q*$s)*($p*$h+$q*(1-$h))/($omega);
+$p=$p+$delta;
+$gr->lineTo($n,$p,$color);
+}	
+}
+grafica_generaciones($p_eq-.1,'red');
+grafica_generaciones($p_eq-.05,'red');
+grafica_generaciones($p_eq,'blue');
+grafica_generaciones($p_eq+.05,'black');
+grafica_generaciones($p_eq+.1,'black');
+
+####################################################
+
+#############################################################
+# the radio button
+$mc = new_multiple_choice();
+#############################################################
+#############################################################
+
+TEXT(beginproblem());
+Context()->texStrings;
+BEGIN_TEXT_ES
+\{
+$I=random(1,3,2);
+$p[0]=$p_eq+random(.05,.1.01); $tendencia[0]="Tiende a 1";
+$p[1]=$p_eq; $tendencia[1]="Se mantiene en $p[1]";
+$p[2]=$p_eq-random(.05,.1.01);$tendencia[2]="Tiende a 0";
+
+$mc->qa(
+"Que pasa con la frecuencia de \(p\) si en la primera generacion \(p=$p[$I]\) ", 
+"$tendencia[$I]"
+);
+$mc->extra(
+"$tendencia[0]",
+"$tendencia[1]",
+"$tendencia[2]",
+);
+$mc->makeLast("ninguna de las anteriores");
+\}
+$BBOLD Seleccion Disruptiva \( h>1 \) $BR $EBOLD $PAR
+
+
+$BBOLD 1. Subdominancia $EBOLD
+Dado el parametro de heterocigosis \(h=$h\) y el de seleccion \(s=$s\), completa la siguiente tabla. $PAR
+
+$BCENTER
+Fitness Relativo
+$table_start
+$table_row1
+$table_row2
+$table_end
+$ECENTER
+$BR Como es el fitness de \(A_1A_2\) respecto a los otros genotipos?. Que alelo domina?
+
+$PAR $BBOLD 2. Disrupcion $EBOLD 
+Con los valores de \(h\) y \(s\) proporcionados grafica \( \Delta_sp\) contra \( p \). Usa la figura para convencerte que el nombre de seleccion disruptiva es correcto. Finalmente calcula el valor \(p\) que representa un punto de equilibrio inestable para esta grafica y contesta la siguiente pregunta $PAR
+
+\{ $mc->print_q() \}
+$BR
+\{ $mc->print_a() \}
+
+END_TEXT
+
+BEGIN_TEXT
+\{
+$I=random(1,3,2);
+$p[0]=$p_eq+random(.05,.1.01); $tendencia[0]="Approaches 1";
+$p[1]=$p_eq; $tendencia[1]="Stays on $p[1]";
+$p[2]=$p_eq-random(.05,.1.01);$tendencia[2]="Approaches 0";
+
+$mc->qa(
+"What happens with \(p\) if \(p=$p[$I]\) on the first generation ", 
+"$tendencia[$I]"
+);
+$mc->extra(
+"$tendencia[0]",
+"$tendencia[1]",
+"$tendencia[2]",
+);
+$mc->makeLast("none of the above");
+\}
+$BBOLD Disruptive Selection \( h>1 \) $BR $EBOLD $PAR
+
+
+$BBOLD 1. Subdominance $EBOLD
+Given the heterozygosis parameter \(h=$h\) and the selection parameter \(s=$s\), fill out the following table. $PAR
+
+$BCENTER
+Relative Fitness
+$table_start
+$table_row1
+$table_row2
+$table_end
+$ECENTER
+$BR How's \(A_1A_2\) fitness relative to tother genotypes?. Which allele is the dominant one?
+
+$PAR $BBOLD 2. Disruption $EBOLD 
+With the given \(h\) and \(s\) values graph \( \Delta_sp\) against \( p \). Analyze the graph to understand why the term 'disruptive selection' is the most appropiate one for this type of selection. Finally, calculate \(p\), which represents a non-stable equilibrium point for the graph and answer the following question: $PAR
+
+\{ $mc->print_q() \}
+$BR
+\{ $mc->print_a() \}
+
+END_TEXT
+
+Context()->normalStrings;
+$showPartialCorrectAnswers = 0;
+ANS( num_cmp($fA1A2) );
+ANS( num_cmp($fA2A2) );
+ANS( radio_cmp( $mc->correct_ans() ) );
+
+##############################################
+Context()->texStrings;
+BEGIN_SOLUTION_ES
+\{
+# the table data
+$table_start = begintable(4);
+$table_row1  = row( "Genotipo","\(A_1A_1 \)","\(A_1A_2 \)","\(A_2A_2 \)" );
+$table_row2  = row( "Fitness Relativo","\(1 \)",  ans_rule(5), ans_rule(5) );
+$table_answer  = row( "Fitness Relativo","\(1 \)", "\(1-hs=1-$hs=$fA1A2\)","\(1-s=1-$s= $fA2A2\)" );
+$table_end   = endtable();
+\}
+Sustituyendo los valores de \(h\) y \(s\) en la tabla obtenemos que: $BR
+$BCENTER
+Fitness Relativo
+$table_start
+$table_row1
+$table_answer
+$table_end
+$ECENTER
+$PAR 
+De donde es claro que $BR
+fitness \(A_1A_2=$fA1A2\)< fitness \(A_2A_2=$fA2A2\)< fitness\(A_1A_1=1\) $PAR
+Es decir el fitness de \(A_1A_2\) esta mas cerca del de \(A_2A_2\) que del de \(A_1A_1\) con lo cual hay una subdominancia del alelo \(A_2\) sobre el alelo \(A_1\). 
+$PAR
+
+Ahora observemos las siguientes graficas:
+$PAR
+\{
+ColumnTable(
+$BCENTER.
+ image( insertGraph($grdelta), width=>300, 
+    height=>300, tex_size=>800 ).PAR."$BBOLD Figura 1 $EBOLD Gráfica de \(\Delta_sp\) $BR \(h=$h\) y \(s=$s\)".$ECENTER,
+$BCENTER.
+image( insertGraph($gr), width=>300, height=>300 ).$PAR.
+"$BBOLD Figura 2 $EBOLD Graficas de \(p\) vs generaciones $BR \(h=$h\) y \(s=$s\)".$ECENTER
+,
+indent => 0, separation => 30, valign => "TOP"
+); 
+\}
+$PAR
+En la $BBOLD Figura 1 $EBOLD podemos observar el comportamiento de \(\Delta_sp\). Notamos que hay un valor de equilibrio \(\hat p\) donde \(\Delta_s p= 0\). Si \(p\) es menor que \(\hat p\) entonces \(\Delta_s p\) es negativa. En cambio si \(p\) comienza mayor que \(\hat p\), entonces \(\Delta_s p\) es positiva y \(p\) crece durante generaciones hasta llegar a \(p=1\). Tambien en la grafica se puede observar que mientras mas cerca de \(1\) se encuentre el valor de \(p\) el crecimiento \(\Delta_s p\) es mas lento. $PAR
+
+En la $BBOLD Figura 2 $EBOLD observamos la razon por la cual al tipo de seleccion cuando \(h>1\) se le llama disruptiva:
+$BR En color negro vemos que si \(p>\hat p\) Entonces \(p\rightarrow 1\).
+$BR En color azul vemos que, si \(p=\hat p\) Entonces \(p\) permanece constante. 
+$BR En color rojo vemos que si \(p<\hat p\) Entonces \(p\rightarrow 0\). 
+$PAR 
+El equilibrio es un equilibrio inestable porque con la menor perturbacion \(p\) tendera a cero o uno. 
+$PAR \(\hat p =$p_equilibrio=$p_eq\) pues en este caso \(h=$h\)
+$PAR
+Por lo cual $p[$I] $tendencia[$I]
+END_SOLUTION
+
+BEGIN_SOLUTION
+\{
+# the table data
+$table_start = begintable(4);
+$table_row1  = row( "Genotype","\(A_1A_1 \)","\(A_1A_2 \)","\(A_2A_2 \)" );
+$table_row2  = row( "Relative Fitness","\(1 \)",  ans_rule(5), ans_rule(5) );
+$table_answer  = row( "Relative Fitness","\(1 \)", "\(1-hs=1-$hs=$fA1A2\)","\(1-s=1-$s= $fA2A2\)" );
+$table_end   = endtable();
+\}
+By solving \(h\) and \(s\) on the table, we get: $BR
+$BCENTER
+Relative Fitness
+$table_start
+$table_row1
+$table_answer
+$table_end
+$ECENTER
+$PAR 
+And we can see that $BR
+\(A_1A_2=$fA1A2\) fitness < \(A_2A_2=$fA2A2\) fitness < \(A_1A_1=1\) fitness$PAR
+This means that \(A_1A_2\) fitness is closer to \(A_2A_2\) fitness than it is to \(A_1A_1\) fitness, which in turn shows us that there is underdominance of the allele \(A_2\) over \(A_1\). 
+$PAR
+
+Now lets focus on the graphs below:
+$PAR
+\{
+ColumnTable(
+$BCENTER.
+ image( insertGraph($grdelta), width=>300, 
+    height=>300, tex_size=>800 ).PAR."$BBOLD Figure 1 $EBOLD \(\Delta_sp\) $BR \(h=$h\) and \(s=$s\)".$ECENTER,
+$BCENTER.
+image( insertGraph($gr), width=>300, height=>300 ).$PAR.
+"$BBOLD Figure 2 $EBOLD \(p\) vs generations $BR \(h=$h\) and \(s=$s\)".$ECENTER
+,
+indent => 0, separation => 30, valign => "TOP"
+); 
+\}
+$PAR
+On $BBOLD Figure 1 $EBOLD we can observe how \(\Delta_sp\) behaves. There is an equilibrium value \(\hat p\) where \(\Delta_s p= 0\). If \(p\) is smaller than \(\hat p\) then \(\Delta_s p\) is negative. On the other hand, if \(p\) starts bigger than \(\hat p\), then \(\Delta_s p\) is positive and \(p\) grows along generations until it reaches \(p=1\). Also, we can observe that the closer the value of \(p\) gets to one, the growth of \(\Delta_s p\) becomes slower. $PAR
+
+On $BBOLD Figure 2 $EBOLD we can appreciate why when \(h>1\) the selection is called 'disruptive':
+$BR On black, we can see that if \(p>\hat p\) then \(p\rightarrow 1\).
+$BR On blue, we can see that if \(p=\hat p\) then \(p\) remains steady. 
+$BR On red, we can see that if \(p<\hat p\) then \(p\rightarrow 0\). 
+$PAR 
+The equilibrium point is unstable because at the lowest perturbation, \(p\) will fall onto zero or one. 
+$PAR \(\hat p =$p_equilibrio=$p_eq\) because on this scenario \(h=$h\)
+$PAR
+And that's why $p[$I] $tendencia[$I]
+END_SOLUTION
+Context()->normalStrings;
+###########################################################
+
+
+ENDDOCUMENT();
+     

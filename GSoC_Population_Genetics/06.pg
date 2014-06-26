@@ -1,0 +1,113 @@
+##############################################################################
+# DESCRIPTION
+# Problem from Gillespi, Population Genetics, 1th ed.
+# WeBWorK problem written by Nelly Sélem LANGEBIO CINVESTAV <nselem84@gmail.com>
+# ENDDESCRIPTION
+
+## KEYWORDS('probability','allele', 'gen', 'selection')
+## Tagged by nselem 22/04/2012
+
+## DBsubject('Probability')
+## DBchapter('Aplications')
+## DBsection('Genetics')
+## Date('22/04/2012')
+## Author('Nelly Selem')
+## Institution('LANGEBIO CINVESTAV')
+## TitleText1('Population Genetics')
+## EditionText1('1')
+## AuthorText1('Jhon H. Gillespie')
+## Section1('3.1')
+
+
+## Textbook tags
+## HHChapter1('Natural Selection')
+
+# DESCRIPTION
+# Problema de Genetica, Jhon H. Gillespie, 1th ed.
+# escrito en WeBWork por Nelly Selem <nselem84@gmail.com>
+# ENDDESCRIPTION
+
+## KEYWORDS('probabilidad','allelo', 'gen', 'seleccion')
+## Tagged by nselem 22/04/12
+
+## DBsubject('Probabilidad')
+## DBchapter('Aplicaciones')
+## DBsection('Genetica')
+## Date('22-04-2012')
+## Translate('Nelly Sélem')
+## Institution('LANGEBIO CINVESTAV')
+
+DOCUMENT();
+
+loadMacros(
+"PGstandard.pl",
+"MathObjects.pl",
+);
+
+Context("Numeric");
+Context()->variables->add(P=>'Real');
+$showPartialCorrectAnswers = 1;
+
+######################################################################
+##  Set Variables
+#
+$n=random(5,9,1);
+$u=10^{-$n};
+$q=random(0,.01,.001);
+$Delta=Compute("-$u+$q*$u");
+$Aprox=Compute("-$u");
+
+####################################################
+TEXT(beginproblem());
+Context()->texStrings;
+BEGIN_TEXT_ES
+$BBOLD Balance seleccion-mutacion $EBOLD $PAR
+
+Sigue las frecuencias alelicas exacta y aproximada del alelo \(A_2\) durante dos generaciones, con la frecuencia inicial de \(A_2\), \(q=$q\) y \(\mu=10^{-$n}\). Cual es el error relativo inducido por la aproximacion. El error relativo se define como la diferencia entre entr el valor exacto y el aproximado divida por el valor exacto $PAR
+
+\[\Delta_{\mu}p=-\mu +q\mu\] $Delta
+\[\Delta_{\mu}p\approx-\mu\] $Aprox
+
+En la segunda generacion la frecuencia del alelo \(A_1\) esta dada por:
+$BR \( p_1 = \) \{ ans_rule(35) \}
+$BR
+
+En la segunda generacion la frecuencia del alelo \(A_1\) esta dada por:
+$BR \( p_1 = \) \{ ans_rule(35) \}
+$BR
+
+END_TEXT
+
+BEGIN_TEXT
+$BBOLD Selection/mutation balance $EBOLD $PAR
+
+Follow the real and approximate allelic frequencies for \(A_2\) along two generations, with an initial frequency for \(A_2\), \(q=$q\) y \(\mu=10^{-$n}\). What is the relative error induced by the approximation? The relative error is defined as the difference between the real value and the approximate one divided by the real value. $PAR
+
+\[\Delta_{\mu}p=-\mu +q\mu\] $Delta
+\[\Delta_{\mu}p\approx-\mu\] $Aprox
+
+On the second generation, the allelic frequency \(A_1\) is given by:
+$BR \( p_1 = \) \{ ans_rule(35) \}
+$BR
+
+On the second generation, the allelic frequency \(A_1\) is given by:
+$BR \( p_1 = \) \{ ans_rule(35) \}
+$BR
+
+END_TEXT
+Context()->normalStrings;
+
+ANS( num_cmp($Delta) );
+ANS( num_cmp($Aprox) );
+
+
+
+Context()->texStrings;
+BEGIN_SOLUTION
+$PAR SOLUTION $PAR
+
+END_SOLUTION
+Context()->normalStrings;
+
+ENDDOCUMENT();
+     

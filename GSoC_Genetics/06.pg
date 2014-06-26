@@ -1,0 +1,88 @@
+##DESCRIPTION
+##  GSoC - Genetics
+##ENDDESCRIPTION
+
+##KEYWORDS('Genetics')
+
+## DBsubject('Genetics')
+## DBchapter('Fundamentals')
+## DBsection('')
+## Date('5/1/2014')
+## Author('Nelly Selem')
+## Institution('GSoC')
+
+########################################################################
+
+DOCUMENT();      
+
+loadMacros(
+   "PGstandard.pl",     # Standard macros for PG language
+   "MathObjects.pl",
+   "GSoC_Genetics.pl",
+   "unionTables.pl",
+   "PGchoicemacros.pl"
+   #"source.pl",        # allows code to be displayed on certain sites.
+   #"PGcourse.pl",      # Customization file for the course
+);
+
+# Print problem number and point value (weight) for the problem
+TEXT(beginproblem());
+
+# Show which answers are correct and which ones are incorrect
+$showPartialCorrectAnswers = 1;
+
+# A
+
+SRAND($problemSeed);
+$a = random(0, 1);
+$b = random(0, 1);
+$c = random(64, 256);
+$d = ( (($a*2)+1)      * (($b*2)+1) * $c) + random(-32, 32);
+$e = ( (($a*2)+1)      * ((($b-1)*-2)+1) * $c) + random(-32, 32);
+$f = ( ((($a-1)*-2)+1) * (($b*2)+1) * $c) + random(-32, 32);
+$g = ( ((($a-1)*-2)+1) * ((($b-1)*-2)+1) * $c) + random(-32, 32);
+$y = new_select_list();
+$y->rf_print_q(~~&pop_up_list_print_q);
+$y->ra_pop_up_list([
+		"No answer" => "?",
+		"0"  => "The ball shape is dominant over the rod shape",
+		"1"  => "The rod shape is dominant over the ball shape",
+	]);
+$y->qa("Shape phenotype", sprintf("%i", $a));
+$y->choose(1);
+$z = new_select_list();
+$z->rf_print_q(~~&pop_up_list_print_q);
+$z->ra_pop_up_list([
+		"No answer" => "?",
+		"0"  => "Color yellow is dominant over color green",
+		"1"  => "Color green is dominant over color yellow"
+	]);
+$z->qa("Color phenotype", sprintf("%i", $b));
+$z->choose(1);
+
+# B
+BEGIN_TEXT
+
+You observe two different traits and count out how many individuals exhibit a certain phenotype for them.
+$BR
+$BR
+\{
+BeginTable(border => 1, tex_border => "1pt", spacing => 0, padding => 4).
+AlignedRow(["Rod-shaped and green-colored", $d], align => LEFT, separation => 0).
+AlignedRow(["Rod-shaped and yellow-colored", $e], align => LEFT, separation => 0).
+AlignedRow(["Ball-shaped and green-colored", $f], align => LEFT, separation => 0).
+AlignedRow(["Ball-shaped and yellow-colored", $g], align => LEFT, separation => 0).
+EndTable()
+\}
+$BR
+$BR
+\{$y->print_q()\}
+\{$z->print_q()\}
+
+END_TEXT
+
+# C
+ANS(str_cmp($y->ra_correct_ans()));
+ANS(str_cmp($z->ra_correct_ans()));
+
+ENDDOCUMENT();        

@@ -1,0 +1,136 @@
+##############################################################################
+# DESCRIPTION
+# Problem from Gillespi, Population Genetics, 1th ed.
+# WeBWorK problem written by Nelly Sélem LANGEBIO CINVESTAV <nselem84@gmail.com>
+# ENDDESCRIPTION
+
+## KEYWORDS('probability','allele', 'gen', 'selection')
+## Tagged by nselem 22/04/2012
+
+## DBsubject('Probability')
+## DBchapter('Aplications')
+## DBsection('Genetics')
+## Date('22/04/2012')
+## Author('Nelly Selem')
+## Institution('LANGEBIO CINVESTAV')
+## TitleText1('Population Genetics')
+## EditionText1('1')
+## AuthorText1('Jhon H. Gillespie')
+## Section1('3.1')
+
+
+## Textbook tags
+## HHChapter1('Natural Selection')
+
+# DESCRIPTION
+# Problema de Genetica, Jhon H. Gillespie, 1th ed.
+# escrito en WeBWork por Nelly Selem <nselem84@gmail.com>
+# ENDDESCRIPTION
+
+## KEYWORDS('probabilidad','allelo', 'gen', 'seleccion')
+## Tagged by nselem 22/04/12
+
+## DBsubject('Probabilidad')
+## DBchapter('Aplicaciones')
+## DBsection('Genetica')
+## Date('22-04-2012')
+## Translate('Nelly Sélem')
+## Institution('LANGEBIO CINVESTAV')
+
+DOCUMENT();
+
+loadMacros(
+"PGstandard.pl",
+"MathObjects.pl",
+"PGchoicemacros.pl",
+"PGgraphmacros.pl",
+"PG.pl",
+"PGbasicmacros.pl",
+"PGanswermacros.pl",
+"unionTables.pl",
+);
+
+Context("Numeric");
+Context()->flags->set( reduceConstants=>0 );
+
+$showPartialCorrectAnswers = 1;
+#############################################################
+######################################################################
+##  Set Variables
+######################################################################
+
+TEXT(beginproblem());
+$ml = new_match_list();
+
+BEGIN_TEXT_ES
+$PAR
+\{
+$ml->qa(
+"Con este modelo consideando apareamiento aleatorio, se alcanza el equilibrio despues de una generacion de apareamiento aleatorio", "Hardy Weinberg",
+"Este modelo alcanza el equilibrio manteniendo constantes las frecuencias alelicas.
+Modela las frecuencias genotipicas como: $BR
+$BR \(A_{11}=p^2\) ,  \(A_{12}=2pq\) ,   \(A_{22}=q^2\) ", "Hardy Weinberg",
+"Al introducir la variable viabilidad, esta fuerza cambia las frecuencias alelicas mediante la formula \(p'=p+\Delta_sp\)", "Seleccion Natural",
+"Tarda \(t_{\frac{1}{2}}\approx 2N ln(2)\) en reducir a la mitad la variabilidad genetica de una poblacion de N individuos", "Deriva Genetica",
+"Esta fuerza, al interactuar con la Deriva Genetica reintroduce la variabilidad.  ", "Mutacion",
+"Al modelar esta fuerza en conjunto con la mutacion, se obtiene que \(k=\mu\). La tasa de fijacion de alelos neutrales es la tasa de mutacion, independintemente del tamaño de la poblacion ", "Deriva Genetica",
+"Modela el decaimiento del Heterocigoto en la deriva genetica", "\(H_t=H_0(1-\frac{1}{2N})^t\)",
+"Mide la probabilidad de que en la siguiente generacion dos alelos distintos por origen sean iguales por estado", "\(G '=\frac{1}{2N}+(1-\frac{1}{2N})G\)",
+"Establece que la mayoria de la diversidad genetica de una poblacion es debida al azar", "Teoria Neutral"
+);
+# use pop-up-lists
+$ml->rf_print_q(~~&pop_up_list_print_q);
+# you may need to add more letters D=>"D", etc. 
+$ml->ra_pop_up_list([No_answer=>"?",A=>"A",B=>"B",C=>"C",D=>"D",E=>"E",F=>"F",G=>"G",H=>"H"]);
+$ml->choose(9);
+#$ml->choose_extra(2);
+$ml->makeLast("Ninguna de las anteriores");
+
+ColumnTable(
+" ".$ml->print_q()."
+$PAR ",
+" ".$ml->print_a()." $BR $PAR ",
+indent => 0, separation => 1, valign => "TOP"
+); 
+\}
+END_TEXT
+
+BEGIN_TEXT
+$PAR
+\{
+$ml->qa(
+"Assuming random mating, the equilibrium is reached after one mating event", "Hardy Weinberg",
+"This model reaches equilibirum by keeping constant the allelic frequencies.
+It defines genotypic frequencies as: $BR
+$BR \(A_{11}=p^2\) ,  \(A_{12}=2pq\) ,   \(A_{22}=q^2\) ", "Hardy Weinberg",
+"By introducing viability, this effect alters the allelic frequencies following \(p'=p+\Delta_sp\)", "Natural Selection",
+"Tarda \(t_{\frac{1}{2}}\approx 2N ln(2)\) en reducir a la mitad la variabilidad genetica de una poblacion de N individuos", "Deriva Genetica",
+"This effect, along with genetic drift, reintroduces variability", "Mutation",
+"By modeling this effect, along with mutation, we obtain \(k=\mu\). The fixation rate for neutral alleles is the mutation rate, independently of population's size", "Genetic Drift",
+"Models the decay of the heterozygote on genetic drift", "\(H_t=H_0(1-\frac{1}{2N})^t\)",
+"Measures then probability that the next generation would have alleles with an equal state but from a different origin", "\(G '=\frac{1}{2N}+(1-\frac{1}{2N})G\)",
+"Establishes that the majority of the genetic diversity is explained by random changes", "Neutral Theory"
+);
+# use pop-up-lists
+$ml->rf_print_q(~~&pop_up_list_print_q);
+# you may need to add more letters D=>"D", etc. 
+$ml->ra_pop_up_list([No_answer=>"?",A=>"A",B=>"B",C=>"C",D=>"D",E=>"E",F=>"F",G=>"G",H=>"H"]);
+$ml->choose(9);
+#$ml->choose_extra(2);
+$ml->makeLast("None of the above");
+
+ColumnTable(
+" ".$ml->print_q()."
+$PAR ",
+" ".$ml->print_a()." $BR $PAR ",
+indent => 0, separation => 1, valign => "TOP"
+); 
+\}
+END_TEXT
+
+install_problem_grader(~~&std_problem_grader);
+
+ANS( str_cmp( $ml->ra_correct_ans ) );
+
+ENDDOCUMENT();
+     

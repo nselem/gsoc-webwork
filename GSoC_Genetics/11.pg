@@ -1,0 +1,70 @@
+##DESCRIPTION
+##  GSoC - Genetics
+##ENDDESCRIPTION
+
+##KEYWORDS('Genetics')
+
+## DBsubject('Genetics')
+## DBchapter('Fundamentals')
+## DBsection('')
+## Date('5/1/2014')
+## Author('Nelly Selem')
+## Institution('GSoC')
+
+########################################################################
+
+DOCUMENT();      
+
+loadMacros(
+   "PGstandard.pl",     # Standard macros for PG language
+   "MathObjects.pl",
+   "GSoC_Genetics.pl",
+   "contextString.pl"
+   #"source.pl",        # allows code to be displayed on certain sites.
+   #"PGcourse.pl",      # Customization file for the course
+);
+
+# Print problem number and point value (weight) for the problem
+TEXT(beginproblem());
+
+# Show which answers are correct and which ones are incorrect
+$showPartialCorrectAnswers = 1;
+
+# A
+$a = 'AUG' . Genetics_RandomDNASequence(64);
+$a =~ s/TAA//g;
+$a =~ s/TAG//g;
+$a =~ s/TTA//g;
+$b = Genetics_TranslateRNASequence(Genetics_TranscriptDNASequence($a));
+$c = random(1, 16);
+$d = random(17, 32);
+$e = Genetics_TranslateRNASequence(Genetics_TranscriptDNASequence(substr($a, 0, $c-1) . substr($a, $c, $d-1-$c) . substr($a, $d)));
+my %zh = ();
+$zh{$e} = {};
+Context('String')->strings->add(%zh);
+$z = String($e);
+
+# B
+BEGIN_TEXT
+
+Consider the following random DNA sequence:
+$BR
+$a
+$BR
+$BR
+which encodes the following aminoacid sequence:
+$BR
+$b
+$BR
+$BR
+If several mutations remove the nucleotides at sites $c and $d (first nucleotide is number 1), what would the resulting aminoacid sequence be?
+$BR
+$BR
+Sequence: \{$z->ans_rule\}
+
+END_TEXT
+
+# C
+ANS($z->cmp);
+
+ENDDOCUMENT();        

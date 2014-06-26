@@ -1,0 +1,75 @@
+##DESCRIPTION
+##  GSoC - Genetics
+##ENDDESCRIPTION
+
+##KEYWORDS('Genetics')
+
+## DBsubject('Genetics')
+## DBchapter('Fundamentals')
+## DBsection('')
+## Date('5/1/2014')
+## Author('Nelly Selem')
+## Institution('GSoC')
+
+########################################################################
+
+DOCUMENT();      
+
+loadMacros(
+   "PGstandard.pl",     # Standard macros for PG language
+   "MathObjects.pl",
+   "GSoC_Genetics.pl",
+   "unionTables.pl"
+   #"source.pl",        # allows code to be displayed on certain sites.
+   #"PGcourse.pl",      # Customization file for the course
+);
+
+# Print problem number and point value (weight) for the problem
+TEXT(beginproblem());
+
+# Show which answers are correct and which ones are incorrect
+$showPartialCorrectAnswers = 1;
+
+# A
+
+$a = Genetics_DrawPedigree('(M1,F,((F2,M3,(F,M4,(F,M,(F,F5,M,(F,M,(F,F6,M,F,M)))))),M,F,(M,F,(M7,M,F,M))))');
+$v = Real(0.5);
+$w = Real(0.25);
+$x = Real(0.25);
+$y = Real(0.125);
+$z = Real(0.25);
+
+# B
+BEGIN_TEXT
+
+Consider the following pedigree:
+$BR
+$BR
+$a
+$BR
+$BR
+How many shared genes would you expect to see in average,
+$BR
+$BR
+\{
+BeginTable(border => 1, tex_border => "1pt", spacing => 0, padding => 4).
+AlignedRow(["Between 1 and 3", $v->ans_rule], align => LEFT, separation => 0).
+AlignedRow(["Between 4 and 5", $w->ans_rule], align => LEFT, separation => 0).
+AlignedRow(["Between 2 and 5", $x->ans_rule], align => LEFT, separation => 0).
+AlignedRow(["Between 4 and 6", $y->ans_rule], align => LEFT, separation => 0).
+AlignedRow(["Between 2 and 7", $z->ans_rule], align => LEFT, separation => 0).
+EndTable()
+\}
+$BR
+$BR
+
+END_TEXT
+
+# C
+ANS($v->with(tolerance=>0.01)->cmp);
+ANS($w->with(tolerance=>0.01)->cmp);
+ANS($x->with(tolerance=>0.01)->cmp);
+ANS($y->with(tolerance=>0.01)->cmp);
+ANS($z->with(tolerance=>0.01)->cmp);
+
+ENDDOCUMENT();        

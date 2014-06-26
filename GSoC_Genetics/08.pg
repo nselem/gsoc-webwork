@@ -1,0 +1,122 @@
+##DESCRIPTION
+##  GSoC - Genetics
+##ENDDESCRIPTION
+
+##KEYWORDS('Genetics')
+
+## DBsubject('Genetics')
+## DBchapter('Fundamentals')
+## DBsection('')
+## Date('5/1/2014')
+## Author('Nelly Selem')
+## Institution('GSoC')
+
+########################################################################
+
+DOCUMENT();      
+
+loadMacros(
+   "PGstandard.pl",     # Standard macros for PG language
+   "MathObjects.pl",
+   "GSoC_Genetics.pl",
+   "PGchoicemacros.pl"
+   #"source.pl",        # allows code to be displayed on certain sites.
+   #"PGcourse.pl",      # Customization file for the course
+);
+
+# Print problem number and point value (weight) for the problem
+TEXT(beginproblem());
+
+# Show which answers are correct and which ones are incorrect
+$showPartialCorrectAnswers = 1;
+
+# A
+
+SRAND($problemSeed);
+$as = random(0, 1000000);
+$ai = random(0, 1);
+$a = Genetics_DrawPedigree(Genetics_RandomPedigree($as, 5, 0.5, 0.5, 2, 4, $ai == 0 ? 'autosomic dominant' : 'autosomic recessive'));
+$w = new_select_list();
+$w->rf_print_q(~~&pop_up_list_print_q);
+$w->ra_pop_up_list([
+		"No answer" => "?",
+		"0"  => "Autosomic Dominant",
+		"1"  => "Autosomic Recessive"
+	]);
+$w->qa("Inheritance pattern", sprintf("%i", $ai));
+$w->choose(1);
+
+$bs = random(0, 1000000);
+$bi = random(0, 1);
+$b = Genetics_DrawPedigree(Genetics_RandomPedigree($bs, 5, 0.5, 0.5, 2, 4, $bi == 0 ? 'autosomic dominant' : 'autosomic recessive'));
+$x = new_select_list();
+$x->rf_print_q(~~&pop_up_list_print_q);
+$x->ra_pop_up_list([
+		"No answer" => "?",
+		"0"  => "Autosomic Dominant",
+		"1"  => "Autosomic Recessive"
+	]);
+$x->qa("Inheritance pattern", sprintf("%i", $bi));
+$x->choose(1);
+
+$cs = random(0, 1000000);
+$ci = random(0, 1);
+$c = Genetics_DrawPedigree(Genetics_RandomPedigree($cs, 5, 0.5, 0.5, 2, 4, $ci == 0 ? 'autosomic dominant' : 'autosomic recessive'));
+$y = new_select_list();
+$y->rf_print_q(~~&pop_up_list_print_q);
+$y->ra_pop_up_list([
+		"No answer" => "?",
+		"0"  => "Autosomic Dominant",
+		"1"  => "Autosomic Recessive"
+	]);
+$y->qa("Inheritance pattern", sprintf("%i", $ci));
+$y->choose(1);
+
+$ds = random(0, 1000000);
+$di = random(0, 1);
+$d = Genetics_DrawPedigree(Genetics_RandomPedigree($ds, 5, 0.5, 0.5, 2, 4, $di == 0 ? 'autosomic dominant' : 'autosomic recessive'));
+$z = new_select_list();
+$z->rf_print_q(~~&pop_up_list_print_q);
+$z->ra_pop_up_list([
+		"No answer" => "?",
+		"0"  => "Autosomic Dominant",
+		"1"  => "Autosomic Recessive"
+	]);
+$z->qa("Inheritance pattern", sprintf("%i", $di));
+$z->choose(1);
+
+
+# B
+BEGIN_TEXT
+
+Choose the right inheritance pattern for each peddigree shown below:
+$BR
+$BR
+$a
+$BR
+\{$w->print_q()\}
+$BR
+$BR
+$b
+$BR
+\{$x->print_q()\}
+$BR
+$BR
+$c
+$BR
+\{$y->print_q()\}
+$BR
+$BR
+$d
+$BR
+\{$z->print_q()\}
+
+END_TEXT
+
+# C
+ANS(str_cmp($w->ra_correct_ans()));
+ANS(str_cmp($x->ra_correct_ans()));
+ANS(str_cmp($y->ra_correct_ans()));
+ANS(str_cmp($z->ra_correct_ans()));
+
+ENDDOCUMENT();        

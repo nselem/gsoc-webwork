@@ -1,0 +1,80 @@
+##DESCRIPTION
+##  GSoC - Genetics
+##ENDDESCRIPTION
+
+##KEYWORDS('Genetics')
+
+## DBsubject('Genetics')
+## DBchapter('Fundamentals')
+## DBsection('')
+## Date('5/1/2014')
+## Author('Nelly Selem')
+## Institution('GSoC')
+
+########################################################################
+
+DOCUMENT();      
+
+loadMacros(
+   "PGstandard.pl",     # Standard macros for PG language
+   "MathObjects.pl",
+   "GSoC_Genetics.pl",
+   "unionTables.pl"
+   #"source.pl",        # allows code to be displayed on certain sites.
+   #"PGcourse.pl",      # Customization file for the course
+);
+
+# Print problem number and point value (weight) for the problem
+TEXT(beginproblem());
+
+# Show which answers are correct and which ones are incorrect
+$showPartialCorrectAnswers = 1;
+
+# A
+
+SRAND($problemSeed);
+$a = random(1, 8)*1000;
+$b = random(1, 5000)/10000;
+$c = floor(($a*(1-$b))/2)+random(-10, 10);
+$d = floor(($a*$b)/2)+random(-10, 10);
+$e = floor(($a*$b)/2)+random(-10, 10);
+$f = $a-$c-$d-$e;
+$z = Real($b);
+
+# B
+BEGIN_TEXT
+
+You are looking at the phenotype of two alleles within a population of $a individuals.
+$BR
+The two alleles describe the color and the size of an individual in the following manner:
+$BR
+$BR
+\{
+BeginTable(border => 1, tex_border => "1pt", spacing => 0, padding => 4).
+AlignedRow([$BBOLD . "Trait" . $EBOLD, $BBOLD . "Dominant" . $EBOLD, $BBOLD . "Recessive" . $EBOLD], align => LEFT, separation => 0).
+AlignedRow(["Color", "Dark (A)", "Light (a)"], align => LEFT, separation => 0).
+AlignedRow(["Size", "Big (B)", "Small (b)"], align => LEFT, separation => 0).
+EndTable()
+\}
+$BR
+$BR
+You make a test cross of an individual carrying the genotype AB/ab with another that has the genotype ab/ab, and observe the following phenotypes in the offspring:
+$BR
+$BR
+\{
+BeginTable(border => 1, tex_border => "1pt", spacing => 0, padding => 4).
+AlignedRow(["", $BBOLD . "Dark" . $EBOLD, $BBOLD . "Light" . $EBOLD], align => LEFT, separation => 0).
+AlignedRow([$BBOLD . "Big" . $EBOLD, $c, $d], align => LEFT, separation => 0).
+AlignedRow([$BBOLD . "Small" . $EBOLD, $e, $f], align => LEFT, separation => 0).
+EndTable()
+\}
+$BR
+$BR
+What is the observed recombination frequency? \{$z->ans_rule\}
+
+END_TEXT
+
+# C
+ANS($z->with(tolerance=>0.01)->cmp);
+
+ENDDOCUMENT();        

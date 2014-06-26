@@ -1,0 +1,141 @@
+##############################################################################
+# DESCRIPTION
+# Problem from Gillespi, Population Genetics, 1th ed.
+# WeBWorK problem written by Nelly Sélem LANGEBIO CINVESTAV <nselem84@gmail.com>
+# ENDDESCRIPTION
+
+## KEYWORDS('probability','allele', 'gen', 'selection')
+## Tagged by nselem 22/04/2012
+
+## DBsubject('Probability')
+## DBchapter('Aplications')
+## DBsection('Genetics')
+## Date('22/04/2012')
+## Author('Nelly Selem')
+## Institution('LANGEBIO CINVESTAV')
+## TitleText1('Population Genetics')
+## EditionText1('1')
+## AuthorText1('Jhon H. Gillespie')
+## Section1('3.1')
+
+
+## Textbook tags
+## HHChapter1('Natural Selection')
+
+# DESCRIPTION
+# Problema de Genetica, Jhon H. Gillespie, 1th ed.
+# escrito en WeBWork por Nelly Selem <nselem84@gmail.com>
+# ENDDESCRIPTION
+
+## KEYWORDS('probabilidad','allelo', 'gen', 'seleccion')
+## Tagged by nselem 22/04/12
+
+## DBsubject('Probabilidad')
+## DBchapter('Aplicaciones')
+## DBsection('Genetica')
+## Date('22-04-2012')
+## Translate('Nelly Sélem')
+## Institution('LANGEBIO CINVESTAV')
+
+DOCUMENT();
+
+loadMacros(
+"PGstandard.pl",
+"MathObjects.pl",
+"PGchoicemacros.pl",
+"PGgraphmacros.pl",
+);
+
+Context("Numeric");
+Context()->flags->set( reduceConstants=>0 );
+
+$showPartialCorrectAnswers = 1;
+
+######################################################################
+##  Set Variables
+######################################################################
+
+#Viability Constants of the Genotypes A11 A12 y A22 
+$w11=random(1.4,1.6,.01);
+$w12=random(1.1,1.3,.01);
+$w22=Compute("1.0");
+
+$s=Compute("1-($w22)/($w11)");  #Selection Coefficient
+$h=Compute("(1-($w12)/($w11))/($s)");  #Heterozygous effect
+ 
+
+TEXT(beginproblem());
+Context()->texStrings;
+BEGIN_TEXT_ES
+Dados que los valores de adaptacion (fitnesses) de los genotipos \(A_{11},A_{12},A_{22}\) son respectivamente \($w11, $w12, $w22 \), calcula el coeficiente de $BITALIC seleccion $EITALIC  \(s\) y el coeficiente de $BITALIC Efecto Heterocigoto $EITALIC \(h\).$PAR
+$BR \(s = \) \{ ans_rule(10) \}
+$BR \(h = \) \{ ans_rule(10) \}
+
+$PAR ¿Que significan estos coeficientes? $PAR
+END_TEXT
+
+BEGIN_TEXT
+For each of the following genotypes \(A_{11},A_{12},A_{22}\), their corresponding fitness values are \($w11, $w12, $w22 \). Calculate the $BITALIC selection $EITALIC coefficient and the $BITALIC heterozygotic effect $EITALIC coefficient.
+$BR \(s = \) \{ ans_rule(10) \}
+$BR \(h = \) \{ ans_rule(10) \}
+
+$PAR What do these coefficients mean? $PAR
+END_TEXT
+Context()->normalStrings;
+
+ANS( num_cmp($s) );
+ANS( num_cmp($h) );
+
+Context()->texStrings;
+BEGIN_SOLUTION_ES
+Despejando \(h\) y \(s\) de la seccion 3.2 de libro de Gillespie obtenemos: $PAR
+
+Coeficiente de seleccion:$BR
+\(s=1-\frac{\omega_{22}}{\omega_{11}}\)  $PAR
+
+Efecto Heterocigoto $BR
+\(h=\frac{1-\frac{\omega_{12}}{\omega_{11}}}{s}=\frac{\omega_{11}-\omega_{12}}{s\omega_{11}}\) $PAR
+
+Sustituyendo los valores de fitness de los genotipos \(\omega_{11}=$w11,
+\omega_{12}=$w12,\omega_{22}=$w22,\)
+$PAR
+Coeficiente de seleccion:$BR
+\(s=1-\frac{$w22}{$w11}=$s\)  $PAR
+
+\(s>0 \) indica que \(A_{11}\) tiene mas fitness que \(A_{22}\)$PAR
+
+Esto se puede ver de que \(s>0\) implica \(\frac{\omega_{22}}{\omega_{11}}<1\), es decir \(\omega_{22} < \omega_{11}\). En este caso es cierto porque: \(\omega_{22}=$w22 < $w11=\omega_{11}\). $PAR
+
+Efecto Heterocigoto $BR
+\(h=\frac{1-\frac{$w12}{$w11}}{s}=$h\) $BR
+\(0\le h \le 1\) significa dominancia incompleta.
+END_SOLUTION
+
+
+BEGIN_SOLUTION
+By solving \(h\) and \(s\) from equation on Gillespie's book, we get: $PAR
+
+Selection coefficient:$BR
+\(s=1-\frac{\omega_{22}}{\omega_{11}}\)  $PAR
+
+Heterozygotic effect coefficient $BR
+\(h=\frac{1-\frac{\omega_{12}}{\omega_{11}}}{s}=\frac{\omega_{11}-\omega_{12}}{s\omega_{11}}\) $PAR
+
+By solving the fitness' values of each genotype \(\omega_{11}=$w11,
+\omega_{12}=$w12,\omega_{22}=$w22,\)
+$PAR
+Selection coefficient:$BR
+\(s=1-\frac{$w22}{$w11}=$s\)  $PAR
+
+\(s>0 \) tells us that \(A_{11}\) is more fit than \(A_{22}\)$PAR
+
+This can be inferred from the fact that \(s>0\) implies \(\frac{\omega_{22}}{\omega_{11}}<1\), which means \(\omega_{22} < \omega_{11}\). For this scenario, this is true because: \(\omega_{22}=$w22 < $w11=\omega_{11}\). $PAR
+
+Heterozygotic effect coefficient $BR
+\(h=\frac{1-\frac{$w12}{$w11}}{s}=$h\) $BR
+\(0\le h \le 1\) means incomplete dominance.
+END_SOLUTION
+Context()->normalStrings;
+
+ENDDOCUMENT();
+     
