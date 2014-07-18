@@ -1,0 +1,119 @@
+
+##DESCRIPTION
+##  This problem is about to classify partial Differential Equations. Author 
+# nselem84@gmail.com
+##ENDDESCRIPTION
+
+##KEYWORDS('classification', 'homogeneous')
+
+## DBsubject('Partial Differential Equations')
+## DBchapter('Partial Differential Equations')
+## DBsection('Variable separation ')
+
+##DESCRIPTION
+##  Introduccion Ecuaciones Parciales
+##ENDDESCRIPTION
+
+##KEYWORDS('clasificacion', 'homogeneas')
+
+## DBsubject('Ecuaciones Diferenciales')
+## DBchapter('Ecuaciones Parciales')
+## DBsection('Introduccion')
+## Author('Nelly Selem')
+###########################
+#  Initialization
+
+DOCUMENT();
+
+loadMacros(
+"PGstandard.pl",
+"MathObjects.pl",
+"answerHints.pl",
+);
+
+TEXT(beginproblem());
+$showPartialCorrectAnswers = 1;
+################################################################################
+#  Extra variables
+#
+  Context()->variables->add(A=>'Real',B=>'Real',W=>'Real',n=>'Real', C=>'Real',D=>'Real',E=>'Real',F=>'Real', y=>"Real",z=>"Real",X=>'Real',Y=>"Real",T=>'Real',
+dX=>'Real',dY=>"Real",dT=>'Real',dx=>'Real',dy=>"Real",dt=>'Real',
+t=>'Real',h=>'Real',l=>'Real',a=>'Real',L=>'Real',k=>'Real',u=>'Real',f=>'Real',g=>'Real',df=>'Real',dg=>'Real',du=>'Real');
+
+##############################################################################
+#   Notation help window. Ventana emergente de notacion
+#
+
+# Show which answers are correct and which ones are incorrect
+$showPartialCorrectAnswers = 1;
+
+##############################################################
+#
+#  Setup
+#
+#
+$a = random(3,6,1);
+$b = $a*$a;
+
+#
+##############################################################
+#
+#  Text
+#
+#
+
+Context()->texStrings;
+BEGIN_TEXT
+Solve the following differential equation by applying the separate variable method.
+$BR \[ \frac{\partial^2 u}{\partial x^2}-$b \frac{\partial^2 u}{\partial y^2} =0. \]
+After appling the separate variable method using the constant \(\lambda^2\), we get two ordinary equations. $BR If the first equation turns out to be: \[  \frac{X''}{X}=\frac{\frac{d^2X}{dx^2}}{X}= \lambda^2 ..... (1)\].  $BR 
+
+
+Then, the ordinary differential equation that depends on y is: $BR
+$BCENTER \{ ans_rule(7) \}= \(\frac{d^2Y}{dy^2}....(2) \)$ECENTER $PAR
+
+The general solution for the equation (1) is:\( X(x)=\)\{ ans_rule(7) \}. $BR
+The general solution for the equation (2) is:\( Y(y)=\)\{ ans_rule(7) \}. $PAR 
+END_TEXT
+BEGIN_TEXT_ES
+Resuelve la siguiente ecuacion diferencial aplicando el metodo de separacion de variables.
+$BR \[ \frac{\partial^2 u}{\partial x^2}-$b \frac{\partial^2 u}{\partial y^2} =0. \]
+Después de aplicar el método de separacion de variables utilizando la constante \(\lambda^2\), obtenemos dos ecuaciones ordinarias. $BR Si la primera ecuación resulta ser: \[  \frac{X''}{X}=\frac{\frac{d^2X}{dx^2}}{X}= \lambda^2 ..... (1)\].  $BR 
+
+
+Entonces la ecuacion diferencial ordinaria dependiente de y es: $BR
+$BCENTER \{ ans_rule(7) \}= \(\frac{d^2Y}{dy^2}....(2) \)$ECENTER $PAR
+
+La solucion general de la ecuacion (1) es:\( X(x)=\)\{ ans_rule(7) \}. $BR
+La solucion general de la ecuacion (2) es:\( Y(y)=\)\{ ans_rule(7) \}. $PAR 
+END_TEXT
+Context()->normalStrings;
+
+$showHint = 1;
+
+$ec_x=Formula("(Y *l^2)/($b)");
+$sol_x=Formula("A*e^{l*x}+B*e^{-l*x}");
+$sol_y=Formula("C*e^{l*y/$a}+D*e^{-l*y/$a}");
+$sol2_x=Formula("B*e^{l*x}+A*e^{-l*x}");
+$sol2_y=Formula("D*e^{l*y/$a}+C*e^{-l*y/$a}");
+
+ANS( $ec_x->cmp() ->withPostFilter(AnswerHints( 
+
+Formula("(y *l^2)/($b)") => "Esta ecuación no utiliza la variable correcta", 
+))
+);
+
+
+
+ANS( $sol_x->cmp(checker=>sub {
+my ( $correct, $student, $ansHash ) = @_;
+return ($sol2_x== $student||$correct == $student);
+}));
+
+
+
+ANS( $sol_y->cmp(checker=>sub {
+my ( $correct, $student, $ansHash ) = @_;
+return ($sol2_y== $student||$correct == $student);
+}));
+ENDDOCUMENT();        

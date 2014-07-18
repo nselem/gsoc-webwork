@@ -1,0 +1,198 @@
+## DESCRIPTION
+## Partial differential equations. This problem is about the 
+## Laplace equation. Autor  Nelly Sélem <nselem84@gmail.com>
+## ENDDESCRIPTION
+
+## KEYWORDS('Laplace','Partial','Differential','Equation')
+
+## DBsubject('Partial Differential Equations')
+## DBchapter('Partial Differential Equations')
+## DBsection('Laplace Equation')
+## Date()
+## Author('Nelly Selem')
+## Institution('LANGEBIO CINVESTAV')
+## TitleText1('Differential equations with boundary value problems')
+## EditionText1('6')
+## AuthorText1('Dennis Zill,Michael R. Cullen ')
+## Section1('12.2')
+
+## Translation
+## DESCRIPTION
+## Ecuación diferencial parcial del Laplace. En este problema 
+## se trata de establecer las condiciones de frontera de una 
+## placa. Nelly Sélem <nselem84@gmail.com>
+## ENDDESCRIPTION
+
+## KEYWORDS('Laplace','Condiciones','Parcial','Diferencial','Ecuacion')
+
+## DBsubject('Ecuaciones Diferenciales Parciales')
+## DBchapter('Ecuaciones Diferenciales Parciales')
+## DBsection('Ecuacion de Laplace')
+## Date()
+## Author('Nelly Selem')
+## Institution('LANGEBIO CINVESTAV')
+## TitleText1('Ecuaciones diferenciales con problemas con valores en la 
+## frontera')
+## EditionText1('6')
+## AuthorText1('Dennis Zill,Michael R. Cullen ')
+## Section1('12.2')
+
+
+################################################################################
+
+
+ DOCUMENT();        # This should be the first executable line in the problem.
+
+    loadMacros(
+      "PGstandard.pl",
+      "Parser.pl",
+      "parserPopUp.pl",
+      "PGunion.pl",
+      "PGchoicemacros.pl",
+    );
+
+###############################################################################
+    TEXT(beginproblem);
+    $showPartialCorrectAnswers = 1;
+
+##############################################################################
+#   Ventana de ayuda / help window
+##############################################################################
+
+##############################################################################
+
+Context()->variables->add(y=>'Real',h=>'Real',L=>'Real',k=>'Real',u=>'Real');
+
+################################################################################
+#   Setup
+##############################################################################
+
+
+################################################################################
+
+#__________________________________________________________________________
+
+  $fun_u = PopUp(  ["?","u","u_y","u_x"],"u",);
+  $u_x = PopUp(  ["?","u","u_y","u_x"],"u_x",);
+  $u_y = PopUp(  ["?","u","u_y","u_x"],"u_y",);
+ 
+#_______________________________________________________________________   
+
+    $I = random(0,1,1);     $L = random(2,6,1);
+    $U0 = random(3,7,2);    $U1 =random(2,6,1);
+    $superior=Formula("exp(1)*$U1");     $derecho=Formula("pi*$U0");
+    $inferior=Formula("-exp(1)*$U1");     $izquierdo=Formula("-pi*$U0");
+
+    $cero = Formula("0");  $ele=Formula("L");
+    $ye=Formula("y");      $equis=Formula("x");
+    $efe=Formula("cosh(y-pi)"); $efe2=Formula("e^{-y}");
+
+#Respuestas
+$resp2_1=$fun_u; $resp2_2=$equis;
+$resp2_3=$superior; $resp2_4=$cero;  
+$resp3_1=$fun_u; $resp3_2=$derecho;
+$resp3_3=$ye; $resp3_4=$efe;  
+$resp4_1=$u_x; $resp4_2=$izquierdo;
+$resp4_3=$ye; $resp4_4=$cero;  
+$resp5_1=$u_y;$resp5_2=$equis;
+$resp5_3=$inferior;$resp5_4=$cero;  
+
+#_______________________________________________________________________
+@Ecuaciones= (
+"\frac{\partial^2 u }{\partial x^2} + \frac{\partial^2 u }{\partial y^2}=0",
+"a^2\frac{\partial^2 u }{\partial x^2}=\frac{\partial^2 u }{\partial t^2}",
+"k\frac{\partial^2 u }{\partial x^2}=\frac{\partial u }  {\partial t}");
+
+$Laplace1=" \(-$U0 \pi \le x\le $U0\pi \) y \(-$U1 e\le y\le $U1 e\)";
+
+Context()->texStrings();    
+BEGIN_TEXT
+\{
+$mcLaplace = new_checkbox_multiple_choice();
+$mcLaplace -> qa ( "Select the equation that models the problem", 
+"\( \displaystyle $Ecuaciones[0] \) $BR"); 
+
+$mcLaplace -> extra(
+"\( \displaystyle  $Ecuaciones[1]\) $BR",
+"\(\displaystyle $Ecuaciones[2]\) $BR" );
+
+$Frontera1="The top region of the plate is kept at 0º. $BR
+The right end of the plate is kept at temperaturae\(f(y)=$efe\). $BR";
+$Iniciales1="the left end and the bottom of the plate are isolated. ";
+"";
+\}
+$PAR Propose a value problem on the boundary of the steady-state temperature \(u\left(x,y\right)\).
+A thin rectangular plate corresponds to the region defined by
+$Laplace1 $BR This temperature does not depend on time. Propose an adequate mathematial model. $BR
+
+1. \{ $mcLaplace -> print_q() \}$BR\{ $mcLaplace -> print_a() \}  $BR 
+
+2. Now write in the following order the $BBOLD boundary conditions:
+ $EBOLD $BR 
+$Frontera1
+ \{$fun_u->menu() \}(\{ ans_rule(1) \} ,\{ ans_rule(1) \} )=(\{ ans_rule(3) \} ). $PAR
+\{$fun_u->menu() \}(\{ ans_rule(1) \} ,\{ ans_rule(1) \} )=(\{ ans_rule(3) \} ). 
+
+ $PAR $BR
+3. Finallt, propose also in order the $BBOLD conditions: $EBOLD $Iniciales1
+
+$PAR
+\{$u_y->menu() \}(\{ ans_rule(1) \} ,\{ ans_rule(1) \} )=(\{ ans_rule(3) \} ).
+$PAR
+\{$u_x->menu() \}(\{ ans_rule(1) \} ,\{ ans_rule(1) \} )=(\{ ans_rule(3) \} ).
+
+END_TEXT
+
+BEGIN_TEXT_ES
+\{
+$mcLaplace = new_checkbox_multiple_choice();
+$mcLaplace -> qa ( "Selecciona la ecuacion que modela el problema", 
+"\( \displaystyle $Ecuaciones[0] \) $BR"); 
+
+$mcLaplace -> extra(
+"\( \displaystyle  $Ecuaciones[1]\) $BR",
+"\(\displaystyle $Ecuaciones[2]\) $BR" );
+
+$Frontera1="La parte superior de la placa se mantiene  temperatura cero. $BR
+El extremo derecho de la placa se mantiene a temperatura \(f(y)=$efe\). $BR";
+$Iniciales1="el extremo izquierdo y el fondo de la placa están aislados. ";
+"";
+\}
+$PAR Establece el problema de valores
+en la frontera para la temperatura de estado estable \(u\left(x,y\right)\).
+Una placa rectángular delgada coinicide con la región definida por
+$Laplace1 $BR Esta temperatura no depende del tiempo. Plantea un modelo matematico adecuado. $BR
+
+1. \{ $mcLaplace -> print_q() \}$BR\{ $mcLaplace -> print_a() \}  $BR 
+
+2. Ahora escribe en el siguiente orden las $BBOLD condiciones de frontera:
+ $EBOLD $BR 
+$Frontera1
+ \{$fun_u->menu() \}(\{ ans_rule(1) \} ,\{ ans_rule(1) \} )=(\{ ans_rule(3) \} ). $PAR
+\{$fun_u->menu() \}(\{ ans_rule(1) \} ,\{ ans_rule(1) \} )=(\{ ans_rule(3) \} ). 
+
+ $PAR $BR
+3. Y finalmente plantea tambien en orden las $BBOLD condiciones: $EBOLD $Iniciales1
+
+$PAR
+\{$u_y->menu() \}(\{ ans_rule(1) \} ,\{ ans_rule(1) \} )=(\{ ans_rule(3) \} ).
+$PAR
+\{$u_x->menu() \}(\{ ans_rule(1) \} ,\{ ans_rule(1) \} )=(\{ ans_rule(3) \} ).
+
+END_TEXT
+####################################################################
+
+ANS( checkbox_cmp( $mcLaplace->correct_ans() ) );
+
+ANS( $resp2_1->cmp() ); ANS($resp2_2->cmp());ANS($resp2_3->cmp()) ; ANS($resp2_4->cmp());
+
+ANS( $resp3_1->cmp() ); ANS($resp3_2->cmp());ANS($resp3_3->cmp()) ; ANS($resp3_4->cmp());
+
+ANS( $resp4_1->cmp() ); ANS($resp4_2->cmp()); ANS($resp4_3->cmp()) ; ANS($resp4_4->cmp());
+
+ANS( $resp5_1->cmp()); ANS($resp5_2->cmp()) ; ANS($resp5_3->cmp());ANS($resp5_4->cmp());
+
+    ENDDOCUMENT();        # This should be the last executable line in the problem.
+
+
+      

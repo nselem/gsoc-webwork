@@ -1,0 +1,57 @@
+##DESCRIPTION
+##  GSoC - Lab Problems
+##ENDDESCRIPTION
+
+##KEYWORDS('Lab Problems')
+
+## DBsubject('Lab Problems')
+## DBchapter('Lab Problems')
+## DBsection('')
+## Date('7/1/2014')
+## Author('Nelly Selem')
+## Institution('GSoC')
+
+########################################################################
+
+DOCUMENT();      
+
+loadMacros(
+   "PGstandard.pl",     # Standard macros for PG language
+   "MathObjects.pl",
+   "GSoC_Genetics.pl",
+   "unionTables.pl"
+   #"source.pl",        # allows code to be displayed on certain sites.
+   #"PGcourse.pl",      # Customization file for the course
+);
+
+# Print problem number and point value (weight) for the problem
+TEXT(beginproblem());
+
+# Show which answers are correct and which ones are incorrect
+$showPartialCorrectAnswers = 1;
+
+# A
+
+$a = Genetics_RandomDNASequence(16);
+$z = Real(Genetics_GCContent($a));
+
+# B
+BEGIN_TEXT
+
+Calculate the GC content for the following random sequence:
+$BR
+$BR
+\{
+BeginTable(border => 1, tex_border => "1pt", spacing => 0, padding => 4).
+AlignedRow(["$a"], align => LEFT, separation => 0).
+EndTable()
+\}
+$BR
+\{$z->ans_rule\}
+
+END_TEXT
+
+# C
+ANS($z->with(tolerance=>0.01)->cmp);
+
+ENDDOCUMENT();        

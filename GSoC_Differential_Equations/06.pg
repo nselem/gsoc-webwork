@@ -1,0 +1,189 @@
+## DESCRIPTION
+## Partial differential equations. This problem is about the 
+## heat equation. Autor  Nelly Sélem <nselem84@gmail.com>
+## ENDDESCRIPTION
+
+## KEYWORDS('Heat','Partial','Differential','Equation')
+
+## DBsubject('Partial Differential Equations')
+## DBchapter('Partial Differential Equations')
+## DBsection('Heat Equation')
+## Date()
+## Author('Nelly Selem')
+## Institution('LANGEBIO CINVESTAV')
+## TitleText1('Differential equations with boundary value problems')
+## EditionText1('6')
+## AuthorText1('Dennis Zill,Michael R. Cullen ')
+## Section1('12.2')
+
+## Translation
+## DESCRIPTION
+## Ecuación diferencial parcial del calor en una dimensión. En este problema ## se trata de establecer las condiciones iniciales y de frontera de una 
+## varilla. Nelly Sélem <nselem84@gmail.com>
+## ENDDESCRIPTION
+
+## KEYWORDS('Calor','Condiciones','Parcial','Diferencial','Ecuacion')
+
+## DBsubject('Ecuaciones Diferenciales Parciales')
+## DBchapter('Ecuaciones Diferenciales Parciales')
+## DBsection('Ecuacion del Calor')
+## Date()
+## Author('Nelly Selem')
+## Institution('LANGEBIO CINVESTAV')
+## TitleText1('Ecuaciones diferenciales con problemas con valores en la 
+## frontera')
+## EditionText1('6')
+## AuthorText1('Dennis Zill,Michael R. Cullen ')
+## Section1('12.2')
+
+
+################################################################################
+
+
+ DOCUMENT();        # This should be the first executable line in the problem.
+
+    loadMacros(
+      "PGstandard.pl",
+      "Parser.pl",
+      "parserPopUp.pl",
+      "PGunion.pl",
+      "PGchoicemacros.pl",
+    );
+
+###############################################################################
+    TEXT(beginproblem);
+    $showPartialCorrectAnswers = 1;
+
+##############################################################################
+#   Ventana de ayuda / help window
+##############################################################################
+
+##############################################################################
+
+Context()->variables->add(t=>'Real',h=>'Real',L=>'Real',k=>'Real',u=>'Real');
+
+################################################################################
+#   Setup
+##############################################################################
+
+####################################################################
+Context()->texStrings();    
+
+BEGIN_TEXT
+\{
+
+$mc = new_checkbox_multiple_choice();
+$mc -> qa (
+"Of the following equations choose the one that you think will fit best the behavior of the temperature of a steel rod", 
+"\(\displaystyle k\frac{\partial^2 u }{\partial x^2}=\frac{\partial u }  {\partial t}\) $BR");
+$mc -> extra(
+"\( \displaystyle a^2\frac{\partial^2 u }{\partial x^2}=\frac{\partial^2 u }{\partial t^2} \) $BR",
+"\( \displaystyle \frac{\partial^2 u }{\partial x^2} + \frac{\partial^2 u }{\partial y^2} = 0\) $BR",);
+
+#__________________________________________________________________________
+
+  $fun_u = PopUp(  ["?","u","u_t","u_x"],"u",);
+  $par_t = PopUp(  ["?","u","u_t","u_x"],"u_t",);
+  $par_x = PopUp(  ["?","u","u_t","u_x"],"u_x",);
+ 
+#_______________________________________________________________________   
+
+    $u0 = random(6,10,2);
+    $u1 = random(2,5,1);
+    $L = random(2,6,1);
+    $ambiente = random(40,50,1);
+
+    $ele=Formula("L");
+    $te=Formula("t");
+    $equis=Formula("x");
+    $efe=Formula("(($u1-$u0)/L)*x+$u0");
+    $transfer=Formula("h*(u-$ambiente)");
+    $wtf="";
+#_______________________________________________________________________
+ 
+\}
+
+You have a steel rod with length L that corresponds to the interval [0 , L] on the x axis. 
+
+\{ $mc -> print_q() \}$BR\{ $mc -> print_a() \}  
+
+If the left end of the steel rod is kept at a temperature $u0, the right end at $u1 and the initial temperature is f(x)=\($efe\) in each point.$BR  Write models for the following cases:
+
+$PAR
+Left end: \{$fun_u->menu() \}(\{ ans_rule(1) \} ,\{ ans_rule(1) \} )=(\{ ans_rule(3) \} ).
+$PAR
+Initial condition: \{$fun_u->menu() \}(\{ ans_rule(1) \} ,\{ ans_rule(1) \} )=(\{ ans_rule(3) \} ).
+$PAR
+Right end: \{$fun_u->menu() \}(\{ ans_rule(1) \} ,\{ ans_rule(1) \} )=(\{ ans_rule(3) \} ). $PAR
+
+END_TEXT
+
+BEGIN_TEXT_ES
+\{
+
+$mc = new_checkbox_multiple_choice();
+$mc -> qa (
+"De las siguientes ecuaciones selecciona la que consideres que modela mejor el comportamiento de la temperatura de la varilla", 
+"\(\displaystyle k\frac{\partial^2 u }{\partial x^2}=\frac{\partial u }  {\partial t}\) $BR");
+$mc -> extra(
+"\( \displaystyle a^2\frac{\partial^2 u }{\partial x^2}=\frac{\partial^2 u }{\partial t^2} \) $BR",
+"\( \displaystyle \frac{\partial^2 u }{\partial x^2} + \frac{\partial^2 u }{\partial y^2} = 0\) $BR",);
+
+#__________________________________________________________________________
+
+  $fun_u = PopUp(  ["?","u","u_t","u_x"],"u",);
+  $par_t = PopUp(  ["?","u","u_t","u_x"],"u_t",);
+  $par_x = PopUp(  ["?","u","u_t","u_x"],"u_x",);
+ 
+#_______________________________________________________________________   
+
+    $u0 = random(6,10,2);
+    $u1 = random(2,5,1);
+    $L = random(2,6,1);
+    $ambiente = random(40,50,1);
+
+    $ele=Formula("L");
+    $te=Formula("t");
+    $equis=Formula("x");
+    $efe=Formula("(($u1-$u0)/L)*x+$u0");
+    $transfer=Formula("h*(u-$ambiente)");
+    $wtf="";
+#_______________________________________________________________________
+
+\}
+Se tiene una varilla de longitud L que coincide con el intervalo [0 , L] en el eje x. 
+ 
+
+\{ $mc -> print_q() \}$BR\{ $mc -> print_a() \}  
+
+Si el extremo izquierdo de la varilla se mantiene a una temperatura $u0, el extremo derecho a temperatura $u1 y la temperatura inicial es f(x)=\($efe\)  en cada punto.$BR  Modela lo que se te pide:
+
+$PAR
+Extremo izquierdo: \{$fun_u->menu() \}(\{ ans_rule(1) \} ,\{ ans_rule(1) \} )=(\{ ans_rule(3) \} ).
+$PAR
+Condicion inicial: \{$fun_u->menu() \}(\{ ans_rule(1) \} ,\{ ans_rule(1) \} )=(\{ ans_rule(3) \} ).
+$PAR
+Extremo derecho: \{$fun_u->menu() \}(\{ ans_rule(1) \} ,\{ ans_rule(1) \} )=(\{ ans_rule(3) \} ). $PAR
+
+END_TEXT
+####################################################################
+
+$showPartialCorrectAnswers = 1;
+ANS( checkbox_cmp( $mc->correct_ans() ) );
+
+ANS( $fun_u->cmp() ); # Extremo izquierdo
+ANS(num_cmp(0)); ANS($te->cmp()) ; ANS(num_cmp($u0));
+
+ANS( $fun_u->cmp() ); #Condicion inicial
+ANS($equis->cmp()) ; ANS(num_cmp(0));ANS($efe->cmp());
+
+ 
+ANS( $fun_u->cmp() ); #Extremo derecho
+ANS($ele->cmp()); ANS($te->cmp()) ; ANS(num_cmp($u1));
+
+##############################################################################
+
+    ENDDOCUMENT();        # This should be the last executable line in the problem.
+
+
+      

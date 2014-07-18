@@ -1,0 +1,200 @@
+######################### ENGLISH ######################################
+
+# DESCRIPTION
+# Problem for Partial Differential Equations. Heat equation in one dimension. 
+# Author: Nelly Sélem <nselem84@gmail.com>
+# ENDDESCRIPTION
+
+## KEYWORDS('partial','heat')
+
+## DBsubject('Partial Differential Equations')
+## DBchapter('Boundary Problems')
+## DBsection('Heat equation')
+## Date()
+## Author('Nelly Selem')
+## Translated('Nelly Selem')
+
+######################### ESPAÑOL ######################################
+
+# DESCRIPTION
+# Problema de ecuaciones diferenciales parciales. Ecuación del calor en una 
+# dimensión. Autor: Nelly Sélem <nselem84@gmail.com>
+# ENDDESCRIPTION
+
+## KEYWORDS('parcial','calor','ecuación','frontera')
+
+## DBsubject('Ecuaciones Diferenciales Parciales')
+## DBchapter('Problemas con valores en la frontera')
+## DBsection('Ecuación del calor')
+## Date()
+## Author('Nelly Sélem')
+## Translated('Nelly Sélem')
+
+
+DOCUMENT();
+
+loadMacros(
+ "PGstandard.pl",
+ "MathObjects.pl",
+ "PGchoicemacros.pl",
+ "PGgraphmacros.pl",
+);
+##############################################################################
+###########################################################################
+Context("Numeric");
+Context()->flags->set( reduceConstants=>0 );
+Context()->variables->add(n=>'Real',k=>'Real',T=>'Real',dT=>'Real',t=>'Real',X=>'Real');
+$showPartialCorrectAnswers = 1;
+
+#######################################################################
+#                 Variables
+#######################################################################
+#
+
+$calor="\(k\frac{\partial^2 u}{\partial x^2}=\frac{\partial u}{\partial t}\)";
+
+$L=random(2,10,1); #Longitud de la varilla
+$a=random(2,10,1); 
+$b=random(2,10,1); 
+
+$Inicial=Formula("-$a*sin(pi*x/$L)");
+
+$EDO=Formula("dT/(k*T)");
+
+$lambda_cero=Compute("0");
+$lambda_positiva=Compute("sin(n*pi*x/$L)");
+$lambda_negativa=Compute("0");
+$T_n=Compute("e^{-(k*n^2*pi^2*t)/($L*$L)}");
+$X_n=Compute("sin(n*pi*x/$L)");
+$sol=Compute("-$a*sin(pi*x/$L)*e^{-(k*pi^2*t)/($L*$L)}");
+
+$a0=Compute("1");$an=Compute("1");$bn=Compute("1");
+
+   ## Para la solución tenemos:
+	    $aint0 = "\frac{2}{\pi}\int_{0}^{\pi}\,$fRight\,dx = ". $a0->TeX;
+	    $aintn = "\frac{2}{\pi}\int_{0}^{\pi}\,$fRight\,\cos(n x)\,dx= " . 
+	    $an->TeX;
+	    $bintn = "\frac{2}{\pi}\int_{0}^{\pi}\,$fRight\,\sin(n x)\,dx= " . 
+            $bn->TeX;
+	
+	
+$an->{test_points} = [[1,1,1,1,1,1,1],[2,2,2,2,2,2,2],
+                     [3,3,3,3,3,3,3],[4,4,4,4,4,4,4],[5,5,5,5,5,5,5]];
+$bn->{test_points} =  [[1,1,1,1,1,1,1],[2,2,2,2,2,2,2],
+                     [3,3,3,3,3,3,3],[4,4,4,4,4,4,4],[5,5,5,5,5,5,5]];
+
+$lambda_positiva->{test_points} = [[1,1,1,1,1,1,1],[2,2,2,2,2,2,2],
+                     [3,3,3,3,3,3,3],[4,4,4,4,4,4,4],[5,5,5,5,5,5,5]];
+$T_n->{test_points} = [[1,1,1,1,1,1,1],[2,2,2,2,2,2,2],
+                     [3,3,3,3,3,3,3],[4,4,4,4,4,4,4],[5,5,5,5,5,5,5]];
+$X_n->{test_points} = [[1,1,1,1,1,1,1],[2,2,2,2,2,2,2],
+                     [3,3,3,3,3,3,3],[4,4,4,4,4,4,4],[5,5,5,5,5,5,5]];
+$sol->{test_points} = [[1,1,1,1,1,1,1],[2,2,2,2,2,2,2],
+                     [3,3,3,3,3,3,3],[4,4,4,4,4,4,4],[5,5,5,5,5,5,5]];
+
+#
+#
+###################################################################
+
+# Show which answers are correct and which ones are incorrect
+$showPartialCorrectAnswers = 1;
+
+
+
+#############################################################################
+#
+#  Text
+#
+#
+Context()->texStrings;
+BEGIN_TEXT
+Find the temperature \(u(x,t)\) of a steel rod with length \($L\) and ends that are kept at 0°.
+$BR The initial $Funcion of the steel rod is given by \(f(x)=-$a \sin(\frac{\pi x} {$L})\).
+$PAR
+
+By using the constant \(-\lambda\) on the separation of variables methos to solve the heat equation: $calor, with k=1, we get two ordinary equations:
+
+$BR ODE 1 .... \(\frac{X''}{X}=-\lambda\),
+.........  ODE2 ..... \(-\lambda=\)\{ ans_rule(15) \} $PAR
+
+Now, write the different solutions X that are obtained after applying the homogeneous boundary conditions to the three possible \(\lambda\) values on ODE 1.
+
+$BR Si  \(\lambda=0\) Entonces \(X_n(x)=C_n\)\{ ans_rule(15) \} .
+$BR Si  \(\lambda=\alpha^2>0\) Entonces \(X_n(x)=D_n\)\{ ans_rule(15) \} .
+$BR Si  \(\lambda=-\alpha^2<0\) Entonces \(X_n(x)=F_n\)\{ ans_rule(15) \} .
+$PAR
+
+With this, once ODE2 is solved we see that one solution to the problem without considering the initial conditions is: $BR
+$BR \(u_n(x,t)= X_n(x)\times [T_n(t)]=A_n\) \{ ans_rule(15) \}\(\times [\)  \{ ans_rule(15) \}\(]\)     $PAR
+
+By applying the superposition principle we make a solution \(u(x,t)= \sum_{n=1}^\infty u_n(x,t)\).       $PAR
+
+Now we just have to guarantee that the solution satisfies the initial conditions, that is \(u(x,0)=f(x)\). Use this to calculate coefficients for \(A_n\) and determine \(u(x,t)\).$PAR
+
+Now \(u(x,t)\) =  \{ ans_rule(15) \} .
+$PAR
+
+If the material properties tell us that \(k=1.63\) use the 3D application of your favorite CAS (computarized algebra system) to plot \(S_5(x,t)\). That is, the sum up to \(n=5\).
+END_TEXT
+BEGIN_TEXT_ES
+Encuentra analíticamente la temperatura \(u(x,t)\) de una varilla de longitud \($L\) con extremos que se mantienen a 0°.
+$BR La $Funcion inicial de la varilla está dada por la función \(f(x)=-$a \sin(\frac{\pi x} {$L})\).
+$PAR
+
+Al utilizar la constante \(-\lambda\) en el método de variables separables para resolver la ecuación del calor: $calor, con k=1, se obtienen dos ecuaciones ordinarias:
+
+$BR EDO 1 .... \(\frac{X''}{X}=-\lambda\),
+.........  EDO2 ..... \(-\lambda=\)\{ ans_rule(15) \} $PAR
+
+Ahora, escribe las las distintas soluciones X que se obtienen después de aplicar las condiciones frontera homogeneas a los tres posibles valores \(\lambda\) en la EDO 1.
+
+$BR Si  \(\lambda=0\) Entonces \(X_n(x)=C_n\)\{ ans_rule(15) \} .
+$BR Si  \(\lambda=\alpha^2>0\) Entonces \(X_n(x)=D_n\)\{ ans_rule(15) \} .
+$BR Si  \(\lambda=-\alpha^2<0\) Entonces \(X_n(x)=F_n\)\{ ans_rule(15) \} .
+$PAR
+
+Con lo cual, una vez resuelta la EDO2 tenemos que una solución al problema sin considerar las condiciones iniciales es: $BR
+$BR \(u_n(x,t)= X_n(x)\times [T_n(t)]=A_n\) \{ ans_rule(15) \}\(\times [\)  \{ ans_rule(15) \}\(]\)     $PAR
+
+Después de aplicar el principio de superposición formamos una solución \(u(x,t)= \sum_{n=1}^\infty u_n(x,t)\).       $PAR
+
+Solo resta garantizar que la solución satisfaga las condiciones iniciales, es decir que \(u(x,0)=f(x)\). Utiliza esta información para calcular los coeficientes \(A_n\) y determinar completamente \(u(x,t)\).$PAR
+
+Así pues \(u(x,t)\) =  \{ ans_rule(15) \} .
+$PAR
+
+Si por las propiedades del material se estima que \(k=1.63\) utiliza la aplicación 3D de tu SAC (sistema de álgebra computarizado) favorito para trazar la gráfica de \(S_5(x,t)\). Es decir la sumatoria hasta \(n=5\). 
+
+$BR \{ htmlLink("#","Help (Notación)","onClick='openhelpCustom1()';") \}
+
+END_TEXT
+Context()->normalStrings;
+
+##############################################################
+#
+#  Answers
+#
+#
+$dos_acero=Compute("0");
+ANS( $EDO->cmp() );
+ANS( $lambda_cero->cmp() );
+ANS( $lambda_positiva->cmp() );
+ANS( $lambda_negativa->cmp() );
+ANS( $X_n->cmp() );
+ANS( $T_n->cmp() );
+ANS( $sol->cmp() );
+
+
+
+##############################################################
+#
+#  Answers
+#
+#
+
+Context()->texStrings;
+Context()->normalStrings;
+
+
+ENDDOCUMENT();        
+
