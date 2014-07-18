@@ -30,28 +30,53 @@ TEXT(beginproblem());
 # Show which answers are correct and which ones are incorrect
 $showPartialCorrectAnswers = 1;
 
+# Alcohol density problem
 # A
 
-$a = Genetics_RandomDNASequence(16);
-$z = Real(Genetics_GCContent($a));
+SRAND($problemSeed);
+$a = random(1, 3)*10;
+$b = random(3, 9)*10;
+$c = random(4, 7)*10;
+$d = random(7, 9)*10;
+$w = Real($a);
+$x = Real($b);
+$y = Real($c);
+$z = Real($d);
 
 # B
 BEGIN_TEXT
-
-Calculate the GC content for the following random sequence:
-$BR
-$BR
+You have 4 different bottles holding solutions of ethanol mixed with water. $BR
+By taking into account the density of the solution, $BR
+find out the proportion of ethanol that is mixed with water (%).
 \{
 BeginTable(border => 1, tex_border => "1pt", spacing => 0, padding => 4).
-AlignedRow(["$a"], align => LEFT, separation => 0).
+AlignedRow(["Weight of 1 L of solution$BR(Room temperature 25º)", "Proportion of ethanol"], align => LEFT, separation => 0).
+AlignedRow([((((100-$a)/100)*997.0479)+(($a/100)*789)) . " g", $w->ans_rule . "%"], align => LEFT, separation => 0).
+AlignedRow([((((100-$b)/100)*997.0479)+(($b/100)*789)) . " g", $x->ans_rule . "%"], align => LEFT, separation => 0).
+AlignedRow([((((100-$c)/100)*997.0479)+(($c/100)*789)) . " g", $y->ans_rule . "%"], align => LEFT, separation => 0).
+AlignedRow([((((100-$d)/100)*997.0479)+(($d/100)*789)) . " g", $x->ans_rule . "%"], align => LEFT, separation => 0).
 EndTable()
 \}
-$BR
-\{$z->ans_rule\}
-
+END_TEXT
+BEGIN_TEXT_ES
+Tienes 4 frascos diferentes con soluciones de etanol mezclado con agua. $BR
+Tomando en cuenta la densidad de la solucion, $BR
+encuentra la proporcion de etanol que esta mezclada con agua (%).
+\{
+BeginTable(border => 1, tex_border => "1pt", spacing => 0, padding => 4).
+AlignedRow(["Peso de 1 L de solucion$BR(Temperatura ambiente 25º)", "Propocion de etanol"], align => LEFT, separation => 0).
+AlignedRow([((((100-$a)/100)*997.0479)+(($a/100)*789)) . " g", $w->ans_rule . "%"], align => LEFT, separation => 0).
+AlignedRow([((((100-$b)/100)*997.0479)+(($b/100)*789)) . " g", $x->ans_rule . "%"], align => LEFT, separation => 0).
+AlignedRow([((((100-$c)/100)*997.0479)+(($c/100)*789)) . " g", $y->ans_rule . "%"], align => LEFT, separation => 0).
+AlignedRow([((((100-$d)/100)*997.0479)+(($d/100)*789)) . " g", $x->ans_rule . "%"], align => LEFT, separation => 0).
+EndTable()
+\}
 END_TEXT
 
 # C
+ANS($w->with(tolerance=>0.01)->cmp);
+ANS($x->with(tolerance=>0.01)->cmp);
+ANS($y->with(tolerance=>0.01)->cmp);
 ANS($z->with(tolerance=>0.01)->cmp);
 
 ENDDOCUMENT();        

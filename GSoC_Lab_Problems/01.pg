@@ -30,28 +30,54 @@ TEXT(beginproblem());
 # Show which answers are correct and which ones are incorrect
 $showPartialCorrectAnswers = 1;
 
+# Making solutions from solids
+# NaCl - 58.44
+# MgCl2 - 95.211
+# Na2SO4·10H2O - 322.2
 # A
 
-$a = Genetics_RandomDNASequence(16);
-$z = Real(Genetics_GCContent($a));
+SRAND($problemSeed);
+$aa = random(1, 20)*50;
+$ab = random(1, 100)/100;
+$ba = random(1, 20)*50;
+$bb = random(1, 100)/100;
+$ca = random(1, 20)*50;
+$cb = random(1, 100)/100;
+$da = random(1, 20)*50;
+$db = random(1, 100)/100;
+$w = Real(($ab*58.44)*($aa/1000));
+$x = Real(($bb*(95.211/2))*($ba/1000));
+$y = Real(($cb*(322.2/2))*($ca/1000));
+$z = Real(($db*322.2)*($da/1000));
 
 # B
 BEGIN_TEXT
-
-Calculate the GC content for the following random sequence:
-$BR
-$BR
+Calculate the weight of solid compound needed to make:
 \{
 BeginTable(border => 1, tex_border => "1pt", spacing => 0, padding => 4).
-AlignedRow(["$a"], align => LEFT, separation => 0).
+AlignedRow(["$aa ml of solution that is $ab M in sodium cation, using sodium chloride (NaCl)", $w->ans_rule . " g"], align => LEFT, separation => 0).
+AlignedRow(["$ba ml of solution that is $bb M in chloride anion, using anhydrous magnesium chloride (MgCl2)", $x->ans_rule . " g"], align => LEFT, separation => 0).
+AlignedRow(["$ca ml of solution that is $cb M in sodium cation, using sodium sulfate decahydrate (Na2SO4·10H2O)", $y->ans_rule . " g"], align => LEFT, separation => 0).
+AlignedRow(["$da ml of solution that is $db M in sulfate anion, using sodium sulfate decahydrate", $z->ans_rule . " g"], align => LEFT, separation => 0).
 EndTable()
 \}
-$BR
-\{$z->ans_rule\}
-
+END_TEXT
+BEGIN_TEXT_ES
+Calcula el peso de cada compuesto solido que necesitas para hacer:
+\{
+BeginTable(border => 1, tex_border => "1pt", spacing => 0, padding => 4).
+AlignedRow(["$aa ml de solucion a una concentracion de $ab M de cation de sodio, utilizando cloruro de sodio (NaCl)", $w->ans_rule . " g"], align => LEFT, separation => 0).
+AlignedRow(["$ba ml de solucion a una concentracion de $bb M de anion de cloro, utilizando cloruro de magensio anhidrido (MgCl2)", $x->ans_rule . " g"], align => LEFT, separation => 0).
+AlignedRow(["$ca ml de solucion a una concentracion de $cb M de cation de sodio, utilizando decahidrato de sulfato de sodio (Na2SO4·10H2O)", $y->ans_rule . " g"], align => LEFT, separation => 0).
+AlignedRow(["$da ml de solucion a una concentracion de $db M de anion sulfato, utilizando decahidrato de sultato de sodio", $z->ans_rule . " g"], align => LEFT, separation => 0).
+EndTable()
+\}
 END_TEXT
 
 # C
+ANS($w->with(tolerance=>0.01)->cmp);
+ANS($x->with(tolerance=>0.01)->cmp);
+ANS($y->with(tolerance=>0.01)->cmp);
 ANS($z->with(tolerance=>0.01)->cmp);
 
 ENDDOCUMENT();        

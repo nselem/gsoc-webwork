@@ -30,30 +30,97 @@ TEXT(beginproblem());
 # Show which answers are correct and which ones are incorrect
 $showPartialCorrectAnswers = 1;
 
+# Dilution problem 2
 # A
 
-# http://www.facebook.com/l.php?u=http%3A%2F%2Fcollective.chem.cmu.edu%2Fassignments.php&h=RAQHhDeVx
-
-$a = Genetics_RandomDNASequence(16);
-$z = Real(Genetics_GCContent($a));
+SRAND($problemSeed);
+$a = random(1, 3);
+$aa = random(1, 4)/20;
+$b = random(2, 4);
+$bb = random(1, 10)/100;
+$c = random(1, 3);
+$cc = random(1, 4)/100;
+$d = random(1, 3);
+$_w = ($d/$a)*$aa*1000;
+$w = Real($_w);
+$_x = ($d/$b)*$bb*1000;
+$x = Real($_x);
+$_y = ($d/$c)*$cc*1000;
+$y = Real($_y);
+$z = Real(($d*1000)-$_w-$_x-$_y);
 
 # B
 BEGIN_TEXT
-
-Calculate the GC content for the following random sequence:
+You are about to prepare a pseudo-hoagland solution to grow plants on. $BR
 $BR
-$BR
+You have the following solutions: $BR
 \{
 BeginTable(border => 1, tex_border => "1pt", spacing => 0, padding => 4).
-AlignedRow(["$a"], align => LEFT, separation => 0).
+AlignedRow(["Solution", "Concentration"], align => LEFT, separation => 0).
+AlignedRow(["Glucose", "$a M"], align => LEFT, separation => 0).
+AlignedRow(["Potassium nitrate (KNO3)", "$b M"], align => LEFT, separation => 0).
+AlignedRow(["Potassium dihydrogen phosphate (KH2PO4)", "$c M"], align => LEFT, separation => 0).
 EndTable()
 \}
 $BR
-\{$z->ans_rule\}
-
+You need to create $d L of a new solution that should contain: $BR
+\{
+BeginTable(border => 1, tex_border => "1pt", spacing => 0, padding => 4).
+AlignedRow(["Compound", "Concentration"], align => LEFT, separation => 0).
+AlignedRow(["Glucose", "$aa M"], align => LEFT, separation => 0).
+AlignedRow(["KNO3", "$bb M"], align => LEFT, separation => 0).
+AlignedRow(["KH2PO4", "$cc M"], align => LEFT, separation => 0).
+EndTable()
+\}
+$BR
+How much of each compound would you need to add to get your final solution? $BR
+\{
+BeginTable(border => 1, tex_border => "1pt", spacing => 0, padding => 4).
+AlignedRow(["Glucose", $w->ans_rule . " ml"], align => LEFT, separation => 0).
+AlignedRow(["KNO3", $x->ans_rule . " ml"], align => LEFT, separation => 0).
+AlignedRow(["KH2PO4", $y->ans_rule . " ml"], align => LEFT, separation => 0).
+AlignedRow(["Water", $z->ans_rule . " ml"], align => LEFT, separation => 0).
+EndTable()
+\}
+END_TEXT
+BEGIN_TEXT_ES
+Estas por preparar una solucion pseudo-hoagland para que crezcan plantas. $BR
+$BR
+Tienes las siguientes soluciones: $BR
+\{
+BeginTable(border => 1, tex_border => "1pt", spacing => 0, padding => 4).
+AlignedRow(["Solucion", "Concentracion"], align => LEFT, separation => 0).
+AlignedRow(["Glucosa", "$a M"], align => LEFT, separation => 0).
+AlignedRow(["Nitrato de potasio (KNO3)", "$b M"], align => LEFT, separation => 0).
+AlignedRow(["Fosfato dihidrico de potasio (KH2PO4)", "$c M"], align => LEFT, separation => 0).
+EndTable()
+\}
+$BR
+Debes preparar $d L de una nueva solucion que debe contener: $BR
+\{
+BeginTable(border => 1, tex_border => "1pt", spacing => 0, padding => 4).
+AlignedRow(["Compuesto", "Concentracion"], align => LEFT, separation => 0).
+AlignedRow(["Glucosa", "$aa M"], align => LEFT, separation => 0).
+AlignedRow(["KNO3", "$bb M"], align => LEFT, separation => 0).
+AlignedRow(["KH2PO4", "$cc M"], align => LEFT, separation => 0).
+EndTable()
+\}
+$BR
+¿Que cantidad de cada compuesto debes agregar para obtener tu solucion final? $BR
+\{
+BeginTable(border => 1, tex_border => "1pt", spacing => 0, padding => 4).
+AlignedRow(["Glucosa", $w->ans_rule . " ml"], align => LEFT, separation => 0).
+AlignedRow(["KNO3", $x->ans_rule . " ml"], align => LEFT, separation => 0).
+AlignedRow(["KH2PO4", $y->ans_rule . " ml"], align => LEFT, separation => 0).
+AlignedRow(["Agua", $z->ans_rule . " ml"], align => LEFT, separation => 0).
+EndTable()
+\}
 END_TEXT
 
 # C
+ANS($w->with(tolerance=>0.01)->cmp);
+ANS($x->with(tolerance=>0.01)->cmp);
+ANS($y->with(tolerance=>0.01)->cmp);
 ANS($z->with(tolerance=>0.01)->cmp);
 
 ENDDOCUMENT();        

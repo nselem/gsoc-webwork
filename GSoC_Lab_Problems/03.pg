@@ -30,28 +30,61 @@ TEXT(beginproblem());
 # Show which answers are correct and which ones are incorrect
 $showPartialCorrectAnswers = 1;
 
+# Predicting DNA concentration
 # A
 
-$a = Genetics_RandomDNASequence(16);
-$z = Real(Genetics_GCContent($a));
+SRAND($problemSeed);
+$aa = random(1, 5)*10;
+$ab = random(1, 9)/10;
+$ac = $aa*$ab;
+$ba = random(1, 5)*10;
+$bb = random(1, 9)/10;
+$bc = $ba*$bb;
+$c = 0;
+if($ac > ($bc/2)) {
+	$ac = ($ac-($bc/2))/($aa+$ba);
+	$c = (($bc/2)/2)/($aa+$ba);
+	$bc = 0;
+} else {
+	$bc = ($bc-($ac*2))/($aa+$ba);
+	$c = (($ac*2)/2)/($aa+$ba);
+	$ac = 0;
+}
+$x = Real($ac);
+$y = Real($bc);
+$z = Real($c);
 
 # B
 BEGIN_TEXT
-
-Calculate the GC content for the following random sequence:
+Consider mixing $aa ml of $ab µM TGTTGT DNA short sequences, $BR
+with $ba ml of $bb µM ACA DNA short sequences. $BR
 $BR
-$BR
+What would be the resulting concentration (µM) for the following compounds?
 \{
 BeginTable(border => 1, tex_border => "1pt", spacing => 0, padding => 4).
-AlignedRow(["$a"], align => LEFT, separation => 0).
+AlignedRow(["TGTTGT DNA", $x->ans_rule . " µM"], align => LEFT, separation => 0).
+AlignedRow(["ACA DNA", $y->ans_rule . " µM"], align => LEFT, separation => 0).
+AlignedRow(["TGTTGT-ACAACA Double-stranded DNA", $z->ans_rule . " µM"], align => LEFT, separation => 0).
 EndTable()
 \}
+END_TEXT
+BEGIN_TEXT_ES
+Vas a mezclar $aa ml de secuencias cortas de DNA (TGTTGT) a una concentration de $ab µM, $BR
+con $ba ml de secuencias cortas de DNA (ACA) a una concentracion de $bb µM. $BR
 $BR
-\{$z->ans_rule\}
-
+¿Cual sera la concentracion resultante (µM) para los siguientes compuestos?
+\{
+BeginTable(border => 1, tex_border => "1pt", spacing => 0, padding => 4).
+AlignedRow(["TGTTGT DNA", $x->ans_rule . " µM"], align => LEFT, separation => 0).
+AlignedRow(["ACA DNA", $y->ans_rule . " µM"], align => LEFT, separation => 0).
+AlignedRow(["TGTTGT-ACAACA DNA de doble cadena", $z->ans_rule . " µM"], align => LEFT, separation => 0).
+EndTable()
+\}
 END_TEXT
 
 # C
+ANS($x->with(tolerance=>0.01)->cmp);
+ANS($y->with(tolerance=>0.01)->cmp);
 ANS($z->with(tolerance=>0.01)->cmp);
 
 ENDDOCUMENT();        
