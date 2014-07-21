@@ -1,0 +1,139 @@
+##DESCRIPTION
+##  Algebra problem: true or false for inequality 
+##ENDDESCRIPTION
+
+
+
+########################################################################
+
+DOCUMENT();      
+
+loadMacros(
+   "PGstandard.pl",     # Standard macros for PG language
+   "MathObjects.pl",
+   #"source.pl",        # allows code to be displayed on certain sites.
+   #"PGcourse.pl",      # Customization file for the course
+"QuantBio.pl",
+"Coalescent.pl",
+);
+
+# Print problem number and point value (weight) for the problem
+TEXT(beginproblem());
+
+# Show which answers are correct and which ones are incorrect
+$showPartialCorrectAnswers = 1;
+
+##############################################################
+#
+#  Setup
+#
+#
+Context("Numeric");
+$i=random(1,4,1); ## We have 4 stored aligned sequences 
+
+$start=random(1,80,1);
+$end=random($start+140,240);
+
+@array1=&amino_seq($i);
+@array2=&amino_seq($i+1);
+
+$org1=&HisA_org($i);
+$org2=&HisA_org($i+1);
+
+
+
+## Now lets color bold if two aminoacids are different
+## Need to see how to pass here for reference
+#$seq1,$seq2,$show1,$show2=show_diferences($start,$end,\@array1,\@array2);
+#$seq1,$seq2,$show1,$show2=show_diferences($start,$end,@array1,@array2);
+
+my $display=0;
+for ($k=$start;$k<$end;$k++){
+      $amino1= $array1[$k]; ## Here we retrieve the sequences from start to end
+      $amino2= $array2[$k];
+       $display++;
+
+       $seq1.=$amino1; ## we concatenate
+       $seq2.=$amino2;
+  
+      if($amino1 ne $amino2){
+           $amino1= "$BBOLD".$amino1."$EBOLD";
+           $amino2= "$BBOLD".$amino2."$EBOLD";  ## we colored them
+           }
+
+      if($display%60==0){
+           $amino1= $amino1."$BR";
+           $amino2= $amino2."$BR";  ## we colored them
+           }
+       $show1.=$amino1; ## we concatenate
+       $show2.=$amino2;
+     }
+
+$len=&seq_length($seq1);
+$proportion=&proportion($seq1,$seq2);
+
+####################################################################
+## Answers
+
+$ham=&Hamming($seq1,$seq2);
+$hamming = Compute("$ham");
+
+$juk=&jukesAmino($seq1,$seq2);
+$jukes = Compute("$juk");
+
+#Jukes-Cantor (default)	
+
+
+##############################################################
+#
+#  Text
+#
+#
+Context()->texStrings;
+BEGIN_TEXT
+Distance between alleles, gene variants, is used to estimate the mutation rate of a particular gene. There are different distance definitions between AMINOACID sequences. Here you are been asked to calculate Hamming and Jukes-Cantor distances between HisA genes of genus Streptomyces. His A is part of a gene cluster that synthesized the aminoacid histidine.  $BR
+
+$PAR
+Consider the coordinates [$start-$end] of an alignment of the organisms $org1, $org2 $BR 
+
+Seq 1: $show1 $BR
+Seq 2: $show2 $BR
+
+$PAR
+Calculate Hamming distance $BR
+Hamming = \{$hamming->ans_rule\} $PAR
+
+While Hamming distance count the differences between two sequences, this would under estimate the true divergence from most recent common ancester, since some positions may have undergone multiple changes. To overcome this situation, Jukes Cantor have proposed the following probabilistic model for Aminoacid mutation. \(d = -\frac{19}{20} log(1-p \frac{20}{19})\) where \(p\) is the proportion of diferences between the two sequences. $PAR
+2) Calculate the Jukes Cantor distance $PAR
+Jukes-Cantor = \{$jukes->ans_rule\} $BR
+$BR
+
+
+END_TEXT
+Context()->normalStrings;
+
+##############################################################
+#
+#  Answers
+#
+#
+
+ANS($hamming->with(tolerance=>.0001)->cmp);
+ANS($jukes->with(tolerance=>.0001)->cmp);
+
+Context()->texStrings;
+SOLUTION(EV3(<<'END_SOLUTION'));
+$PAR SOLUTION $PAR
+
+The correct answer for Hamming distance is $hamming because it is the number of differences between the two sequences $PAR
+
+Jukes Cantor model for amino acids is given by:$BR
+\(d = -\frac{19}{20} log(1-p \frac{20}{19})\) $BR
+If sequence length = $len, then proportion $BR\(p=\frac{ Hamming}{Sequence\hspace{1 mm} length}\)=$proportion $BR 
+So finally, 
+$BR Jukes Cantor distance: $jukes $BR
+
+END_SOLUTION
+Context()->normalStrings;
+
+ENDDOCUMENT();        

@@ -1,0 +1,102 @@
+##DESCRIPTION
+##  Algebra problem: true or false for inequality 
+##ENDDESCRIPTION
+
+
+
+########################################################################
+
+DOCUMENT();      
+
+loadMacros(
+   "PGstandard.pl",     # Standard macros for PG language
+   "MathObjects.pl",
+   #"source.pl",        # allows code to be displayed on certain sites.
+   #"PGcourse.pl",      # Customization file for the course
+"QuantBio.pl",
+);
+
+# Print problem number and point value (weight) for the problem
+TEXT(beginproblem());
+
+# Show which answers are correct and which ones are incorrect
+$showPartialCorrectAnswers = 1;
+
+##############################################################
+#
+#  Setup
+#
+#
+Context("Numeric");
+
+$pi = Real("pi");
+$b=&helloworld($pi);
+
+$i=random(1,4,1); ## We have 4 aligned sequences 
+
+$start=random(1,200,1);
+$end=random($start,240);
+
+$seq1=""; 
+$seq2="";
+
+###Lo vamos a mandar a la sub get_array
+if ($i==1){@array1=@Strepto1;@array2=@Strepto2;}
+if ($i==2){@array1=@Strepto2;@array2=@Strepto3;}
+if ($i==3){@array1=@Strepto3;@array2=@Strepto4;}
+if ($i==4){@array1=@Strepto4;@array2=@Strepto1;}
+
+
+## This is going to be the sub get sequences:
+for ($k=$start;$k<$end;$k++){
+
+$amino1= $array1[$k];
+$amino2= $array2[$k];
+
+  if($amino1 ne $amino2){
+      $amino1= "$BBOLD".$amino1."$EBOLD";
+      $amino2= "$BBOLD".$amino2."$EBOLD";
+   }
+$seq1.=$amino1;$seq2.=$amino2;
+}
+##############################################################
+#
+#  Text
+#
+#
+
+Context()->texStrings;
+BEGIN_TEXT
+<bgcolor="salmon">
+$HtmlTable $BR
+Gen Distance $BR
+Start Coordinate: $start $BR
+i $i $BR
+Final coordinate: $end $BR
+Seq 1: $seq1 $BR
+Seq 2: $seq2 $BR
+
+1) Calculate the hammer distance $BR
+1) Calculate the Jukes Cantor distance
+
+$TEST $BR
+$BR
+$b
+Enter a value for \(\pi\)
+
+\{$pi->ans_rule\}
+END_TEXT
+Context()->normalStrings;
+
+##############################################################
+#
+#  Answers
+#
+#
+
+ANS($pi->with(tolerance=>.0001)->cmp);
+# relative tolerance --3.1412 is incorrect but 3.1413 is correct
+# default tolerance is .01 or one percent.
+
+
+ENDDOCUMENT();        
