@@ -30,25 +30,29 @@ TEXT(beginproblem());
 # Show which answers are correct and which ones are incorrect
 $showPartialCorrectAnswers = 1;
 
+# Gas law problems # 2
+# N - 14.007
+# Ne - 20.1797
 # A
 
-$a = Genetics_RandomDNASequence(16);
-$z = Real(Genetics_GCContent($a));
+SRAND($problemSeed);
+$a = random(50, 500)/10;
+$b = random(200, 800);
+$c = random(100, 200)/10;
+$z = Real(($c*($a/0.416))/(0.08206*$b));
 
 # B
+BEGIN_TEXT_ES
+Un gas con una masa de $a g esta compuesto por partes iguales (en moles) de Nitrogeno y Neon.$BR
+Asumiendo el comportamiento de un gas ideal, calcula la densidad de la mezcla a $b \(^{\circ}K\) y $c atm.$BR
+$BR
+Densidad: \{$z->ans_rule\} g/L
+END_TEXT
 BEGIN_TEXT
-
-Calculate the GC content for the following random sequence:
+A gas with a total mass of $a g is composed of Nitrogen and Neon at an equal quantity in moles.$BR
+Assuming ideal gas behavior, calculate the density of the mixture at $b \(^{\circ}K\) and $c atm.$BR
 $BR
-$BR
-\{
-BeginTable(border => 1, tex_border => "1pt", spacing => 0, padding => 4).
-AlignedRow(["$a"], align => LEFT, separation => 0).
-EndTable()
-\}
-$BR
-\{$z->ans_rule\}
-
+Density: \{$z->ans_rule\} g/L
 END_TEXT
 
 # C
