@@ -30,25 +30,27 @@ TEXT(beginproblem());
 # Show which answers are correct and which ones are incorrect
 $showPartialCorrectAnswers = 1;
 
+# Osmosis problems # 2
 # A
 
-$a = Genetics_RandomDNASequence(16);
-$z = Real(Genetics_GCContent($a));
+SRAND($problemSeed);
+$a = random(1, 100)/1000;
+$b = random(20, 100)/100;
+$c = random(10, 50);
+$z = Real(((((1/(($a*0.08206*(273+$c))/0.93))*$a)-$a)/$a)*100);
 
 # B
+BEGIN_TEXT_ES
+Una solucion de HNO\(_2\) a $a M ejerce una presion osmotica de $b atm a $c \(^{\circ}C\).$BR
+¿Que porcentaje del acido se encuentra ionizado?$BR
+$BR
+Acido ionizado: \{$z->ans_rule\} %
+END_TEXT
 BEGIN_TEXT
-
-Calculate the GC content for the following random sequence:
+A solution of $a M HNO\(_2\) has an osmotic pressure of $b atm at $c \(^{\circ}C\).$BR
+What percentage of the acid is ionized?$BR
 $BR
-$BR
-\{
-BeginTable(border => 1, tex_border => "1pt", spacing => 0, padding => 4).
-AlignedRow(["$a"], align => LEFT, separation => 0).
-EndTable()
-\}
-$BR
-\{$z->ans_rule\}
-
+Ionized acid: \{$z->ans_rule\} %
 END_TEXT
 
 # C
