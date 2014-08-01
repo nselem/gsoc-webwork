@@ -30,25 +30,34 @@ TEXT(beginproblem());
 # Show which answers are correct and which ones are incorrect
 $showPartialCorrectAnswers = 1;
 
+# Titration to the equivalence point # 10
+# H3PO4 - 97.9937
+# Ba(OH)2 - 171.341
 # A
 
-$a = Genetics_RandomDNASequence(16);
-$z = Real(Genetics_GCContent($a));
+SRAND($problemSeed);
+$a = random(20000, 90000)/1000;
+$b = random(1000, 2000)/100;
+$z = Real(((($b/171.341)*2)/3)/($a/1000));
 
 # B
+BEGIN_TEXT_ES
+$a ml de H\(_3\)PO\(_4\) reaccionan con $b g de Ba(OH)\(_2\).$BR
+¿Cual es la molaridad de la sal resultante?$BR
+$BR
+Recuerda que primero debes balancear la ecuacion:$BR
+H\(_3\)PO\(_4\) + Ba(OH)\(_2\) \(\Rightarrow\) Ba\(_3\)(PO\(_4\))\(_2\) + H\(_2\)O$BR
+$BR
+Ba\(_3\)(PO\(_4\))\(_2\): \{$z->ans_rule\} M
+END_TEXT
 BEGIN_TEXT
-
-Calculate the GC content for the following random sequence:
+$a ml of H\(_3\)PO\(_4\) react with $b g of Ba(OH)\(_2\).$BR
+What is the molarity of the resulting salt?$BR
 $BR
+Remember to first balance the following equation:$BR
+H\(_3\)PO\(_4\) + Ba(OH)\(_2\) \(\Rightarrow\) Ba\(_3\)(PO\(_4\))\(_2\) + H\(_2\)O$BR
 $BR
-\{
-BeginTable(border => 1, tex_border => "1pt", spacing => 0, padding => 4).
-AlignedRow(["$a"], align => LEFT, separation => 0).
-EndTable()
-\}
-$BR
-\{$z->ans_rule\}
-
+Ba\(_3\)(PO\(_4\))\(_2\): \{$z->ans_rule\} M
 END_TEXT
 
 # C

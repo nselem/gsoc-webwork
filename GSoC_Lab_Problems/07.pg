@@ -30,28 +30,40 @@ TEXT(beginproblem());
 # Show which answers are correct and which ones are incorrect
 $showPartialCorrectAnswers = 1;
 
+# Termochemistry problems: Two equations needed # 3
+# H2O - 17.999
 # A
 
-$a = Genetics_RandomDNASequence(16);
-$z = Real(Genetics_GCContent($a));
+SRAND($problemSeed);
+$a = random(200, 2000)/10;
+$b = random(2, 20);
+$y = Real(($a*$b*2.06)/1000);
+$z = Real(($a/17.999)*6.02);
 
 # B
-BEGIN_TEXT
-
-Calculate the GC content for the following random sequence:
-$BR
+BEGIN_TEXT_ES
+¿Cuanta energia se requiere para derretir $a g de hielo a -$b.0 \(^{\circ}C\)?$BR
 $BR
 \{
 BeginTable(border => 1, tex_border => "1pt", spacing => 0, padding => 4).
-AlignedRow(["$a"], align => LEFT, separation => 0).
+AlignedRow(["De -" . $b . ".0 \(^{\circ}C\) a 0.0 \(^{\circ}C\)", $y->ans_rule . " kJ"], align => LEFT, separation => 0).
+AlignedRow(["Para derretir todo", $z->ans_rule . " kJ"], align => LEFT, separation => 0).
 EndTable()
 \}
+END_TEXT
+BEGIN_TEXT
+How much energy is needed to melt $a g of ice at -$b.0 \(^{\circ}C\)?$BR
 $BR
-\{$z->ans_rule\}
-
+\{
+BeginTable(border => 1, tex_border => "1pt", spacing => 0, padding => 4).
+AlignedRow(["From -" . $b . ".0 \(^{\circ}C\) to 0.0 \(^{\circ}C\)", $y->ans_rule . " kJ"], align => LEFT, separation => 0).
+AlignedRow(["To melt everything", $z->ans_rule . " kJ"], align => LEFT, separation => 0).
+EndTable()
+\}
 END_TEXT
 
 # C
+ANS($y->with(tolerance=>0.01)->cmp);
 ANS($z->with(tolerance=>0.01)->cmp);
 
 ENDDOCUMENT();        

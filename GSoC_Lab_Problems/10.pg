@@ -30,25 +30,44 @@ TEXT(beginproblem());
 # Show which answers are correct and which ones are incorrect
 $showPartialCorrectAnswers = 1;
 
+# Titration to the equivalence point using masses # 11
+# MgCO3 - 84.313
+# Na2CO3 - 105.9874
+# HCl - 36.458
 # A
 
-$a = Genetics_RandomDNASequence(16);
-$z = Real(Genetics_GCContent($a));
+SRAND($problemSeed);
+$a = random(100, 400);
+$b = random(20, 40);
+$c = random(4, 6)/10;
+$z = Real(((($a/1000)-(($c*($b/1000))*2))/2)*84.313);
 
 # B
+BEGIN_TEXT_ES
+Se agrego carbonato de magnesio puro (MgCO\(_3\)) a $a ml de HCl a 1.00 M.$BR
+La solucion resultante tenia pH acido.$BR
+$b ml de Na\(_2\)CO\(_3\) a $c M se agregaron despues hasta que el acido en exceso fue neutralizado.$BR
+¿Que cantidad de carbonato de magnesio existia originalmente?$BR
+$BR
+Recuerda balancear primero las siguientes ecuaciones:$BR
+HCl + Na\(_2\)CO\(_3\) \(\Rightarrow\) NaCl + CO\(_2\) + H\(_2\)O$BR
+$BR
+HCl + MgCO\(_3\) \(\Rightarrow\) MgCl\(_2\) + CO\(_2\) + H\(_2\)O$BR
+$BR
+MgCO\(_3\): \{$z->ans_rule\} g
+END_TEXT
 BEGIN_TEXT
-
-Calculate the GC content for the following random sequence:
+Pure magenissum carbonate (MgCO\(_3\)) was added to $a ml of 1.00 M HCl.$BR
+The resulting solution was acidic.$BR
+$b ml of $c M Na\(_2\)CO\(_3\) was later added until the excess acid was neutralized.$BR
+What mass of magnessium carbonate was originally used?$BR
 $BR
+Remember to first balance the following equations:$BR
+HCl + Na\(_2\)CO\(_3\) \(\Rightarrow\) NaCl + CO\(_2\) + H\(_2\)O$BR
 $BR
-\{
-BeginTable(border => 1, tex_border => "1pt", spacing => 0, padding => 4).
-AlignedRow(["$a"], align => LEFT, separation => 0).
-EndTable()
-\}
+HCl + MgCO\(_3\) \(\Rightarrow\) MgCl\(_2\) + CO\(_2\) + H\(_2\)O$BR
 $BR
-\{$z->ans_rule\}
-
+MgCO\(_3\): \{$z->ans_rule\} g
 END_TEXT
 
 # C

@@ -56,8 +56,8 @@ Calculate the weight of solid compound needed to make:
 \{
 BeginTable(border => 1, tex_border => "1pt", spacing => 0, padding => 4).
 AlignedRow(["$aa ml of solution that is $ab M in sodium cation, using sodium chloride (NaCl)", $w->ans_rule . " g"], align => LEFT, separation => 0).
-AlignedRow(["$ba ml of solution that is $bb M in chloride anion, using anhydrous magnesium chloride (MgCl2)", $x->ans_rule . " g"], align => LEFT, separation => 0).
-AlignedRow(["$ca ml of solution that is $cb M in sodium cation, using sodium sulfate decahydrate (Na2SO4·10H2O)", $y->ans_rule . " g"], align => LEFT, separation => 0).
+AlignedRow(["$ba ml of solution that is $bb M in chloride anion, using anhydrous magnesium chloride (MgCl\(_2\))", $x->ans_rule . " g"], align => LEFT, separation => 0).
+AlignedRow(["$ca ml of solution that is $cb M in sodium cation, using sodium sulfate decahydrate (Na\(_2\)SO\(_4\)·10H\(_2\)O)", $y->ans_rule . " g"], align => LEFT, separation => 0).
 AlignedRow(["$da ml of solution that is $db M in sulfate anion, using sodium sulfate decahydrate", $z->ans_rule . " g"], align => LEFT, separation => 0).
 EndTable()
 \}
@@ -67,8 +67,8 @@ Calcula el peso de cada compuesto solido que necesitas para hacer:
 \{
 BeginTable(border => 1, tex_border => "1pt", spacing => 0, padding => 4).
 AlignedRow(["$aa ml de solucion a una concentracion de $ab M de cation de sodio, utilizando cloruro de sodio (NaCl)", $w->ans_rule . " g"], align => LEFT, separation => 0).
-AlignedRow(["$ba ml de solucion a una concentracion de $bb M de anion de cloro, utilizando cloruro de magensio anhidrido (MgCl2)", $x->ans_rule . " g"], align => LEFT, separation => 0).
-AlignedRow(["$ca ml de solucion a una concentracion de $cb M de cation de sodio, utilizando decahidrato de sulfato de sodio (Na2SO4·10H2O)", $y->ans_rule . " g"], align => LEFT, separation => 0).
+AlignedRow(["$ba ml de solucion a una concentracion de $bb M de anion de cloro, utilizando cloruro de magensio anhidrido (MgCl\(_2\))", $x->ans_rule . " g"], align => LEFT, separation => 0).
+AlignedRow(["$ca ml de solucion a una concentracion de $cb M de cation de sodio, utilizando decahidrato de sulfato de sodio (Na\(_2\)SO\(_4\)·10H\(_2\)O)", $y->ans_rule . " g"], align => LEFT, separation => 0).
 AlignedRow(["$da ml de solucion a una concentracion de $db M de anion sulfato, utilizando decahidrato de sultato de sodio", $z->ans_rule . " g"], align => LEFT, separation => 0).
 EndTable()
 \}

@@ -30,25 +30,33 @@ TEXT(beginproblem());
 # Show which answers are correct and which ones are incorrect
 $showPartialCorrectAnswers = 1;
 
+# Titration to the equivalence point # 4
 # A
 
-$a = Genetics_RandomDNASequence(16);
-$z = Real(Genetics_GCContent($a));
+SRAND($problemSeed);
+$a = random(20, 120);
+$b = random(10, 90)/100;
+$c = random(50, 90)/100;
+$z = Real((((($a/1000)*$b)/2)/$c)*1000);
 
 # B
+BEGIN_TEXT_ES
+Una solucion de $a ml de NaOH a $b M se va a titular usando H\(_2\)SO\(_4\) a $c M.$BR
+¿Que cantidad de H\(_2\)SO\(_4\) se va a necesitar?$BR
+$BR
+Recuerda que primero debes balancear la ecuacion:$BR
+NaOH + H\(_2\)SO\(_4\) \(\Rightarrow\) Na\(_2\)SO\(_4\) + H\(_2\)O$BR
+$BR
+H\(_2\)SO\(_4\): \{$z->ans_rule\} ml
+END_TEXT
 BEGIN_TEXT
-
-Calculate the GC content for the following random sequence:
+A solution of $a ml of $b M NaOH will be titrated using $c M H\(_2\)SO\(_4\).$BR
+How much H\(_2\)SO\(_4\) is going to be needed?$BR
 $BR
+Remember to first balance the following equation:$BR
+NaOH + H\(_2\)SO\(_4\) \(\Rightarrow\) Na\(_2\)SO\(_4\) + H\(_2\)O$BR
 $BR
-\{
-BeginTable(border => 1, tex_border => "1pt", spacing => 0, padding => 4).
-AlignedRow(["$a"], align => LEFT, separation => 0).
-EndTable()
-\}
-$BR
-\{$z->ans_rule\}
-
+H\(_2\)SO\(_4\): \{$z->ans_rule\} ml
 END_TEXT
 
 # C

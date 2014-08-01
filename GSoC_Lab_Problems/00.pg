@@ -58,8 +58,8 @@ You have the following solutions: $BR
 BeginTable(border => 1, tex_border => "1pt", spacing => 0, padding => 4).
 AlignedRow(["Solution", "Concentration"], align => LEFT, separation => 0).
 AlignedRow(["Glucose", "$a M"], align => LEFT, separation => 0).
-AlignedRow(["Potassium nitrate (KNO3)", "$b M"], align => LEFT, separation => 0).
-AlignedRow(["Potassium dihydrogen phosphate (KH2PO4)", "$c M"], align => LEFT, separation => 0).
+AlignedRow(["Potassium nitrate (KNO\(_3\))", "$b M"], align => LEFT, separation => 0).
+AlignedRow(["Potassium dihydrogen phosphate (KH\(_2\)PO\(_4\))", "$c M"], align => LEFT, separation => 0).
 EndTable()
 \}
 $BR
@@ -68,8 +68,8 @@ You need to create $d L of a new solution that should contain: $BR
 BeginTable(border => 1, tex_border => "1pt", spacing => 0, padding => 4).
 AlignedRow(["Compound", "Concentration"], align => LEFT, separation => 0).
 AlignedRow(["Glucose", "$aa M"], align => LEFT, separation => 0).
-AlignedRow(["KNO3", "$bb M"], align => LEFT, separation => 0).
-AlignedRow(["KH2PO4", "$cc M"], align => LEFT, separation => 0).
+AlignedRow(["KNO\(_3\)", "$bb M"], align => LEFT, separation => 0).
+AlignedRow(["KH\(_2\)PO\(_4\)", "$cc M"], align => LEFT, separation => 0).
 EndTable()
 \}
 $BR
@@ -77,8 +77,8 @@ How much of each compound would you need to add to get your final solution? $BR
 \{
 BeginTable(border => 1, tex_border => "1pt", spacing => 0, padding => 4).
 AlignedRow(["Glucose", $w->ans_rule . " ml"], align => LEFT, separation => 0).
-AlignedRow(["KNO3", $x->ans_rule . " ml"], align => LEFT, separation => 0).
-AlignedRow(["KH2PO4", $y->ans_rule . " ml"], align => LEFT, separation => 0).
+AlignedRow(["KNO\(_3\)", $x->ans_rule . " ml"], align => LEFT, separation => 0).
+AlignedRow(["KH\(_2\)PO\(_4\)", $y->ans_rule . " ml"], align => LEFT, separation => 0).
 AlignedRow(["Water", $z->ans_rule . " ml"], align => LEFT, separation => 0).
 EndTable()
 \}
@@ -91,8 +91,8 @@ Tienes las siguientes soluciones: $BR
 BeginTable(border => 1, tex_border => "1pt", spacing => 0, padding => 4).
 AlignedRow(["Solucion", "Concentracion"], align => LEFT, separation => 0).
 AlignedRow(["Glucosa", "$a M"], align => LEFT, separation => 0).
-AlignedRow(["Nitrato de potasio (KNO3)", "$b M"], align => LEFT, separation => 0).
-AlignedRow(["Fosfato dihidrico de potasio (KH2PO4)", "$c M"], align => LEFT, separation => 0).
+AlignedRow(["Nitrato de potasio (KNO\(_3\))", "$b M"], align => LEFT, separation => 0).
+AlignedRow(["Fosfato dihidrico de potasio (KH\(_2\)PO\(_4\))", "$c M"], align => LEFT, separation => 0).
 EndTable()
 \}
 $BR
@@ -101,8 +101,8 @@ Debes preparar $d L de una nueva solucion que debe contener: $BR
 BeginTable(border => 1, tex_border => "1pt", spacing => 0, padding => 4).
 AlignedRow(["Compuesto", "Concentracion"], align => LEFT, separation => 0).
 AlignedRow(["Glucosa", "$aa M"], align => LEFT, separation => 0).
-AlignedRow(["KNO3", "$bb M"], align => LEFT, separation => 0).
-AlignedRow(["KH2PO4", "$cc M"], align => LEFT, separation => 0).
+AlignedRow(["KNO\(_3\)", "$bb M"], align => LEFT, separation => 0).
+AlignedRow(["KH\(_2\)PO\(_4\)", "$cc M"], align => LEFT, separation => 0).
 EndTable()
 \}
 $BR
@@ -110,8 +110,8 @@ $BR
 \{
 BeginTable(border => 1, tex_border => "1pt", spacing => 0, padding => 4).
 AlignedRow(["Glucosa", $w->ans_rule . " ml"], align => LEFT, separation => 0).
-AlignedRow(["KNO3", $x->ans_rule . " ml"], align => LEFT, separation => 0).
-AlignedRow(["KH2PO4", $y->ans_rule . " ml"], align => LEFT, separation => 0).
+AlignedRow(["KNO\(_3\)", $x->ans_rule . " ml"], align => LEFT, separation => 0).
+AlignedRow(["KH\(_2\)PO\(_4\)", $y->ans_rule . " ml"], align => LEFT, separation => 0).
 AlignedRow(["Agua", $z->ans_rule . " ml"], align => LEFT, separation => 0).
 EndTable()
 \}

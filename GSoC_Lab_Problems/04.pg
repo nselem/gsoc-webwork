@@ -30,28 +30,61 @@ TEXT(beginproblem());
 # Show which answers are correct and which ones are incorrect
 $showPartialCorrectAnswers = 1;
 
+# Chemical remediation of arsenic
+# AsO4 - 138.9175
+# Fe - 55.845
+# FeAsO4 - 194.7625
 # A
 
-$a = Genetics_RandomDNASequence(16);
-$z = Real(Genetics_GCContent($a));
+SRAND($problemSeed);
+$aa = random(200, 500)/100;
+$ab = $aa/138.9175;
+$ba = random(200, 500)/100;
+$bb = $ba/55.845;
+$c = ($ab, $bb)[$ab > $bb];
+$x = Real($c*194.7625);
+$y = Real(($bb-$c)*55.845);
+$z = Real(($ab-$c)*138.9175);
 
 # B
-BEGIN_TEXT
-
-Calculate the GC content for the following random sequence:
+BEGIN_TEXT_ES
+El arsenico es un elemento presente en la tierra en forma de arsenato AsO\(^4\).$BR
+Para removerlo, se aprovecha el resultado de la siguiente reaccion quimica:$BR
 $BR
+AsO\(_4^{-3}\) + Fe\(^{3+}\) \(\Rightarrow\) FeAsO\(_4\)$BR
+$BR
+Si mezclamos $aa g de arsenato con $ba g de ion de Hierro(III) ion,$BR
+cual es la masa resultante de:$BR
 $BR
 \{
 BeginTable(border => 1, tex_border => "1pt", spacing => 0, padding => 4).
-AlignedRow(["$a"], align => LEFT, separation => 0).
+AlignedRow(["Arsenato de Hierro(III)", $x->ans_rule . " g"], align => LEFT, separation => 0).
+AlignedRow(["Ion de Hierro(III)", $y->ans_rule . " g"], align => LEFT, separation => 0).
+AlignedRow(["Arsenato", $z->ans_rule . " g"], align => LEFT, separation => 0).
 EndTable()
 \}
+END_TEXT
+BEGIN_TEXT
+Arsenic is present on soil as arsenate AsO\(^4\).$BR
+An approach that is used to remove it takes advantage of the following chemical reaction:$BR
 $BR
-\{$z->ans_rule\}
-
+AsO\(_4^{-3}\) + Fe\(^{3+}\) \(\Rightarrow\) FeAsO\(_4\)$BR
+$BR
+If we mix $aa g of arsenate with $ba g of Iron(III) ion,$BR
+what would be the resulting mass of:$BR
+$BR
+\{
+BeginTable(border => 1, tex_border => "1pt", spacing => 0, padding => 4).
+AlignedRow(["Iron(III) arsenate", $x->ans_rule . " g"], align => LEFT, separation => 0).
+AlignedRow(["Iron(III) ion", $y->ans_rule . " g"], align => LEFT, separation => 0).
+AlignedRow(["Arsenate", $z->ans_rule . " g"], align => LEFT, separation => 0).
+EndTable()
+\}
 END_TEXT
 
 # C
+ANS($x->with(tolerance=>0.01)->cmp);
+ANS($y->with(tolerance=>0.01)->cmp);
 ANS($z->with(tolerance=>0.01)->cmp);
 
 ENDDOCUMENT();        

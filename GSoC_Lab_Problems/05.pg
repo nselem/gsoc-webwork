@@ -30,28 +30,40 @@ TEXT(beginproblem());
 # Show which answers are correct and which ones are incorrect
 $showPartialCorrectAnswers = 1;
 
+# Termochemistry problems: Two equations needed # 1
+# H2O - 17.999
 # A
 
-$a = Genetics_RandomDNASequence(16);
-$z = Real(Genetics_GCContent($a));
+SRAND($problemSeed);
+$a = random(200, 1000)/10;
+$b = random(20, 50);
+$y = Real(((100-$b)*$a*4.184)/1000);
+$z = Real(($a/17.999)*40.7);
 
 # B
-BEGIN_TEXT
-
-Calculate the GC content for the following random sequence:
-$BR
+BEGIN_TEXT_ES
+¿Cuanta energia se requiere para evaporar completamente $a g de H\(_2\)O a $b.0 \(^{\circ}C\)?$BR
 $BR
 \{
 BeginTable(border => 1, tex_border => "1pt", spacing => 0, padding => 4).
-AlignedRow(["$a"], align => LEFT, separation => 0).
+AlignedRow(["De " . $b . ".0 \(^{\circ}C\) a 100.0 \(^{\circ}C\)", $y->ans_rule . " kJ"], align => LEFT, separation => 0).
+AlignedRow(["Para evaporar todo", $z->ans_rule . " kJ"], align => LEFT, separation => 0).
 EndTable()
 \}
+END_TEXT
+BEGIN_TEXT
+How much energy is required to completely boil away $a g of H\(_2\)O at $b.0 \(^{\circ}C\)?$BR
 $BR
-\{$z->ans_rule\}
-
+\{
+BeginTable(border => 1, tex_border => "1pt", spacing => 0, padding => 4).
+AlignedRow(["From " . $b . ".0 \(^{\circ}C\) to 100.0 \(^{\circ}C\)", $y->ans_rule . " kJ"], align => LEFT, separation => 0).
+AlignedRow(["To boil everything away", $z->ans_rule . " kJ"], align => LEFT, separation => 0).
+EndTable()
+\}
 END_TEXT
 
 # C
+ANS($y->with(tolerance=>0.01)->cmp);
 ANS($z->with(tolerance=>0.01)->cmp);
 
 ENDDOCUMENT();        
