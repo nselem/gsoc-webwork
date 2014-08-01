@@ -1,0 +1,60 @@
+##DESCRIPTION
+##  GSoC - Lab Problems
+##ENDDESCRIPTION
+
+##KEYWORDS('Lab Problems')
+
+## DBsubject('Lab Problems')
+## DBchapter('Lab Problems')
+## DBsection('')
+## Date('7/1/2014')
+## Author('Nelly Selem')
+## Institution('GSoC')
+
+########################################################################
+
+DOCUMENT();      
+
+loadMacros(
+   "PGstandard.pl",     # Standard macros for PG language
+   "MathObjects.pl",
+   "GSoC_Genetics.pl",
+   "unionTables.pl"
+   #"source.pl",        # allows code to be displayed on certain sites.
+   #"PGcourse.pl",      # Customization file for the course
+);
+
+# Print problem number and point value (weight) for the problem
+TEXT(beginproblem());
+
+# Show which answers are correct and which ones are incorrect
+$showPartialCorrectAnswers = 1;
+
+# First order chemical reactions # 1
+# A
+
+SRAND($problemSeed);
+$a = random(40, 100);
+$b = random(40, 90);
+$z = Real((log(2))/((log(1)-log((100-$b)/100))/$a));
+
+# B
+BEGIN_TEXT_ES
+Se analiza una reaccion de primer orden durante $a s.$BR
+En este tiempo un $b% de la substancia ha reaccionado.$BR
+Con estos datos, calcula la vida media de la reaccion.$BR
+$BR
+Vida media \(t_{1/2}\): \{$z->ans_rule\}
+END_TEXT
+BEGIN_TEXT
+A first-order reaction occurs for $a s.$BR
+During this time $b% of the substance has reacted.$BR
+With these data, calculate the half-life of the reaction.$BR
+$BR
+Half-life \(t_{1/2}\): \{$z->ans_rule\}
+END_TEXT
+
+# C
+ANS($z->with(tolerance=>0.01)->cmp);
+
+ENDDOCUMENT();        

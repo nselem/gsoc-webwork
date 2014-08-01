@@ -1,0 +1,63 @@
+##DESCRIPTION
+##  GSoC - Lab Problems
+##ENDDESCRIPTION
+
+##KEYWORDS('Lab Problems')
+
+## DBsubject('Lab Problems')
+## DBchapter('Lab Problems')
+## DBsection('')
+## Date('7/1/2014')
+## Author('Nelly Selem')
+## Institution('GSoC')
+
+########################################################################
+
+DOCUMENT();      
+
+loadMacros(
+   "PGstandard.pl",     # Standard macros for PG language
+   "MathObjects.pl",
+   "GSoC_Genetics.pl",
+   "unionTables.pl"
+   #"source.pl",        # allows code to be displayed on certain sites.
+   #"PGcourse.pl",      # Customization file for the course
+);
+
+# Print problem number and point value (weight) for the problem
+TEXT(beginproblem());
+
+# Show which answers are correct and which ones are incorrect
+$showPartialCorrectAnswers = 1;
+
+# First order chemical reactions # 7
+# A
+
+SRAND($problemSeed);
+$a = random(70, 90)/100;
+$b = random(20, 50)/100;
+$c = 4+random(0, 8)/2;
+$d = random(30, 50)/100;
+$e = random(10, 20)/100;
+$z = Real((log($e)-log($d))/-((log($a)-log($b))/$c));
+
+# B
+BEGIN_TEXT_ES
+El peroxido de hidrogeno se descompone en oxigeno y agua a traves de una reaccion de primer orden.$BR
+Si la concentracion de H\(_2\)O\(_2\) disminuye de $a a $b en $c hours,$BR
+¿En cuanto tiempo la concentracion pasara de $d a $e?$BR
+$BR
+Tiempo: \{$z->ans_rule\} horas
+END_TEXT
+BEGIN_TEXT
+Hydrogen peroxide descomposes to oxygen and water through a first-order reaction.$BR
+If the concentration of H\(_2\)O\(_2\) decreases from $a to $b in $c hours,$BR
+how much time is required for the concentration to decrease from $d to $e?$BR
+$BR
+Time: \{$z->ans_rule\} hours
+END_TEXT
+
+# C
+ANS($z->with(tolerance=>0.01)->cmp);
+
+ENDDOCUMENT();        
