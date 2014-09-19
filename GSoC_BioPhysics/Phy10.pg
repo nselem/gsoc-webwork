@@ -1,0 +1,77 @@
+##DESCRIPTION
+##  GSoC nselem84@gmail.com Nelly Selem Biophysics
+##ENDDESCRIPTION
+########################################################################
+
+DOCUMENT();      
+
+loadMacros(
+   "PGstandard.pl",     # Standard macros for PG language
+   "MathObjects.pl",
+   #"source.pl",        # allows code to be displayed on certain sites.
+   #"PGcourse.pl",      # Customization file for the course
+);
+
+# Print problem number and point value (weight) for the problem
+TEXT(beginproblem());
+
+# Show which answers are correct and which ones are incorrect
+$showPartialCorrectAnswers = 1;
+
+##############################################################
+#
+#  Setup
+#
+#
+Context("Numeric");
+Context()->flags->set(  tolerance => 0.0001,  tolType => "absolute",);
+##############################################################
+#
+#  Text
+#
+#
+$C0=10+random(1,10);
+$Cf=10+random(1,10);
+$T= Compute(" (200 *ln( $C0**{10}/($Cf)) )/(1800)");
+
+Context()->texStrings;
+
+BEGIN_TEXT
+
+A tumor of \($C0^{10}\) cell will be destroyed by high-energy gamma radiation. The intensity of the dose is \(1800 \hspace{1mm} rad \hspace{1mm }hour^{-1}\). What would be the exposure time needed to reduce the tumor to only \($Cf\) cells? The destruction of the tumor obey to the equation \( C(D) = C_0e^\frac{-D}{D_0}\), with \(D_0 = 200\hspace{1mm} rad \)
+$PAR  \(T=\) \{ans_rule(8)\} $PAR
+END_TEXT
+Context()->normalStrings;
+
+##############################################################
+#
+#  Answers
+#
+#
+
+ANS($T->cmp());
+
+Context()->texStrings;
+SOLUTION(EV3(<<'END_SOLUTION'));
+$PAR SOLUTION $PAR
+
+
+Since \(C0=$C0^{10}\) $PAR 
+\(C(D)=$Cf = $C0^{10}e^\frac{-D}{D_0}\) $PAR
+taking logarithms in both sides $BR
+
+\(\frac{D}{D_0}=ln\frac{$C0^{10}}{$Cf}\) $PAR
+and this is $PAR
+
+\(D=D_0\times ln\frac{$C0^{10}}{$Cf}=200\times ln\frac{$C0^{10}}{$Cf} rad\) $PAR
+
+Using that the dose has an intensity of \(1800 \hspace{1mm} rad \hspace{1mm }hour^{-1}\) $PAR
+
+a time of $BR
+\(T= \frac { 200 \times ln\frac{$C0^{10}}{$Cf }rad }
+           {1800 \hspace{1mm} rad \hspace{1mm }hour^{-1}}=$T\) would be needed.
+
+END_SOLUTION
+Context()->normalStrings;
+
+ENDDOCUMENT();        

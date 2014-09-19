@@ -1,0 +1,68 @@
+##DESCRIPTION
+##  GSoC nselem84@gmail.com Nelly Selem Biophysics
+##ENDDESCRIPTION
+
+########################################################################
+
+DOCUMENT();      
+
+loadMacros(
+   "PGstandard.pl",     # Standard macros for PG language
+   "MathObjects.pl",
+   #"source.pl",        # allows code to be displayed on certain sites.
+   #"PGcourse.pl",      # Customization file for the course
+);
+
+# Print problem number and point value (weight) for the problem
+TEXT(beginproblem());
+
+# Show which answers are correct and which ones are incorrect
+$showPartialCorrectAnswers = 1;
+
+##############################################################
+#
+#  Setup
+#
+#
+Context("Numeric");
+Context()->flags->set(  tolerance => 0.0001,  tolType => "absolute",);
+$pi = Compute("3.14159265359");
+
+##############################################################
+#
+#  Text
+#
+#
+
+$dif=6.9+random(.1,4,.1);
+$sol=Compute("(1.38 * 10 **{-16}* 293.15 )/(6* $pi * 0.01* $dif*10**(-7))");
+$Ang=Compute ("$sol/10^{-8}");
+
+Context()->texStrings;
+BEGIN_TEXT
+
+A globular protein similar to Hemoglobin has approximately spherical shape. Calculate its radio from the Einstein relationship for the diffusion coefficient \((D=\frac{kT}{6\pi\mu r})\) if the diffusion constant of this protein in water at \(20^{\circ} C\) is \(D=$dif \times 10^{-7}cm^2s^{-1}]\)  [\(\mu\) (water at \(20^{\circ} C)=0.01\) poise, \(k = 1.38 \times 10 ^{-16}\)  erg \(K^{-1} \)  $PAR
+
+This problem shows how useful it is Einstein's formula for the diffusion coefficient, it allows us to obtain a magnitude of molecular radio, very difficult to measure directly, as a function of a direct measure.
+$PAR
+
+\(r=\) \{ans_rule(8)\} \(A^{\circ}\)
+END_TEXT
+Context()->normalStrings;
+
+##############################################################
+#
+#  Answers
+#
+#
+
+ANS($Ang->cmp());
+Context()->texStrings;
+SOLUTION(EV3(<<'END_SOLUTION'));
+$PAR SOLUTION $PAR
+\(r = \frac{kT}{6\pi\mu D} =\frac{1.38 \times 10 ^{-16} erg K^{-1}\times 293.15 K}{6\pi \times 0.01g \hspace{1 mm} cm ^{-1} s^{-1} \times $dif \times 10^{-7}cm^2s}\)
+$PAR
+\(r=$sol cm = $Ang A^{\circ}\) $PAR
+END_SOLUTION
+Context()->normalStrings;
+ENDDOCUMENT();        

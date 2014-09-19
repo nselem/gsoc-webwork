@@ -1,0 +1,88 @@
+##DESCRIPTION
+##  GSoC nselem84@gmail.com Nelly Selem Biophysics
+##ENDDESCRIPTION
+
+DOCUMENT();      
+
+loadMacros(
+   "PGstandard.pl",     # Standard macros for PG language
+   "MathObjects.pl",
+   #"source.pl",        # allows code to be displayed on certain sites.
+   #"PGcourse.pl",      # Customization file for the course
+);
+
+# Print problem number and point value (weight) for the problem
+TEXT(beginproblem());
+
+# Shoxw which answers are correct and which ones are incorrect
+$showPartialCorrectAnswers = 1;
+
+##############################################################
+#
+#  Setup
+#
+#
+Context("Numeric");
+Context()->flags->set(  tolerance => 0.0001,  tolType => "absolute",);
+$pi = Compute("3.14159265359");
+
+##############################################################
+#
+#  Text
+#
+#
+$long=0.72;
+$diam=.13;
+$w=2.4;
+$lf=1.39+random(1,20,1)/100;
+$g=9.81;
+$Strength= $w*.001*$g;
+$Area=Compute ("$pi*((.001*$diam)**2)/4");   ## .001 is to convert to meters
+$Effort=Compute("$Strength/$Area");
+$Elong=Compute("$lf-$long");
+$Unit=Compute("$Elong/$long");
+$Young=Compute("$Effort/$Unit");
+
+Context()->texStrings;
+
+BEGIN_TEXT
+The Young's modulus of resilin, a flexible rubber-like protein used by the arthropods can be determined experimentally using the elastic tendon of the Grasshopper leg.
+The tendon had initially \($long mm \) and \($diam mm \) in diameter and a load \($w g \) stretched it to a length of \($lf mm \). From these data calculate the effort, the unitary deformation and Young's modulus.
+$PAR Effort \{ans_rule(8)\} \(N\hspace{1mm} m^{-2}\)
+$PAR Unitary Deformation \{ans_rule(8)\}
+$PAR Young modulus \{ans_rule(8)\} \(N\hspace{1mm} m^{-2}\)
+
+END_TEXT
+Context()->normalStrings;
+
+##############################################################
+#
+#  Answers
+#
+#
+
+ANS($Effort->cmp());
+ANS($Unit->cmp());
+ANS($Young->cmp());
+Context()->texStrings;
+SOLUTION(EV3(<<'END_SOLUTION'));
+$PAR SOLUTION $PAR
+$BR Effort =\( \sigma = \frac{F}{A}\)
+
+$PAR \(F= mg = ($w\times 10 ^{-3}) kg)($g \frac{m}{s^2}) = $Strength \)
+
+$PAR \(Area = $Area\)
+
+$PAR \(Effort  = $Effort\)
+
+$PAR Unitary deformation is the ratio of the elongation and the original length  
+$PAR Unitary deformation \(\epsilon= \frac{\Delta l}{l_0} \)
+$PAR Unitary deformation \(= $Unit \)
+
+$PAR Young modulus \(= $Young \) 
+
+END_SOLUTION
+Context()->normalStrings;
+
+
+ENDDOCUMENT();        

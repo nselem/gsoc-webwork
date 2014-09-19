@@ -1,0 +1,70 @@
+##DESCRIPTION
+##  GSoC nselem84@gmail.com Nelly Selem Biophysics
+##ENDDESCRIPTION
+
+########################################################################
+
+DOCUMENT();      
+
+loadMacros(
+   "PGstandard.pl",     # Standard macros for PG language
+   "MathObjects.pl",
+   #"source.pl",        # allows code to be displayed on certain sites.
+   #"PGcourse.pl",      # Customization file for the course
+);
+
+# Print problem number and point value (weight) for the problem
+TEXT(beginproblem());
+
+# Show which answers are correct and which ones are incorrect
+$showPartialCorrectAnswers = 1;
+
+##############################################################
+#
+#  Setup
+#
+#
+Context("Numeric");
+Context()->flags->set(  tolerance => 0.0001,  tolType => "absolute",);
+$pi = Real("pi");
+
+##############################################################
+#
+#  Text
+#
+#
+$dist=1+random(.01,.5,.01);
+$t2= Compute(".1*($dist/10^{-3})^2 ");
+Context()->texStrings;
+BEGIN_TEXT
+
+Knowing that glucose molecules need \( 0.1 \)seconds to travel through diffusion an average distance of \(10 \mu m\), calculate the time that takes them to travel a distance of \($dist cm\) average.
+The relationship between the average distance traveled by diffusion and the time t that it takes to travel is $BR
+\(t=\)\{ans_rule(8)\}\(s\) $PAR
+END_TEXT
+Context()->normalStrings;
+
+##############################################################
+#
+#  Answers
+#
+#
+
+ANS($t2->cmp());
+Context()->texStrings;
+SOLUTION(EV3(<<'END_SOLUTION'));
+
+$PAR SOLUTION $PAR
+\(r^2 = 2 Dt \) where \(D\) is the difussion coeficient. $PAR
+Thus, if we know the two middle distance and time to travel one, we can determine the desired time from the relationship) is the diffusion constant.
+$PAR 
+\(\frac{\bar{r_1^2}}{\bar{r_2^2}}=\frac{t_1}{t_2}\), 
+then $BR 
+\(t_2=t_1\times \frac{\bar{r_1^2}}{\bar{r_2^2}}\), 
+$BAR
+\(t_2= .1 s\times (\frac{$dist cm}{10^{-3}cm})^2 = $t2 s \), 
+
+END_SOLUTION
+Context()->normalStrings;
+
+ENDDOCUMENT();        

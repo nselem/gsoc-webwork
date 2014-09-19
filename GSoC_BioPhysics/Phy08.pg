@@ -1,0 +1,94 @@
+##DESCRIPTION
+##  GSoC nselem84@gmail.com Nelly Selem Biophysics
+##ENDDESCRIPTION
+
+
+########################################################################
+
+DOCUMENT();      
+
+loadMacros(
+   "PGstandard.pl",     # Standard macros for PG language
+   "MathObjects.pl",
+   #"source.pl",        # allows code to be displayed on certain sites.
+   #"PGcourse.pl",      # Customization file for the course
+);
+
+# Print problem number and point value (weight) for the problem
+TEXT(beginproblem());
+
+# Show which answers are correct and which ones are incorrect
+$showPartialCorrectAnswers = 1;
+
+##############################################################
+#
+#  Setup
+#
+#
+Context("Numeric");
+Context()->flags->set(  tolerance => 0.0001,  tolType => "absolute",);
+$pi = Real("pi");
+
+##############################################################
+#
+#  Text
+#
+#
+
+Context()->texStrings;
+
+$art=1.19;
+$art_m=$art/100;
+$Artv=35 + random(1,5,.1);
+$Artv_m=$Artv/100;
+$ReArt=Compute(" 1.1 *10 **3 * $Artv_m * $art_m/(2.084* 10^{-3} )");
+
+
+$cap=4;
+$capm= $cap / 1000000;
+$capv=3.9+random(1,5,.1);
+$capv_m=$capv/1000000;
+$ReCap=Compute("( 1.1* 10^3*$capv*10^{-6}* $cap*10^{-6})/(2.084*10^{-3})");
+
+
+BEGIN_TEXT
+Evaluate the Reynolds number corresponding to the blood flow in the cardiovascular system. Data: Average rate \($Artv \hspace{1mm}  cm \hspace{1mm} s^{-1}\)  on the arterial end and \($capv \hspace{1mm}  mm \hspace{1mm}  s^{-1}\) on the capillar end, average arterial radio \($art  \hspace{1mm} cm\), average capillar radio \($cap \hspace{1mm} \mu m\), \(\rho = 1.1 \times 10 ^3 kg  \hspace{1mm} m^{-3}\),\( \mu = 2.084\times 10 ^{-3} Ns  \hspace{1mm} m^{-2}\). $PAR
+
+$PAR
+Arterial \(Re=\) \{ans_rule(8)\}
+$PAR 
+Capillar \(Re=\) \{ans_rule(8)\} $PAR
+
+END_TEXT
+Context()->normalStrings;
+
+##############################################################
+#
+#  Answers
+#
+#
+
+ANS($ReArt->cmp());
+ANS($ReCap->cmp());
+
+Context()->texStrings;
+SOLUTION(EV3(<<'END_SOLUTION'));
+$PAR SOLUTION $PAR
+
+\(Re=\frac{\rho v R} {\mu}\) $BR
+For the arterial $BR
+\(Re=\frac{\rho v R} {\mu}=\frac{ 1.1 \times 10 ^3 kg  \hspace{1mm} m^{-3}\times $Artv \hspace{1mm}  cm \hspace{1mm} s^{-1}\times $art  \hspace{1mm} cm}{2.084\times 10 ^{-3} Ns  \hspace{1mm} m^{-2}}\)
+
+$PAR
+\(=\frac{ 1.1 \times 10 ^3 kg  \hspace{1mm} m^{-3}\times $Artv_m \hspace{1mm}  m \hspace{1mm} s^{-1}\times $art_m  \hspace{1mm} m}{2.084\times 10 ^{-3} Ns  \hspace{1mm} m^{-2}}= $ReArt\)
+
+$PAR
+For the capillar $BR
+\(Re=\frac{\rho v R} {\mu}=\frac{ 1.1 \times 10 ^3 kg  \hspace{1mm} m^{-3}\times $capv \hspace{1mm}  mm \hspace{1mm} s^{-1}\times $cap  \hspace{1mm} \mu m}{2.084\times 10 ^{-3} Ns  \hspace{1mm} m^{-2}}\)
+
+$PAR
+\(=\frac{ 1.1 \times 10 ^3 kg  \hspace{1mm} m^{-3}\times $capv \hspace{1mm} \times 10^{-6} m \hspace{1mm} s^{-1}\times $cap \times 10^{-6}  \hspace{1mm} m}{2.084\times 10 ^{-3} Ns  \hspace{1mm} m^{-2}}= $ReCap\)
+
+END_SOLUTION
+Context()->normalStrings;
+ENDDOCUMENT();        

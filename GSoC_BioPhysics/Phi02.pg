@@ -1,0 +1,68 @@
+##DESCRIPTION
+##  GSoC nselem84@gmail.com Nelly Selem Biophysics
+##ENDDESCRIPTION
+
+DOCUMENT();      
+
+loadMacros(
+   "PGstandard.pl",     # Standard macros for PG language
+   "MathObjects.pl",
+   #"source.pl",        # allows code to be displayed on certain sites.
+   #"PGcourse.pl",      # Customization file for the course
+);
+
+# Print problem number and point value (weight) for the problem
+TEXT(beginproblem());
+
+# Show which answers are correct and which ones are incorrect
+$showPartialCorrectAnswers = 1;
+
+##############################################################
+#
+#  Setup
+#
+#
+Context("Numeric");
+Context()->flags->set(  tolerance => 0.0001,  tolType => "absolute",);
+$pi = Real("pi");
+
+##############################################################
+#
+#  Text
+#
+#
+
+$Ts=5+random(.1,.5,.01);
+$Te=25+random(.1,.5,.01);
+
+$R1=Compute("2*$Ts/.005");
+$R2=Compute("2*$Te/.0025");
+
+Context()->texStrings;
+BEGIN_TEXT
+In the healthy newborn alveolar supeficial tension at the end of expiration is $Ts d cm^{-1} and radius of the alveoli is 50 x 10 ^{-6} m. In infants suffering from hyaline membrane disease, the surface tension at the end of expiration is $Te d cm ^{-1} and the alveoli radio is 25 x 10 {-6 } m . Assess the value of the pressure needed to inflate the alveoli in each case. Assuming that the alveoli are spheres you can use the equation: \(P_e=\frac{2T}{r}\)$PAR
+
+Healthy: \(P=\) \{ans_rule(8)\} \(d\hspace{1mm} cm^{-2}\) $PAR 
+Disease: \(P=\) \{ans_rule(8)\} \(d\hspace{1mm} cm^{-2}\) $PAR 
+
+END_TEXT
+Context()->normalStrings;
+
+##############################################################
+#
+#  Answers
+#
+#
+
+ANS($R1->cmp());
+ANS($R2->cmp());
+Context()->texStrings;
+SOLUTION(EV3(<<'END_SOLUTION'));
+$PAR SOLUTION $PAR
+$PAR \(P_e=\frac{2T}{r}\)
+$PAR Healthy: $R1
+$PAR With disease: $R2
+END_SOLUTION
+Context()->normalStrings;
+
+ENDDOCUMENT();        

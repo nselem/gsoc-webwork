@@ -1,0 +1,68 @@
+##DESCRIPTION
+##  GSoC nselem84@gmail.com Nelly Selem Biophysics
+##ENDDESCRIPTION
+########################################################################
+
+DOCUMENT();      
+
+loadMacros(
+   "PGstandard.pl",     # Standard macros for PG language
+   "MathObjects.pl",
+   #"source.pl",        # allows code to be displayed on certain sites.
+   #"PGcourse.pl",      # Customization file for the course
+);
+
+# Print problem number and point value (weight) for the problem
+TEXT(beginproblem());
+
+# Show which answers are correct and which ones are incorrect
+$showPartialCorrectAnswers = 1;
+
+##############################################################
+#
+#  Setup
+#
+#
+Context("Numeric");
+Context()->flags->set(  tolerance => 0.0001,  tolType => "absolute",);
+$pi = Real("pi");
+
+##############################################################
+#
+#  Text
+#
+#
+
+$ve=5+random(1,10,.1);
+$Cr=Compute("2* 0.6* 400/(1000* 10^{-2}* ($ve)^3)");
+
+Context()->texStrings;
+BEGIN_TEXT
+The swim muscles of a fish develop a power of \(0.4 \times 10^3 w\) from which \(60 %\) is applied to swimming. If the fish swims at a speed of \($ve m s^{-1}\) and if its maxima cross section area in the direction of motion is \(100 \hspace{1mm}cm^2\), What is the value of drag coefficient?
+$PAR
+
+\(C_r=\) \{ans_rule(8)\}
+END_TEXT
+Context()->normalStrings;
+
+##############################################################
+#
+#  Answers
+#
+#
+
+ANS($Cr->cmp());
+
+Context()->texStrings;
+SOLUTION(EV3(<<'END_SOLUTION'));
+$PAR SOLUTION $PAR
+\(C_r=\frac{2P}{\rho A v³}\) $BR
+
+where \(v\) is the fish velocity, and \(\rho\) water density. $PAR
+
+\(C_r=\frac{2\times 0.6 \times 400 w }{1000 kg \hspace{1 mm} m^3 10^{-2}m^2 ($ve s^{-1})^3}=$Cr\) $BR
+
+END_SOLUTION
+Context()->normalStrings;
+
+ENDDOCUMENT();        

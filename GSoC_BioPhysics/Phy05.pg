@@ -1,0 +1,64 @@
+##DESCRIPTION
+##  GSoC nselem84@gmail.com Nelly Selem Biophysics
+##ENDDESCRIPTION
+
+########################################################################
+
+DOCUMENT();      
+
+loadMacros(
+   "PGstandard.pl",     # Standard macros for PG language
+   "MathObjects.pl",
+   #"source.pl",        # allows code to be displayed on certain sites.
+   #"PGcourse.pl",      # Customization file for the course
+);
+
+# Print problem number and point value (weight) for the problem
+TEXT(beginproblem());
+
+# Show which answers are correct and which ones are incorrect
+$showPartialCorrectAnswers = 1;
+
+##############################################################
+#
+#  Setup
+#
+#Context()->flags->set(  tolerance => 0.0001,  tolType => "absolute",);
+Context("Numeric");
+
+$pi = Real("pi");
+
+##############################################################
+#
+#  Text
+#
+#
+$long=3+random(.1,.25,.05);
+$Sol = Compute("1.05 *9.82 *$long");
+
+Context()->texStrings;
+BEGIN_TEXT
+
+Giraffes have a very long neck, that makes their head be located $long m above their heart. Whether to move blood through the brain of this animal at a pressure of 60 mm Hg is needed,  What should be the blood pressure at the outlet of the heart?. (blood density \(1.05 \times 10 ^3 \frac{kg}{m^3}\) ) .
+$PAR  \(P=\) \{ans_rule(8)\}\( \frac{N}{m^2}\) $PAR
+END_TEXT
+Context()->normalStrings;
+
+##############################################################
+#
+#  Answers
+#
+#
+
+ANS($Sol->cmp());
+Context()->texStrings;
+SOLUTION(EV3(<<'END_SOLUTION'));
+$PAR SOLUTION $PAR
+
+$PAR \(P_f - P_h = \rho g h\) 
+
+$PAR \(P_f - P_h =  1.05 \times 10 ^3  \frac{kg}{m^3} 9.82 \frac{m}{s^2} $long m = $Sol \frac{N}{m^2}\) 
+END_SOLUTION
+Context()->normalStrings;
+
+ENDDOCUMENT();        
