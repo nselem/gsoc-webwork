@@ -62,14 +62,17 @@ $answer.="\frac{1}{$population-1}";
 
 Context()->texStrings;
 BEGIN_TEXT
-Consider a population of $population gene, for which you have DNA sequences. If you want to estimate 
-\(\theta\), the population mutation rate, you can use Waterson or Tajima \(\theta\)-estimators: $BR
-This estimators are given by:$PAR
+Considere una poblacion de $population genes, para los cuales se tienen secuencias de DNA. Si quieres estimar
+\(\theta\), la tasa de mutación de la poblacion, puedes usar el estimador de Waterson o Tajima \(\theta\): $BR
+Estos estimadores estan dados por:$PAR
 Tajima: $BR
 \(\hat\pi=\frac{2}{n(n-1)}\sum_{i,j}\pi_{ij}\) , Waterson  \(  \hatθ_W=\frac{S_n}{a_n}\) 
-where \(a_n =\sum_{i=1}^{n−1}\frac{1}{i}\) $PAR
+donde \(a_n =\sum_{i=1}^{n−1}\frac{1}{i}\) $PAR
 
-Then, if \(\hat\pi\) and \(\hat\theta_W\) are compared, their difference is expected to be close to zero and deviations from zero are thus indicative that the basic coalescent model does not capture the variation in the data. Tajima (1989) normalised the difference in what is now known as Tajima’s D $PAR
+Entonces, si \(\hat\pi\) y \(\hat\theta_W\) son comparados, se espera que su diferencia sea cercana a cero 
+por lo que entonces, las desviaciones del cero
+son significativas. Por este hecho el modelo básico de coalescencia no captura la variación en los datos. Tajima (1989) 
+normaliza la diferencia en lo que ahora se conoce como Tajima’s D $PAR
 
 \(D=\frac{\hat\pi-\hat\theta_W}{\sqrt{e_1S_n+e_2S_n(S_n-1)}}\) $BR
 with $BR
@@ -77,7 +80,8 @@ with $BR
 \(e_2=\frac{1}{a_n^2+b_n}(\frac{2(n^2+n+3)}{9n(n-1)}-\frac{n+2}{na_n}+\frac{b_n}{a_n^2})\) $BR
 \(b_n=\sum_{i=1}^{n-1}\frac{1}{i^2}\) $PAR
 
-Using your knowledge of sumatories, calculate the constants needed for the calculus of Waterson estimator and the D-Tajima test. $PAR 
+Usando tu conocimiento de sumatorias, calcula las constantes necesarias para
+obtener el estumador de Waterson y el estimador D-Tajima de la prueba de Tajima. $PAR 
 \(a_n=\) \{$an->ans_rule\} $BR
 \(b_n=\) \{$bn->ans_rule\} $BR
 \(e_1=\) \{$e1->ans_rule\} $BR
@@ -101,11 +105,11 @@ ANS($e2->with(tolerance=>.0001)->cmp);
 Context()->texStrings;
 SOLUTION(EV3(<<'END_SOLUTION'));
 $PAR SOLUTION $PAR
-Using population size you have that n=$population $BR
-Then, you only have to substitute n on the formulas below, for example $BR
+Usando el numero de elementos en la poblacion n=$population $BR
+Entonces solo sustituimos n en las formulas de abajo, por ejemplo $BR
  \(a_n =\sum_{i=1}^{n−1}\frac{1}{i}\) $BR
 \(a_n=$answer\) $BR
-So, by doing this, you will get: $BR
+Asi que haciendo esto obtendras: $BR
 \(a_n=$an\)$BR
 \(b_n=$bn\) $BR 
 \(e_1=$e1\) $BR 
