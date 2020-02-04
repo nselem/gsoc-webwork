@@ -63,7 +63,7 @@ $answer.="\frac{1}{$population-1}";
 Context()->texStrings;
 BEGIN_TEXT
 Considere una poblacion de $population genes, para los cuales se tienen secuencias de DNA. Si quieres estimar
-\(\theta\), la tasa de mutación de la poblacion, puedes usar el estimador de Waterson o Tajima \(\theta\): $BR
+\(\theta\), la tasa de mutación de la poblacion, puedes usar los estimadores de Waterson o de Tajima \(\theta\): $BR
 Estos estimadores estan dados por:$PAR
 Tajima: $BR
 \(\hat\pi=\frac{2}{n(n-1)}\sum_{i,j}\pi_{ij}\) , Waterson  \(  \hatθ_W=\frac{S_n}{a_n}\) 
@@ -81,7 +81,7 @@ with $BR
 \(b_n=\sum_{i=1}^{n-1}\frac{1}{i^2}\) $PAR
 
 Usando tu conocimiento de sumatorias, calcula las constantes necesarias para
-obtener el estumador de Waterson y el estimador D-Tajima de la prueba de Tajima. $PAR 
+obtener el estimador de Waterson y el estimador D-Tajima de la prueba de Tajima. $PAR 
 \(a_n=\) \{$an->ans_rule\} $BR
 \(b_n=\) \{$bn->ans_rule\} $BR
 \(e_1=\) \{$e1->ans_rule\} $BR
