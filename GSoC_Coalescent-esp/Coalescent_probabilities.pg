@@ -142,11 +142,11 @@ ANS($an->with(tolerance=>.0001)->cmp);
 Context()->texStrings;
 SOLUTION(EV3(<<'END_SOLUTION'));
 $PAR SOLUTION $PAR
-Using population size you have that n=$population $BR
-Then, you only have to substitute n on the formulas below, for example $BR
+Usando el numero n=$population  de individuos en la poblacion $BR
+solo tienes que sustituir n en las formulas de abajo, por ejemplo $BR
  \(a_n =\sum_{i=1}^{n−1}\frac{1}{i}\) $BR
 \(a_n=$answer\) $BR
-So, by doing this, you will get: $BR
+Al hacer esto obtienes: $BR
 \(a_n=$an\)$BR
 
 END_SOLUTION
@@ -157,9 +157,11 @@ END_SOLUTION
 Context()->texStrings;
 BEGIN_TEXT
 $PAR
-Your population consists of hypervariable mitochondrial loop of human mexican population $name.  Now find segregation sites \(S_n\), the total number of sites in wich a mutation has happened in at least some individual of the population . Data are given below.
+Tu poblacion consiste en secuencias de la region hipervariable mitocondrial de mexicanos. $name.  
+Encuentra sitios de segregacion \(S_n\), el numero total de sitios en los cuales la mutacion ha ocurrido
+en al menos un individuo de la poblacion. Los datos son mostrados abajo
 $PAR
-Coordinates [$start-$end] of an alignment of the mithocondrial region $BR 
+Coordenadas [$start-$end] del alineamiento de la ragion mitocondrial $BR 
 >$Keys[0]$BR 
 $show1 $BR
 >$Keys[1]$BR 
@@ -170,7 +172,7 @@ $show2 $BR
 $show3 $BR
 
 $PAR
-Calculate Hamming distance $BR
+Calcula la distancia de Hamming $BR
 Hamming = \{$hamming->ans_rule\} $PAR
 
 END_TEXT
@@ -188,7 +190,7 @@ Context()->texStrings;
 SOLUTION(EV3(<<'END_SOLUTION'));
 $PAR SOLUTION $PAR
 
-The correct answer for Hamming distance is $hamming because it is the number of differences between the two sequences $PAR
+La respuesta correcta para la distancia de Hamming es $hamming porque es el número de diferencias entre las dos secuencias $PAR
 
 END_SOLUTION
 Context()->normalStrings;
