@@ -94,11 +94,13 @@ $jukes = Compute("$juk");
 #
 Context()->texStrings;
 BEGIN_TEXT
-
-Distance between alleles, gene variants, is used to estimate the mutation rate of a particular gene. There are different distance definitions between DNA sequences. Here you are been asked to calculate Hamming and Jukes-Cantor distances between hypervariable mitochondrial loop of human mexican population $name.  $BR
+La distancia entre alelos o variantes genicas es usada para estimar la tasa de mutacion de un gen particular.
+Existen diversas definciones de distancia entre scuencias de DNA. 
+Aqui se te piden calcular las distancias de Hamming y la de Jukes-Cantor 
+entre secuencias de la region hipervariable del loop mitocondrial de muestras de la poblacion mexicana $name.  $BR
 
 $PAR
-Consider the coordinates [$start-$end] of an alignment of the gene $BR 
+Considere las coordenadas [$start-$end] de un alineamiento del gen $BR 
 
 >$Keys[0]$BR 
 $show1 $BR
@@ -106,11 +108,15 @@ $show1 $BR
 $show2 $BR
 
 $PAR
-Calculate Hamming distance $BR
+Calcula la distancia de Hamming $BR
 Hamming = \{$hamming->ans_rule\} $PAR
 
-While Hamming distance count the differences between two sequences, this would under estimate the true divergence from most recent common ancester, since some positions may have undergone multiple changes. To overcome this situation, Jukes Cantor have proposed the following probabilistic model for DNA. \(d = -\frac{3}{4} log(1-p \frac{4}{3})\) where \(p\) is the proportion of diferences between the two sequences. $PAR
-2) Calculate the Jukes Cantor distance $PAR
+Mientras la distancia de Hamming cuenta las diferencias entre dos secuencias, 
+puede no estimar correctamente la divergencia de un ancestro comun.
+Esto debido a que algunas posiciones pueden haber sufrido multiples cambios. 
+Para resolver esta situacion, Jukes Cantor propusieron el siguiente modelo probabilistico de distancia de DNA. 
+\(d = -\frac{3}{4} log(1-p \frac{4}{3})\) donde \(p\) es la proporcion de diferencias entre dos secuencias. $PAR
+2)Calcula la distancia de Jukes-Cantor $PAR
 Jukes-Cantor = \{$jukes->ans_rule\} $BR
 $BR
 
@@ -131,13 +137,14 @@ Context()->texStrings;
 SOLUTION(EV3(<<'END_SOLUTION'));
 $PAR SOLUTION $PAR
 
-The correct answer for Hamming distance is $hamming because it is the number of differences between the two sequences $PAR
+La respuesta correcta para la distancia de Hamming es $hamming porque es el numero de diferencias entre dos secuencias $PAR
 
-Jukes Cantor model for amino acids is given by:$BR
+El modelo de Jukes-Cantor para aminoacidos esta dado por :$BR
 \(d = -\frac{3}{4} log(1-p \frac{4}{3})\) $BR
-If sequence length = $len, then proportion $BR\(p=\frac{ Hamming}{Sequence\hspace{1 mm} length}\)=$proportion $BR 
-So finally, 
-$BR Jukes Cantor distance: $jukes $BR
+Si la longitud de la secuencia es longitud = $len, entonces la proporcion $BR
+\(p=\frac{ Hamming}{Sequencia \hspace{1 mm} longitud}\)=$proportion $BR 
+Asi que finalmente, 
+$BR Distancia de Jukes Cantor: $jukes $BR
 
 END_SOLUTION
 Context()->normalStrings;
