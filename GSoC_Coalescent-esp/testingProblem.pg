@@ -129,21 +129,26 @@ $answer.="\frac{1}{$population-1}";
 
 Context()->texStrings;
 BEGIN_TEXT
-Given a population decide if the neutral model it is enough to explain its variation, and this is, look if the coalescent theory adjust well to the data by applying the Tajima test. $PAR 
+Dada una poblacion decide si el modelo neutral es suficiente para explicar su variacion, es decir,
+mira si el modelo coalescente se ajusta bien a los datos aplicando el test de Tajima. $PAR 
 
-First estimate \(\theta\), the population mutation rate, using Waterson-estimator given by: Waterson  \(  \hatθ_W=\frac{S_n}{a_n}\) 
-where \(a_n =\sum_{i=1}^{n−1}\frac{1}{i}\) $BR
+Primero estima \(\theta\), la tasa de mutacion de la poblacion, usa el estimador de Waterson dado por : 
+Waterson  \(  \hatθ_W=\frac{S_n}{a_n}\) 
+donde \(a_n =\sum_{i=1}^{n−1}\frac{1}{i}\) $BR
 Waterson = \{$Waterson->ans_rule\} $PAR
-Second calculate the \(\hat \pi\) estimator $BR
+
+Despues calcula el estimador \(\hat \pi\)  $BR
 \(\hat\pi\) = \{$tajima->ans_rule\} $PAR
 
-Finally calculate the \(D\) from Tajima-test $BR
-\(D\) = \{$D->ans_rule\} and conclude $PAR
+Finalmente calcula la D de tajima \(D\) del test de Tajima $BR
+\(D\) = \{$D->ans_rule\} y concluye $PAR
 
 Data $PAR
-Your population consists of hypervariable mitochondrial loop of human mexican population $name.  Now find segregation sites \(S_n\), the total number of sites in wich a mutation has happened in at least some individual of the population . Data are given below.
+La poblacion consiste de regiones hipervariables de un loop mitocondrial de mexicanos $name.  
+Ahora encuentra los sitios de segregacion \(S_n\), el numero total de sitios en los cuales
+una mutacion ha ocurrido en al menos un individuo de la poblacion. Los datos se muestran abajo.
 $PAR
-Coordinates [$start-$end] of an alignment of the mithocondrial region $BR 
+Coordenadas [$start-$end] de un alineamiento de la region mitocondrial $BR 
 >$Keys[0]$BR 
 $show1 $BR
 >$Keys[1]$BR 
@@ -172,22 +177,23 @@ Context()->texStrings;
 SOLUTION(EV3(<<'END_SOLUTION'));
 $PAR SOLUTION $PAR
 
-Using population size you have that n=$population $BR
-Then, you only have to substitute n on the formulas below, for example $BR
+Utilizando el numero n=$population de individuos de la poblacion  $BR
+Solo tienes que sustituir n en las formulas de abajo, por ejemplo $BR
  \(a_n =\sum_{i=1}^{n−1}\frac{1}{i}\) $BR
 \(a_n=$answer\) $BR
-So, by doing this, you will get: $BR
+Haciendo lo indicado, obtienes: $BR
 \(a_n=$an\)$BR
 
-The correct answer for Segregation Sites is $Sites because it is the number of sites with differences between all the sequences $PAR
-The Waterson estimator is given by \(\frac{$Sites}{$an} = $Waterson\)
-The \(\hat\pi\) is given by \($tajima\)
+El numero correcto de sitios de segregacion es $Sites porque es el numero de sitios con diferencias
+en las secuencias $PAR
+El estimador de Waterson esta dado por \(\frac{$Sites}{$an} = $Waterson\)
+La \(\hat\pi\) esta dada por \($tajima\)
 
-Using the variables \(\hat\pi=\) $tajima, \(W=\)$Waterson, \(s_n=\)$Site, \(e_1=\)$E1, \(e_2=\)$E2
-and the definition \(D=\frac{\hat\pi-\hat\theta_W}{\sqrt{e_1S_n+e_2S_n(S_n-1)}}\) $BR
+Usando las variables \(\hat\pi=\) $tajima, \(W=\)$Waterson, \(s_n=\)$Site, \(e_1=\)$E1, \(e_2=\)$E2
+y la definicion \(D=\frac{\hat\pi-\hat\theta_W}{\sqrt{e_1S_n+e_2S_n(S_n-1)}}\) $BR
 \(D=\frac{$tajima-$Waterson}{\sqrt{($E1 )($Site) + ($E2)($Site) ($Site-1)}}\) $PAR
 
-then \( D= $D\)
+entonces \( D= $D\)
 
 END_SOLUTION
 Context()->normalStrings;
